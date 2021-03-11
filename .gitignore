@@ -1,0 +1,15 @@
+# Unity 3D
+Assets/Plugins/*.exp
+Assets/Plugins/*.lib
+Library/*
+Temp
+*.pidb
+build
+
+#Project/User Preference Files
+*.sln
+*.csproj
+*.pidb
+*.userprefs
+*.user
+*.suo
