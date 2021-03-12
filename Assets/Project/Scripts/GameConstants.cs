@@ -1,4 +1,4 @@
-﻿public class Constants 
+﻿public class GameConstants 
 {
     // From InputManager (Edit > ProjectSettings > InputManager)
     public const string VERTICAL = "Vertical";
