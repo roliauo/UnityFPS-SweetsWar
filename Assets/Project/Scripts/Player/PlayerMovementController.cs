@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
-public class PlayerController : MonoBehaviour
+public class PlayerMovementController : MonoBehaviour
 {
     // editor
     public Camera playerCamera;
@@ -33,16 +33,13 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded { get; private set; }
     public bool isCrouching { get; private set; }
 
-
     // private
-    CharacterController m_characterController;
-    float m_cameraHeightRatio = 0.9f;
-    float m_rotationX = 0f;
-    float m_heightPlayer;
-    float m_speedPlayer;
-    Vector3 m_velocity;
-    
-
+    private CharacterController m_characterController;
+    private Vector3 m_velocity;
+    private float m_cameraHeightRatio = 0.9f;
+    private float m_rotationX = 0f;
+    private float m_heightPlayer;
+    private float m_speedPlayer;
 
     void Start()
     {
