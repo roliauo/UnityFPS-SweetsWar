@@ -20,4 +20,12 @@
     public const string BUTTON_PAUSE_MENU = "Pause Menu";
     public const string BUTTON_SUBMIT = "Submit";
     public const string BUTTON_CANCEL = "Cancel";
+
+    // Scene
+    public const string SCENE_TITLE = "TitleScene";
+    public const string SCENE_LOBBY = "LobbyScene";
+    public const string SCENE_GAME = "GameScene";
+    public const string SCENE_WIN = "WinScene";
+    public const string SCENE_LOSE = "LoseScene";
+
 }

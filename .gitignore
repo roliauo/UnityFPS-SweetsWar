@@ -1,15 +1,15 @@
-# Unity 3D
-Assets/Plugins/*.exp
-Assets/Plugins/*.lib
-Library/*
-Temp
-*.pidb
+# unity ignore dir
+/[Bb]in/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
 build
-
-#Project/User Preference Files
-*.sln
+ 
+# unity ignore file
 *.csproj
-*.pidb
-*.userprefs
+*.unityproj
+*.sln
 *.user
+*.userprefs
+*.tmp
 *.suo

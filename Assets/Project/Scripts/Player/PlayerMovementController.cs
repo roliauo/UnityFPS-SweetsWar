@@ -53,10 +53,10 @@ public class PlayerMovementController : MonoBehaviour
     {
         checkGrounded();
 
-        // sprint
+        /* sprint */
         m_speedPlayer = isGrounded && Input.GetButton(GameConstants.BUTTON_SPRINT) ? speedSprinting : speedNormal;
         
-        // crouch
+        /* crouch */
         if (isGrounded && Input.GetButtonDown(GameConstants.BUTTON_CROUCH))
         {
             isCrouching = !isCrouching;
@@ -79,13 +79,13 @@ public class PlayerMovementController : MonoBehaviour
             }*/
         }
 
-        // jump
+        /* jump */
         if (isGrounded && Input.GetButtonDown(GameConstants.BUTTON_JUMP))
         {
             m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        // fire
+        /* fire */
         if (Input.GetButtonDown(GameConstants.BUTTON_FIRE))
         {
             Debug.Log("BUTTON_FIRE");
