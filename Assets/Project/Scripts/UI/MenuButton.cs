@@ -1,36 +1,49 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MenuButton : MonoBehaviour
+namespace Game.SweetsWar
 {
-    public string sceneToLoad = "";
-
-    private void Update()
+    public class MenuButton : MonoBehaviour
     {
-        
+        //public string sceneToLoad = "";
+        public GameObject OptionsMenu;
+        public GameObject MainMenu;
+        public GameObject Title;
+
+        private void Update()
+        {
+
+        }
+
+        public void LoadTargetScene()
+        {
+            //SceneManager.LoadScene(sceneToLoad);
+        }
+
+        public void StartGame()
+        {
+            SceneManager.LoadScene(GameConstants.SCENE_GAME);
+        }
+
+        public void OnClickOptionsButton()
+        {
+            Title.SetActive(false);
+            MainMenu.SetActive(false);
+            OptionsMenu.SetActive(true);
+        }
+
+        public void QuitGame()
+        {
+            Debug.Log("quit");
+            // PhotonNetwork.LeaveLobby();
+            // PhotonNetwork.Disconnect();
+            Application.Quit();
+        }
+
     }
-
-    public void LoadTargetScene()
-    {
-        SceneManager.LoadScene(sceneToLoad);
-    }
-
-    public void StartGame()
-    {
-        SceneManager.LoadScene(sceneToLoad);
-    }
-
-    public void ShowOptionsMenu()
-    {
-
-    }
-
-    public void QuitGame()
-    {
-        Debug.Log("quit");
-        Application.Quit();
-    }
-
 }
+
