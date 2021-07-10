@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Game.SweetsWar
 {
-    public class MenuButton : MonoBehaviour
+    public class TitleMenuButton : MonoBehaviour
     {
         //public string sceneToLoad = "";
         public GameObject OptionsMenu;

@@ -23,6 +23,9 @@
         public const string BUTTON_SUBMIT = "Submit";
         public const string BUTTON_CANCEL = "Cancel";
 
+        // Game Settings
+        public const byte maxPlayersPerRoom = 4;
+
         // Scene
         public const string SCENE_TITLE = "TitleScene";
         public const string SCENE_LOBBY = "LobbyScene";
