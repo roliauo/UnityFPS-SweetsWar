@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.SweetsWar
 {
@@ -43,6 +44,11 @@ namespace Game.SweetsWar
                 IsOpen = true,
                 PublishUserId = true,
             });
+        }
+
+        public void LeaveLobby()
+        {
+            PhotonNetwork.LeaveLobby();
         }
 
         private void JoinedLobbyGUI()
@@ -89,8 +95,13 @@ namespace Game.SweetsWar
 
         public override void OnJoinedRoom()
         {
-            //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
-            PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
+            // #Critical: We only load if we are the first player, else we rely on PhotonNetwork.AutomaticallySyncScene to sync our instance scene.
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            {
+                Debug.Log("OnJoinedRoom(): SCENE_GAME_PLAYER_1"); 
+                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER_1);
+
+            }
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
@@ -114,6 +125,8 @@ namespace Game.SweetsWar
         public override void OnLeftLobby()
         {
             roomList.Clear();
+            PhotonNetwork.Disconnect();
+            SceneManager.LoadScene(GameConstants.SCENE_TITLE);
         }
 
         public override void OnDisconnected(DisconnectCause cause)

@@ -11,11 +11,20 @@ namespace Game.SweetsWar
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
         [SerializeField]
-        public InputField input_playerName;
-        public Button btn_login;
+        private InputField input_playerName;
+
+        private Button btn_login;
+        private GameObject mainMenu;
+        private GameObject title;
+
+        [SerializeField]
+        private GameObject controlPanel;
+
+        [SerializeField]
+        private GameObject loader;
 
         //private string gameVersion; 
-        
+
         const string playerNamePrefKey = "PlayerName";
 
         void Awake()
@@ -42,8 +51,13 @@ namespace Game.SweetsWar
 
         public void Connect()
         {
+            Debug.Log("connectting....");
+            controlPanel.SetActive(false);
+            loader.SetActive(true);
+
             if (PhotonNetwork.IsConnected)
             {
+                loader.SetActive(false);
                 PhotonNetwork.JoinLobby();
             }
             else
@@ -88,6 +102,7 @@ namespace Game.SweetsWar
             Debug.Log("player has connected to Photon master server. Now: " + PhotonNetwork.CountOfPlayers);
             Debug.Log("rooms: " + PhotonNetwork.CountOfRooms);
             Debug.Log("version: " + PhotonNetwork.GameVersion);
+            Debug.Log("region: " + PhotonNetwork.CloudRegion);
         }
 
         public override void OnJoinedLobby()
@@ -97,7 +112,7 @@ namespace Game.SweetsWar
 
         public override void OnLeftLobby()
         {
-            //base.OnLeftLobby();
+            base.OnLeftLobby();
         }
 
 

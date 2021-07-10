@@ -31,7 +31,7 @@
         public const string SCENE_LOBBY = "LobbyScene";
         public const string SCENE_GAME = "GameScene";
         public const string SCENE_GAME_PLAYER = "GameScenePlayer";
-        //public const string SCENE_GAME_PLAYER_1 = "GameScenePlayer1";
+        public const string SCENE_GAME_PLAYER_1 = "GameScenePlayer1";
         //public const string SCENE_GAME_PLAYER_2 = "GameScenePlayer2";
         //public const string SCENE_GAME_PLAYER_3 = "GameScenePlayer3";
         //public const string SCENE_GAME_PLAYER_4 = "GameScenePlayer4";
