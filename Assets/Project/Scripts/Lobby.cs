@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+//using ExitGames.Client.Photon;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game.SweetsWar
 {
@@ -11,6 +13,9 @@ namespace Game.SweetsWar
     {
         private List<RoomInfo> roomList = new List<RoomInfo>();
         // private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
+        private Hashtable CustomRoomProperties = new Hashtable() {
+                { GameConstants.GAME_MODE, GameConstants.GAME_MODE_PERSONAL_BATTLE }
+            };
         void Start()
         {
             if (!PhotonNetwork.IsConnected)
@@ -35,17 +40,31 @@ namespace Game.SweetsWar
         {
             // btn_play.SetActive(false);
             // btn_cancel.SetActive(true);
-            Debug.Log("IsConnectedAndReady: " + PhotonNetwork.IsConnectedAndReady);
-            if (PhotonNetwork.IsConnectedAndReady)
-            {
-                PhotonNetwork.JoinRandomRoom();
-            }
-                    
+            QuickMatch(GameConstants.GAME_MODE_PERSONAL_BATTLE);
+        }
+
+        public void OnTeamFightButtonClicked()
+        {
+            QuickMatch(GameConstants.GAME_MODE_TEAM_FIGHT);
         }
 
         public void LeaveLobby()
         {
             PhotonNetwork.LeaveLobby();
+        }
+
+        private void QuickMatch(string gameMode)
+        {
+            Debug.Log("IsConnectedAndReady: " + PhotonNetwork.IsConnectedAndReady);
+
+            CustomRoomProperties = new Hashtable() {
+                { GameConstants.GAME_MODE, gameMode }
+            };
+
+            if (PhotonNetwork.IsConnectedAndReady)
+            {
+                PhotonNetwork.JoinRandomRoom(CustomRoomProperties, 0);
+            }
         }
 
         private void CreateRoom()
@@ -58,6 +77,7 @@ namespace Game.SweetsWar
                 IsVisible = true,
                 IsOpen = true,
                 PublishUserId = true,
+                CustomRoomProperties = CustomRoomProperties,
             });
         }
 
@@ -105,22 +125,24 @@ namespace Game.SweetsWar
 
         public override void OnJoinedRoom()
         {
+            
+            // debug
             // #Critical: We only load if we are the first player, else we rely on PhotonNetwork.AutomaticallySyncScene to sync our instance scene.
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                /*
-                 // load area
-                Debug.Log("OnJoinedRoom(): SCENE_GAME_PLAYER_1"); 
-                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER + "1");
-                */
-                /*
-                if (isTeamFight)
-                {
-                    PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_TEAM);
-                }
-                */
-                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
+                Debug.Log("First Player -> Load Level");
+                
+                //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME + CustomRoomProperties[GameConstants.GAME_MODE]);
+                PhotonNetwork.LoadLevel((string)CustomRoomProperties[GameConstants.GAME_MODE]);
             }
+            
+
+            /*
+            if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
+            {
+                PhotonNetwork.LoadLevel((string)CustomRoomProperties[GameConstants.GAME_MODE]);
+            }
+            */
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)

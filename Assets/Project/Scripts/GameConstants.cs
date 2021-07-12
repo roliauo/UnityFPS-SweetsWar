@@ -28,14 +28,15 @@
         public const string SCENE_LOBBY = "LobbyScene";
         public const string SCENE_GAME = "GameScene";
         public const string SCENE_GAME_TEAM = "GameSceneTeam";
-        //public const string SCENE_GAME_PLAYER = "GameScenePlayer";
-        //public const string SCENE_GAME_PLAYER_1 = "GameScenePlayer1";
-        //public const string SCENE_GAME_PLAYER_2 = "GameScenePlayer2";
-        //public const string SCENE_GAME_PLAYER_3 = "GameScenePlayer3";
-        //public const string SCENE_GAME_PLAYER_4 = "GameScenePlayer4";
         public const string SCENE_WIN = "WinScene";
         public const string SCENE_LOSE = "LoseScene";
 
+        // 
+        public const string GAME_MODE = "GAME_MODE";
+        public const string GAME_MODE_PERSONAL_BATTLE = SCENE_GAME;
+        public const string GAME_MODE_TEAM_FIGHT = SCENE_GAME_TEAM;
+        //public const byte GAME_MODE_PERSONAL_BATTLE = 1;
+        //public const byte GAME_MODE_TEAM_FIGHT = 2;
 
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
