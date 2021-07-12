@@ -13,17 +13,11 @@ namespace Game.SweetsWar
         [SerializeField]
         private InputField input_playerName;
 
-        private Button btn_login;
-        private GameObject mainMenu;
-        private GameObject title;
-
         [SerializeField]
         private GameObject controlPanel;
 
         [SerializeField]
         private GameObject loader;
-
-        //private string gameVersion; 
 
         const string playerNamePrefKey = "PlayerName";
 
@@ -32,7 +26,6 @@ namespace Game.SweetsWar
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
-            //gameVersion = Application.version;
         }
         void Start()
         {
@@ -52,21 +45,20 @@ namespace Game.SweetsWar
         public void Connect()
         {
             Debug.Log("connectting....");
-            controlPanel.SetActive(false);
-            loader.SetActive(true);
+            ShowLoader(true);
 
             if (PhotonNetwork.IsConnected)
             {
-                loader.SetActive(false);
-                PhotonNetwork.JoinLobby();
+                ShowLoader(false);
+                //PhotonNetwork.JoinLobby();
             }
             else
             {
                 // connect to Photon Online Server.            
                 //PhotonNetwork.PhotonServerSettings.AppSettings.EnableLobbyStatistics = true;
-                //PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
+                PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = GameConstants.FIXED_REGION_ASIA;
                 PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = Application.version; // important: set the GameVersion right after calling ConnectUsingSettings
+                PhotonNetwork.GameVersion = Application.version; // #important: set the GameVersion right after calling ConnectUsingSettings
             }
         }
 
@@ -89,20 +81,28 @@ namespace Game.SweetsWar
             Connect();
         }
 
+        private void ShowLoader(bool show)
+        {
+            controlPanel.SetActive(!show);
+            loader.SetActive(show);
+        }
+
         
 
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.LogWarningFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
+            ShowLoader(false);
         }
 
         public override void OnConnectedToMaster()
         {
-            PhotonNetwork.JoinLobby();
             Debug.Log("player has connected to Photon master server. Now: " + PhotonNetwork.CountOfPlayers);
             Debug.Log("rooms: " + PhotonNetwork.CountOfRooms);
             Debug.Log("version: " + PhotonNetwork.GameVersion);
             Debug.Log("region: " + PhotonNetwork.CloudRegion);
+            PhotonNetwork.JoinLobby();
+            //SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 
         public override void OnJoinedLobby()
@@ -114,7 +114,7 @@ namespace Game.SweetsWar
         {
             base.OnLeftLobby();
         }
-
+        
 
 
     }

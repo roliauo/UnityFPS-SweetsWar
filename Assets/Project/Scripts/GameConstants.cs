@@ -23,15 +23,13 @@
         public const string BUTTON_SUBMIT = "Submit";
         public const string BUTTON_CANCEL = "Cancel";
 
-        // Game Settings
-        public const byte maxPlayersPerRoom = 4;
-
         // Scene
         public const string SCENE_TITLE = "TitleScene";
         public const string SCENE_LOBBY = "LobbyScene";
         public const string SCENE_GAME = "GameScene";
-        public const string SCENE_GAME_PLAYER = "GameScenePlayer";
-        public const string SCENE_GAME_PLAYER_1 = "GameScenePlayer1";
+        public const string SCENE_GAME_TEAM = "GameSceneTeam";
+        //public const string SCENE_GAME_PLAYER = "GameScenePlayer";
+        //public const string SCENE_GAME_PLAYER_1 = "GameScenePlayer1";
         //public const string SCENE_GAME_PLAYER_2 = "GameScenePlayer2";
         //public const string SCENE_GAME_PLAYER_3 = "GameScenePlayer3";
         //public const string SCENE_GAME_PLAYER_4 = "GameScenePlayer4";
@@ -39,11 +37,9 @@
         public const string SCENE_LOSE = "LoseScene";
 
 
-        // Function
-        /*public string getPlayerScene(byte number)
-        {
-            return SCENE_GAME_PLAYER + number;
-        }*/
+        // Game Settings
+        public const byte MAX_PLAYERS_PER_ROOM = 4;
+        public const string FIXED_REGION_ASIA = "asia";
 
     }
 }

@@ -13,7 +13,12 @@ namespace Game.SweetsWar
         // private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
         void Start()
         {
-
+            if (!PhotonNetwork.IsConnected)
+            {
+                SceneManager.LoadScene(GameConstants.SCENE_TITLE);
+                return;
+            }
+            Debug.Log("InLobby: " + PhotonNetwork.InLobby);
         }
 
         // Update is called once per frame
@@ -30,25 +35,30 @@ namespace Game.SweetsWar
         {
             // btn_play.SetActive(false);
             // btn_cancel.SetActive(true);
-            PhotonNetwork.JoinRandomRoom();
-        }
-
-        public void CreateRoom()
-        {
-            //int randomRoomName = Random.Range(0, 10000);
-            //string roomName = "Let's play";
-            PhotonNetwork.CreateRoom(null, new RoomOptions
+            Debug.Log("IsConnectedAndReady: " + PhotonNetwork.IsConnectedAndReady);
+            if (PhotonNetwork.IsConnectedAndReady)
             {
-                MaxPlayers = GameConstants.maxPlayersPerRoom,
-                IsVisible = true,
-                IsOpen = true,
-                PublishUserId = true,
-            });
+                PhotonNetwork.JoinRandomRoom();
+            }
+                    
         }
 
         public void LeaveLobby()
         {
             PhotonNetwork.LeaveLobby();
+        }
+
+        private void CreateRoom()
+        {
+            //int randomRoomName = Random.Range(0, 10000);
+            //string roomName = "Let's play";
+            PhotonNetwork.CreateRoom(null, new RoomOptions
+            {
+                MaxPlayers = GameConstants.MAX_PLAYERS_PER_ROOM,
+                IsVisible = true,
+                IsOpen = true,
+                PublishUserId = true,
+            });
         }
 
         private void JoinedLobbyGUI()
@@ -98,9 +108,18 @@ namespace Game.SweetsWar
             // #Critical: We only load if we are the first player, else we rely on PhotonNetwork.AutomaticallySyncScene to sync our instance scene.
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
+                /*
+                 // load area
                 Debug.Log("OnJoinedRoom(): SCENE_GAME_PLAYER_1"); 
-                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER_1);
-
+                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER + "1");
+                */
+                /*
+                if (isTeamFight)
+                {
+                    PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_TEAM);
+                }
+                */
+                PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
             }
         }
 
@@ -114,16 +133,19 @@ namespace Game.SweetsWar
         {
             base.OnRoomListUpdate(roomList);
             this.roomList = roomList;
-            JoinedLobbyGUI();
         }
-
+        /*
         public override void OnJoinedLobby()
         {
+            Debug.Log("OnJoinedLobby");
+            //base.OnJoinedLobby();
             roomList.Clear();
         }
-
+        */
         public override void OnLeftLobby()
         {
+            Debug.Log("OnLeftLobby");
+            base.OnLeftLobby();
             roomList.Clear();
             PhotonNetwork.Disconnect();
             SceneManager.LoadScene(GameConstants.SCENE_TITLE);
@@ -131,7 +153,7 @@ namespace Game.SweetsWar
 
         public override void OnDisconnected(DisconnectCause cause)
         {
-            Debug.Log("OnDisconnected()");
+            Debug.Log("Lobby: OnDisconnected()");
             roomList.Clear();
         }
     }

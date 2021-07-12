@@ -45,8 +45,8 @@ namespace Game.SweetsWar
 
         void Start()
         {
+            //Cursor.lockState = CursorLockMode.Locked;
             m_characterController = GetComponent<CharacterController>();
-            Cursor.lockState = CursorLockMode.Locked;
             m_speedPlayer = speedNormal;
             m_heightPlayer = heightStanding;
         }
