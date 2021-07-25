@@ -47,6 +47,7 @@ namespace Game.SweetsWar
             // "back" button of phone equals "Escape". quit app if that's pressed
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                //Cursor.lockState = CursorLockMode.None;
                 PhotonNetwork.LeaveRoom();
             }
         }
@@ -71,6 +72,7 @@ namespace Game.SweetsWar
 
         public override void OnLeftRoom()
         {
+            PhotonNetwork.JoinLobby();
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 

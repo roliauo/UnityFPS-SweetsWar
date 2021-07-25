@@ -1,4 +1,6 @@
-﻿namespace Game.SweetsWar
+﻿using UnityEngine;
+
+namespace Game.SweetsWar
 {
     public class GameConstants
     {
@@ -31,6 +33,9 @@
         public const string SCENE_WIN = "WinScene";
         public const string SCENE_LOSE = "LoseScene";
 
+        // UI
+        public const string BACKGROUND_COLOR_YELLOW = "FDBB08";
+
         // 
         public const string GAME_MODE = "GAME_MODE";
         public const string GAME_MODE_PERSONAL_BATTLE = SCENE_GAME;
@@ -38,9 +43,42 @@
         //public const byte GAME_MODE_PERSONAL_BATTLE = 1;
         //public const byte GAME_MODE_TEAM_FIGHT = 2;
 
+        // Props
+        public const string IS_PLAYER_READY = "IsPlayerReady";
+        public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
+
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
         public const string FIXED_REGION_ASIA = "asia";
+
+        // Method
+        public static Color GetModeColor(string mode)
+        {
+            switch (mode)
+            {
+                case GAME_MODE_TEAM_FIGHT:
+                    return Color.red;
+            }
+
+            return Color.black;
+
+        }
+        public static Color GetColor(int number)
+        {
+            switch (number)
+            {
+                case 0: return Color.red;
+                case 1: return Color.green;
+                case 2: return Color.blue;
+                case 3: return Color.yellow;
+                case 4: return Color.cyan;
+                case 5: return Color.grey;
+                case 6: return Color.magenta;
+                case 7: return Color.white;
+            }
+
+            return Color.black;
+        }
 
     }
 }

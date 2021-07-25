@@ -1,10 +1,10 @@
 # unity ignore dir
 /[Bb]in/
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-build
- 
+**/[Ll]ibrary/*
+**/[Tt]emp/*
+**/[Oo]bj/*
+**/[Bb]uild*/*
+
 # unity ignore file
 *.csproj
 *.unityproj

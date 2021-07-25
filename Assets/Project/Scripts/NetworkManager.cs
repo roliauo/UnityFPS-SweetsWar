@@ -101,7 +101,8 @@ namespace Game.SweetsWar
             Debug.Log("rooms: " + PhotonNetwork.CountOfRooms);
             Debug.Log("version: " + PhotonNetwork.GameVersion);
             Debug.Log("region: " + PhotonNetwork.CloudRegion);
-            PhotonNetwork.JoinLobby();
+
+            PhotonNetwork.JoinLobby(TypedLobby.Default);
             //SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 
