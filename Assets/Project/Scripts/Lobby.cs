@@ -84,9 +84,10 @@ namespace Game.SweetsWar
 
         public void ShowRoomListPanel() 
         {
+            // for updating room list
             if (!PhotonNetwork.InLobby)
             {
-                PhotonNetwork.JoinLobby();
+                PhotonNetwork.JoinLobby(TypedLobby.Default);
             }
 
             SetActivePanel(RoomListPanel.name);
@@ -94,6 +95,7 @@ namespace Game.SweetsWar
 
         public void OnBackButtonClicked()
         {
+            // for updating room list
             if (PhotonNetwork.InLobby)
             {
                 PhotonNetwork.LeaveLobby();
@@ -123,6 +125,45 @@ namespace Game.SweetsWar
             //StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
+        public void CreateRoom()
+        {
+            // TODO: Need to add game mode
+            string roomName = Input_RoomName.text;
+            roomName = (roomName.Equals(string.Empty)) ? "Let's play " + Random.Range(1, 10000) : roomName;
+
+            //string roomName = "Let's play " + Random.Range(1, 10000);
+
+            //byte maxPlayers;
+            //byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
+            //maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
+            //RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers, PlayerTtl = 10000 };
+            //PhotonNetwork.CreateRoom(roomName, options, null);
+
+            //int randomRoomName = Random.Range(0, 10000);
+            //string roomName = "Let's play";
+
+            Debug.Log("CreateRoom - GAME_MODE: " + CustomRoomProperties[GameConstants.GAME_MODE]);
+            PhotonNetwork.CreateRoom(
+                roomName, //null, 
+                new RoomOptions
+                {
+                    MaxPlayers = GameConstants.MAX_PLAYERS_PER_ROOM,
+                    IsVisible = true,
+                    IsOpen = true,
+                    PublishUserId = true,
+                    CustomRoomProperties = CustomRoomProperties,
+                    CustomRoomPropertiesForLobby = new string[] { GameConstants.GAME_MODE } // #Important! 
+                },
+                TypedLobby.Default
+            );
+        }
+
+        public void SearchTheRoom()
+        {
+            string roomName = Input_RoomName.text;
+            PhotonNetwork.JoinRoom(roomName);
+        }
+
         #endregion
 
         #region Private function
@@ -145,36 +186,6 @@ namespace Game.SweetsWar
             {
                 PhotonNetwork.JoinRandomRoom(CustomRoomProperties, 0);
             }
-        }
-
-        private void CreateRoom()
-        {
-            string roomName = Input_RoomName.text;
-            roomName = (roomName.Equals(string.Empty)) ? "Let's play " + Random.Range(1, 10000) : roomName;
-
-            //string roomName = "Let's play " + Random.Range(1, 10000);
-
-            //byte maxPlayers;
-            //byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
-            //maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
-            //RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers, PlayerTtl = 10000 };
-            //PhotonNetwork.CreateRoom(roomName, options, null);
-
-            //int randomRoomName = Random.Range(0, 10000);
-            //string roomName = "Let's play";
-            Debug.Log("CreateRoom - GAME_MODE: " + CustomRoomProperties[GameConstants.GAME_MODE]);
-            PhotonNetwork.CreateRoom(
-                roomName, //null, 
-                new RoomOptions
-                {
-                    MaxPlayers = GameConstants.MAX_PLAYERS_PER_ROOM,
-                    IsVisible = true,
-                    IsOpen = true,
-                    PublishUserId = true,
-                    CustomRoomProperties = CustomRoomProperties,
-                },
-                TypedLobby.Default
-            );
         }
 
         private void JoinedLobbyGUI()
@@ -257,9 +268,6 @@ namespace Game.SweetsWar
         {
             foreach (RoomInfo info in cachedRoomList.Values)
             {
-                string v = (string)info.CustomProperties[GameConstants.GAME_MODE];
-                //info.CustomProperties.
-                Debug.Log("info: " + info);
                 GameObject item = Instantiate(RoomListItemPrefab);
                 item.transform.SetParent(RoomListContent.transform);
                 item.transform.localScale = Vector3.one;
@@ -349,9 +357,9 @@ namespace Game.SweetsWar
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
                 Debug.Log("First Player -> Load Level");
-                
+
                 //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME + CustomRoomProperties[GameConstants.GAME_MODE]);
-                PhotonNetwork.LoadLevel((string)CustomRoomProperties[GameConstants.GAME_MODE]);
+                PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)CustomRoomProperties[GameConstants.GAME_MODE]));
             }
 
             /*

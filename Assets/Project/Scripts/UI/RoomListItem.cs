@@ -28,19 +28,18 @@ namespace Game.SweetsWar
             });
         }
 
-        public void Initialize(string name, string mode, byte currentPlayers, byte maxPlayers)
-        {
-            roomName = name;
-            text_RoomName.text = name;
-            text_GameMode.text = mode;
-            text_Players.text = currentPlayers + " / " + maxPlayers;           
-        }
-
         public void Initialize(RoomInfo info)
         {
+            Debug.Log("info.ToStringFull(): " + info.ToStringFull());
             roomName = info.Name;
             text_RoomName.text = info.Name;
-            text_GameMode.text = (string)info.CustomProperties[GameConstants.GAME_MODE];
+            //text_GameMode.text = (string)info.CustomProperties[GameConstants.GAME_MODE];
+            object gameMode;
+            //info.CustomRoomProperties
+            info.CustomProperties.TryGetValue(GameConstants.GAME_MODE, out gameMode);
+            Debug.Log("info-gameMode: " + gameMode);
+            text_GameMode.text = (string)gameMode;
+
             Image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);
             text_Players.text = info.PlayerCount + " / " + info.MaxPlayers;
         }

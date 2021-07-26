@@ -533,7 +533,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1114510017}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1472,7 +1472,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2024639329}
-        m_MethodName: OnBackButtonClicked
+        m_MethodName: CreateRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1712,7 +1712,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2024639329}
-        m_MethodName: OnBackButtonClicked
+        m_MethodName: SearchTheRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3618,7 +3618,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 738718460}
   m_HandleRect: {fileID: 738718459}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

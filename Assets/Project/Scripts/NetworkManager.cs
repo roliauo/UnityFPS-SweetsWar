@@ -50,7 +50,6 @@ namespace Game.SweetsWar
             if (PhotonNetwork.IsConnected)
             {
                 ShowLoader(false);
-                //PhotonNetwork.JoinLobby();
             }
             else
             {
@@ -87,8 +86,6 @@ namespace Game.SweetsWar
             loader.SetActive(show);
         }
 
-        
-
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.LogWarningFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
@@ -102,10 +99,11 @@ namespace Game.SweetsWar
             Debug.Log("version: " + PhotonNetwork.GameVersion);
             Debug.Log("region: " + PhotonNetwork.CloudRegion);
 
-            PhotonNetwork.JoinLobby(TypedLobby.Default);
-            //SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
+            //PhotonNetwork.JoinLobby(TypedLobby.Default);
+            SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 
+        /*
         public override void OnJoinedLobby()
         {
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
@@ -115,8 +113,7 @@ namespace Game.SweetsWar
         {
             base.OnLeftLobby();
         }
-        
-
+        */      
 
     }
 }

@@ -30,28 +30,36 @@ namespace Game.SweetsWar
         public const string SCENE_LOBBY = "LobbyScene";
         public const string SCENE_GAME = "GameScene";
         public const string SCENE_GAME_TEAM = "GameSceneTeam";
-        public const string SCENE_WIN = "WinScene";
-        public const string SCENE_LOSE = "LoseScene";
-
-        // UI
-        public const string BACKGROUND_COLOR_YELLOW = "FDBB08";
 
         // 
         public const string GAME_MODE = "GAME_MODE";
-        public const string GAME_MODE_PERSONAL_BATTLE = SCENE_GAME;
-        public const string GAME_MODE_TEAM_FIGHT = SCENE_GAME_TEAM;
+        public const string GAME_MODE_PERSONAL_BATTLE = "個人戰";
+        public const string GAME_MODE_TEAM_FIGHT = "團戰";
         //public const byte GAME_MODE_PERSONAL_BATTLE = 1;
         //public const byte GAME_MODE_TEAM_FIGHT = 2;
 
         // Props
-        public const string IS_PLAYER_READY = "IsPlayerReady";
-        public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
+        public const string IS_PLAYER_READY = "IS_PLAYER_READY";
+        public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
+
+        // UI
+        public const string COLOR_YELLOW = "FDBB08";
 
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
         public const string FIXED_REGION_ASIA = "asia";
 
         // Method
+        public static string GetSceneByGameMode(string gameMode)
+        {
+            switch (gameMode)
+            {
+                case GAME_MODE_TEAM_FIGHT:
+                    return SCENE_GAME_TEAM;
+            }
+            return SCENE_GAME;
+        }
+
         public static Color GetModeColor(string mode)
         {
             switch (mode)
