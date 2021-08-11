@@ -10,11 +10,13 @@ namespace Game.SweetsWar
     public class GameManager : MonoBehaviourPunCallbacks
     {
         static public GameManager Instance;
-        private GameObject m_instance;
+        public GameObject Menu;
 
         [SerializeField]
         private GameObject playerPrefab;
-       
+
+        private GameObject m_instance;
+
         void Start()
         {
             Instance = this;
@@ -26,25 +28,35 @@ namespace Game.SweetsWar
             }
 
             Cursor.lockState = CursorLockMode.Locked;
-            /*
-            if (PlayerManager.LocalPlayerInstance == null)
-            {
-                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
-                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            
+            if (playerPrefab == null) //PlayerManager.LocalPlayerInstance == null
+            {
+                Debug.LogFormat("Missing playerPrefab Reference");
+
             }
             else
             {
 
-                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                if (PlayerMovementController.localPlayerInstance == null)
+                {
+                    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+
+                    // generate the player : it gets synced by using PhotonNetwork.Instantiate
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                }
+                else
+                {
+
+                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                }
+
             }
-            */
+
         }
 
         void Update()
         {
-            // "back" button of phone equals "Escape". quit app if that's pressed
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //Cursor.lockState = CursorLockMode.None;
@@ -68,6 +80,26 @@ namespace Game.SweetsWar
             PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER + PhotonNetwork.CurrentRoom.PlayerCount);
             */
             PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
+        }
+
+        private bool CheckAllPlayerLoadedLevel()
+        {
+            foreach (Player p in PhotonNetwork.PlayerList)
+            {
+                object playerLoadedLevel;
+
+                if (p.CustomProperties.TryGetValue(GameConstants.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
+                {
+                    if ((bool)playerLoadedLevel)
+                    {
+                        continue;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         public override void OnLeftRoom()

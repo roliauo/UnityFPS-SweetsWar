@@ -35,19 +35,23 @@ namespace Game.SweetsWar
         public const string GAME_MODE = "GAME_MODE";
         public const string GAME_MODE_PERSONAL_BATTLE = "個人戰";
         public const string GAME_MODE_TEAM_FIGHT = "團戰";
-        //public const byte GAME_MODE_PERSONAL_BATTLE = 1;
-        //public const byte GAME_MODE_TEAM_FIGHT = 2;
 
         // Props
         public const string IS_PLAYER_READY = "IS_PLAYER_READY";
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
 
-        // UI
-        public const string COLOR_YELLOW = "FDBB08";
-
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
         public const string FIXED_REGION_ASIA = "asia";
+
+        // Animation
+        public const string ANIMATION_SPEED = "Speed";
+        public const string ANIMATION_MOVE = "Move";
+        public const string ANIMATION_JUMP = "Jump";
+        public const string ANIMATION_CHROUCH = "Crouch";
+
+        // UI
+        public const string COLOR_YELLOW = "FDBB08";
 
         // Method
         public static string GetSceneByGameMode(string gameMode)

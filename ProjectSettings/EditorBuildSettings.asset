@@ -16,7 +16,7 @@ EditorBuildSettings:
     guid: 268af9cae9aec154e8f844fa41ec13af
   - enabled: 1
     path: Assets/Project/Scenes/GameSceneTeam.unity
-    guid: db6528dfca491504eb35dadf57e583bf
+    guid: 2a5e58272fb8b1a4cb6e9ca59ac9a0aa
   - enabled: 1
     path: Assets/Project/Scenes/EndScene.unity
     guid: f69ed2bfc3361074d8494d89a5a749f4

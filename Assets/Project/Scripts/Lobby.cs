@@ -131,17 +131,6 @@ namespace Game.SweetsWar
             string roomName = Input_RoomName.text;
             roomName = (roomName.Equals(string.Empty)) ? "Let's play " + Random.Range(1, 10000) : roomName;
 
-            //string roomName = "Let's play " + Random.Range(1, 10000);
-
-            //byte maxPlayers;
-            //byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
-            //maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
-            //RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers, PlayerTtl = 10000 };
-            //PhotonNetwork.CreateRoom(roomName, options, null);
-
-            //int randomRoomName = Random.Range(0, 10000);
-            //string roomName = "Let's play";
-
             Debug.Log("CreateRoom - GAME_MODE: " + CustomRoomProperties[GameConstants.GAME_MODE]);
             PhotonNetwork.CreateRoom(
                 roomName, //null, 

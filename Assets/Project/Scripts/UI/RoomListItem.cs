@@ -33,11 +33,9 @@ namespace Game.SweetsWar
             Debug.Log("info.ToStringFull(): " + info.ToStringFull());
             roomName = info.Name;
             text_RoomName.text = info.Name;
-            //text_GameMode.text = (string)info.CustomProperties[GameConstants.GAME_MODE];
+
             object gameMode;
-            //info.CustomRoomProperties
             info.CustomProperties.TryGetValue(GameConstants.GAME_MODE, out gameMode);
-            Debug.Log("info-gameMode: " + gameMode);
             text_GameMode.text = (string)gameMode;
 
             Image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);

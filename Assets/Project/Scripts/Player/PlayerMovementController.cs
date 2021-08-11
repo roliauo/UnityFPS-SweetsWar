@@ -1,18 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
-    public class PlayerMovementController : MonoBehaviour
+    public class PlayerMovementController : MonoBehaviourPunCallbacks, IPunObservable
     {
-        // editor
+        public static GameObject localPlayerInstance;
         public Camera playerCamera;
         public AudioSource playerAudioSource;
 
         public float lookSensitivity = 200f;
         public float gravity = -20f;
+
+        [Header("Health")]
+        public float health = 100f;
 
         [Header("Ground Check")]
         public Transform groundCheckTransform;
@@ -34,6 +39,7 @@ namespace Game.SweetsWar
         public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
+        public bool isFiring;
 
         // private
         private CharacterController m_characterController;
@@ -42,31 +48,83 @@ namespace Game.SweetsWar
         private float m_rotationX = 0f;
         private float m_heightPlayer;
         private float m_speedPlayer;
+        private Animator m_animator;
+     
 
+        public void Awake()
+        {
+            /*
+            if (this.beams == null)
+            {
+                Debug.LogError("<Color=Red><b>Missing</b></Color> Beams Reference.", this);
+            }
+            else
+            {
+                this.beams.SetActive(false);
+            }
+            */
+
+            // #Important
+            // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
+            if (photonView.IsMine)
+            {
+                localPlayerInstance = gameObject;
+                playerCamera.gameObject.SetActive(true);
+            }
+
+            // #Critical
+            // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+            DontDestroyOnLoad(gameObject);
+        }
         void Start()
         {
             //Cursor.lockState = CursorLockMode.Locked;
+            m_animator = GetComponent<Animator>();
             m_characterController = GetComponent<CharacterController>();
             m_speedPlayer = speedNormal;
             m_heightPlayer = heightStanding;
+
+            /*
+            CameraWork _cameraWork = gameObject.GetComponent<CameraWork>();
+
+            if (_cameraWork != null)
+            {
+                if (photonView.IsMine)
+                {
+                    _cameraWork.OnStartFollowing();
+                }
+            }
+            else
+            {
+                Debug.LogError("<Color=Red><b>Missing</b></Color> CameraWork Component on player Prefab.", this);
+            }
+            */
+
         }
 
         void Update()
         {
+            if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+            {
+                return;
+            }
+
             checkGrounded();
 
             /* sprint */
             m_speedPlayer = isGrounded && Input.GetButton(GameConstants.BUTTON_SPRINT) ? speedSprinting : speedNormal;
 
             /* crouch */
-            if (isGrounded && Input.GetButtonDown(GameConstants.BUTTON_CROUCH))
+            if (Input.GetButtonDown(GameConstants.BUTTON_CROUCH) && isGrounded)
             {
                 isCrouching = !isCrouching;
                 m_heightPlayer = isCrouching ? heightCrouching : heightStanding;
                 m_speedPlayer = isCrouching ? speedCrouching : speedNormal;
+                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
 
-                // resize player
-                transform.localScale = new Vector3(1, m_heightPlayer, 1);
+                // change player's height
+                //transform.localScale = new Vector3(1, m_heightPlayer, 1);
+                transform.localPosition = new Vector3(transform.localPosition.x, m_heightPlayer, transform.localPosition.z);
 
                 /*if (m_characterController.height != m_heightPlayer)
                 {
@@ -82,9 +140,10 @@ namespace Game.SweetsWar
             }
 
             /* jump */
-            if (isGrounded && Input.GetButtonDown(GameConstants.BUTTON_JUMP))
+            if (Input.GetButtonDown(GameConstants.BUTTON_JUMP) && isGrounded)
             {
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                m_animator.SetTrigger(GameConstants.ANIMATION_JUMP);
             }
 
             /* fire */
@@ -107,6 +166,7 @@ namespace Game.SweetsWar
             float y = Input.GetAxis(GameConstants.VERTICAL);
             Vector3 move = transform.right * x + transform.forward * y;
             m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
+            m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
 
         }
 
@@ -121,6 +181,23 @@ namespace Game.SweetsWar
             m_characterController.Move(m_velocity * Time.deltaTime);
         }
 
+        #region IPunObservable implementation
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                // We own this player: send the others our data
+                stream.SendNext(isFiring);
+                stream.SendNext(health);
+            }
+            else
+            {
+                // Network player, receive data
+                isFiring = (bool)stream.ReceiveNext();
+                health = (float)stream.ReceiveNext();
+            }
+        }
+        #endregion
     }
 }
    
