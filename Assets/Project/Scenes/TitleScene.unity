@@ -2509,7 +2509,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 141535227}
         m_MethodName: SetPlayerName
         m_Mode: 1
         m_Arguments:

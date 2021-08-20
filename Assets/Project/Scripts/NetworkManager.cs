@@ -19,8 +19,6 @@ namespace Game.SweetsWar
         [SerializeField]
         private GameObject loader;
 
-        const string playerNamePrefKey = "PlayerName";
-
         void Awake()
         {
             // #Critical
@@ -32,9 +30,9 @@ namespace Game.SweetsWar
             string defaultName = string.Empty;
             if (input_playerName != null)
             {
-                if (PlayerPrefs.HasKey(playerNamePrefKey))
+                if (PlayerPrefs.HasKey(GameConstants.PLAYER_NAME_PREFAB_KEY))
                 {
-                    defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                    defaultName = PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY);
                     input_playerName.text = defaultName;
                 }
             }
@@ -70,9 +68,12 @@ namespace Game.SweetsWar
                 Debug.LogError("Player Name is null or empty");
                 return;
             }
-            Debug.Log(PlayerPrefs.GetString(playerNamePrefKey));
             PhotonNetwork.NickName = name;
-            PlayerPrefs.SetString(playerNamePrefKey, name);
+            PlayerPrefs.SetString(GameConstants.PLAYER_NAME_PREFAB_KEY, name);
+            Debug.LogFormat("SetPlayerName - PlayerPrefs: {0}, PhotonNetwork.NickName: {1}", 
+                PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY),
+                PhotonNetwork.NickName
+                );
         }
 
         public void Login()

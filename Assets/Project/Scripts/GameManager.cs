@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 namespace Game.SweetsWar
 {
@@ -26,10 +27,7 @@ namespace Game.SweetsWar
                 SceneManager.LoadScene(GameConstants.SCENE_TITLE);
                 return;
             }
-
-            Cursor.lockState = CursorLockMode.Locked;
-
-            
+                
             if (playerPrefab == null) //PlayerManager.LocalPlayerInstance == null
             {
                 Debug.LogFormat("Missing playerPrefab Reference");
@@ -53,16 +51,45 @@ namespace Game.SweetsWar
 
             }
 
+            // SET CURSOR
+            Cursor.lockState = CursorLockMode.Locked;
+
+            /*
+            // SHOW PLAYERS' NAME
+            playerName.text = photonView.Owner.NickName;
+
+            Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
+                PhotonNetwork.NickName,
+                PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY),
+                photonView.Owner.NickName
+              );
+            */
         }
 
         void Update()
         {
+            // show the menu
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //Cursor.lockState = CursorLockMode.None;
                 PhotonNetwork.LeaveRoom();
             }
         }
+
+        /*
+        void OnGUI()
+        {
+            Vector3 characterPos = Camera.main.WorldToScreenPoint(playerPrefab.transform.position);
+           
+            characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (windowWidth / 2), Screen.width - (windowWidth / 2)),
+                                               Mathf.Clamp(characterPos.y, 50, Screen.height),
+                                               characterPos.z);
+            GUILayout.BeginArea(new Rect((characterPos.x + offsetX) - (windowWidth / 2), (Screen.height - characterPos.y) + offsetY, windowWidth, windowHeight));
+            // GUI CODE GOES HERE
+
+            GUILayout.EndArea();
+        }
+        */
 
         private void OnDestroy()
         {
@@ -104,11 +131,10 @@ namespace Game.SweetsWar
 
         public override void OnLeftRoom()
         {
-            PhotonNetwork.JoinLobby();
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 
-        // Watching other Players Connection
+        // Watching other Players' Connection
         public override void OnPlayerEnteredRoom(Player other)
         {
             Debug.Log(other.NickName + " entered this room!"); // not seen if you're the player connecting

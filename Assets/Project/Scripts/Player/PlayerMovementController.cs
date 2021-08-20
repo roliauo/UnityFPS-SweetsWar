@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
+using Photon.Realtime;
 
 namespace Game.SweetsWar
 {
@@ -11,6 +12,7 @@ namespace Game.SweetsWar
     {
         public static GameObject localPlayerInstance;
         public Camera playerCamera;
+        public Text playerName;
         public AudioSource playerAudioSource;
 
         public float lookSensitivity = 200f;
@@ -33,8 +35,8 @@ namespace Game.SweetsWar
         public float jumpHeight = 1f;
 
         [Header("Stance")]
-        public float heightStanding = 1.5f;
-        public float heightCrouching = 1f;
+        public float heightStanding = 1f;
+        public float heightCrouching = 0.6f;
 
         public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
@@ -43,27 +45,17 @@ namespace Game.SweetsWar
 
         // private
         private CharacterController m_characterController;
+        private Animator m_animator;
         private Vector3 m_velocity;
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;
         private float m_heightPlayer;
         private float m_speedPlayer;
-        private Animator m_animator;
-     
+
+        private GameObject sign;
 
         public void Awake()
         {
-            /*
-            if (this.beams == null)
-            {
-                Debug.LogError("<Color=Red><b>Missing</b></Color> Beams Reference.", this);
-            }
-            else
-            {
-                this.beams.SetActive(false);
-            }
-            */
-
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
             if (photonView.IsMine)
@@ -73,43 +65,62 @@ namespace Game.SweetsWar
             }
 
             // #Critical
-            // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+            // giving a seamless experience when levels load.
             DontDestroyOnLoad(gameObject);
         }
         void Start()
         {
-            //Cursor.lockState = CursorLockMode.Locked;
             m_animator = GetComponent<Animator>();
             m_characterController = GetComponent<CharacterController>();
             m_speedPlayer = speedNormal;
             m_heightPlayer = heightStanding;
 
+            
+            playerName.text = photonView.Owner.NickName;
+            Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
+                PhotonNetwork.NickName, 
+                PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY), 
+                photonView.Owner.NickName
+              );
+
+            // the player's name faces camera
+            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
+            //Debug.LogFormat("rotation: {0}, {1}", Camera.main.transform.rotation, playerCamera.transform.rotation);
+            
             /*
-            CameraWork _cameraWork = gameObject.GetComponent<CameraWork>();
-
-            if (_cameraWork != null)
-            {
-                if (photonView.IsMine)
-                {
-                    _cameraWork.OnStartFollowing();
-                }
-            }
-            else
-            {
-                Debug.LogError("<Color=Red><b>Missing</b></Color> CameraWork Component on player Prefab.", this);
-            }
+            sign = new GameObject("player_label");
+            sign.transform.rotation = Camera.main.transform.rotation; // Causes the text faces camera.
+            TextMesh tm = sign.AddComponent<TextMesh>();
+            tm.text = photonView.Owner.NickName;
+            tm.color = new Color(0.8f, 0.8f, 0.8f);
+            tm.fontStyle = FontStyle.Bold;
+            tm.alignment = TextAlignment.Center;
+            tm.anchor = TextAnchor.MiddleCenter;
+            tm.characterSize = 0.065f;
+            tm.fontSize = 60;
             */
-
         }
 
         void Update()
         {
+            //playerName.gameObject.transform.position = localPlayerInstance.transform.position + Vector3.up * 3f;
+            //Camera.main.transform.position + Vector3.forward * 3f;
+            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
+            //playerName.gameObject.transform.position = Camera.main.WorldToScreenPoint(localPlayerInstance.transform.position);
+            //sign.transform.position = localPlayerInstance.transform.position + Vector3.up * 3f;
+
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
                 return;
             }
 
-            checkGrounded();
+            Action();
+
+        }
+
+        private void Action() {
+
+            CheckGrounded();
 
             /* sprint */
             m_speedPlayer = isGrounded && Input.GetButton(GameConstants.BUTTON_SPRINT) ? speedSprinting : speedNormal;
@@ -119,12 +130,16 @@ namespace Game.SweetsWar
             {
                 isCrouching = !isCrouching;
                 m_heightPlayer = isCrouching ? heightCrouching : heightStanding;
-                m_speedPlayer = isCrouching ? speedCrouching : speedNormal;
-                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
+                m_speedPlayer = isCrouching ? speedCrouching : speedNormal;             
 
                 // change player's height
                 //transform.localScale = new Vector3(1, m_heightPlayer, 1);
-                transform.localPosition = new Vector3(transform.localPosition.x, m_heightPlayer, transform.localPosition.z);
+                //transform.localPosition = new Vector3(transform.localPosition.x, m_heightPlayer, transform.localPosition.z);
+                m_characterController.height = m_heightPlayer;
+                m_characterController.center = new Vector3(0, m_heightPlayer / 2, 0);
+                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.up * m_heightPlayer * m_cameraHeightRatio, 10 * Time.deltaTime);
+
+                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
 
                 /*if (m_characterController.height != m_heightPlayer)
                 {
@@ -162,15 +177,23 @@ namespace Game.SweetsWar
             transform.Rotate(Vector3.up * mouseX);
 
             /* move */
+            m_animator.SetFloat(GameConstants.ANIMATION_SPEED, m_speedPlayer);
             float x = Input.GetAxis(GameConstants.HORIZONTAL);
             float y = Input.GetAxis(GameConstants.VERTICAL);
-            Vector3 move = transform.right * x + transform.forward * y;
-            m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
-            m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
+            if (x == 0 && y == 0)
+            {
+                m_animator.SetBool(GameConstants.ANIMATION_MOVE, false);
+            }
+            else
+            {
+                Vector3 move = transform.right * x + transform.forward * y;
+                m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
+                m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
 
+            }
         }
 
-        void checkGrounded()
+        private void CheckGrounded()
         {
             isGrounded = Physics.CheckSphere(groundCheckTransform.position, groundDistance, groundLayerMask);
             if (isGrounded && m_velocity.y < 0)

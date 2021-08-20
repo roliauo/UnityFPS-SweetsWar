@@ -52,11 +52,6 @@ namespace Game.SweetsWar
             Debug.Log("InLobby: " + PhotonNetwork.InLobby);
         }
 
-        /*
-        private void OnGUI() {
-            JoinedLobbyGUI();
-        }
-        */
 
         #region UI
 
@@ -102,6 +97,8 @@ namespace Game.SweetsWar
             }
 
             SetActivePanel(MainPanel.name);
+
+            ShowConnectionInfo();
         }
 
         public void LeaveRoom()
@@ -175,6 +172,15 @@ namespace Game.SweetsWar
             {
                 PhotonNetwork.JoinRandomRoom(CustomRoomProperties, 0);
             }
+        }
+
+        private void ShowConnectionInfo()
+        {
+            // connection info
+            Debug.Log("player has connected to Photon master server. Now: " + PhotonNetwork.CountOfPlayers);
+            Debug.Log("rooms: " + PhotonNetwork.CountOfRooms + ", roomList.Count: " + cachedRoomList.Count);
+            Debug.Log("version: " + PhotonNetwork.GameVersion);
+            Debug.Log("region: " + PhotonNetwork.CloudRegion);
         }
 
         private void JoinedLobbyGUI()
