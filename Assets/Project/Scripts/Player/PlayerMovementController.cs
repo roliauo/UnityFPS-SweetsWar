@@ -7,12 +7,12 @@ using Photon.Realtime;
 
 namespace Game.SweetsWar
 {
-    [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
+    [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
     public class PlayerMovementController : MonoBehaviourPunCallbacks, IPunObservable
     {
         public static GameObject localPlayerInstance;
         public Camera playerCamera;
-        public Text playerName;
+        public TextMesh playerName;
         public AudioSource playerAudioSource;
 
         public float lookSensitivity = 200f;
@@ -24,19 +24,15 @@ namespace Game.SweetsWar
         [Header("Ground Check")]
         public Transform groundCheckTransform;
         public LayerMask groundLayerMask;
-        public float groundDistance = 0.4f;
+
 
 
         [Header("Movement")]
-        public float speedNormal = 4f;
+        public float speedNormal = 2f;
         public float speedMax = 8f;
-        public float speedCrouching = 2.5f;
-        public float speedSprinting = 6f;
+        public float speedCrouching = 1f;
+        public float speedSprinting = 4f;
         public float jumpHeight = 1f;
-
-        [Header("Stance")]
-        public float heightStanding = 1f;
-        public float heightCrouching = 0.6f;
 
         public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
@@ -46,13 +42,15 @@ namespace Game.SweetsWar
         // private
         private CharacterController m_characterController;
         private Animator m_animator;
-        private Vector3 m_velocity;
+        private Vector3 m_velocity;  
+        private Vector3 m_cameraPosition;
+        private Vector3 m_cameraCrouchingPosition;
+        private float m_speedPlayer;
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;
-        private float m_heightPlayer;
-        private float m_speedPlayer;
+        private float groundCheckDistance = 0.05f;
 
-        private GameObject sign;
+        
 
         public void Awake()
         {
@@ -73,9 +71,10 @@ namespace Game.SweetsWar
             m_animator = GetComponent<Animator>();
             m_characterController = GetComponent<CharacterController>();
             m_speedPlayer = speedNormal;
-            m_heightPlayer = heightStanding;
+            m_cameraPosition = Camera.main.transform.localPosition; 
+            m_cameraCrouchingPosition = new Vector3(m_cameraPosition.x, m_cameraPosition.y / 2, m_cameraPosition.z);
+     
 
-            
             playerName.text = photonView.Owner.NickName;
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
                 PhotonNetwork.NickName, 
@@ -83,31 +82,15 @@ namespace Game.SweetsWar
                 photonView.Owner.NickName
               );
 
-            // the player's name faces camera
-            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
-            //Debug.LogFormat("rotation: {0}, {1}", Camera.main.transform.rotation, playerCamera.transform.rotation);
+            // the player's name always faces the main camera : use Camera.main to get the main
+            //playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
             
-            /*
-            sign = new GameObject("player_label");
-            sign.transform.rotation = Camera.main.transform.rotation; // Causes the text faces camera.
-            TextMesh tm = sign.AddComponent<TextMesh>();
-            tm.text = photonView.Owner.NickName;
-            tm.color = new Color(0.8f, 0.8f, 0.8f);
-            tm.fontStyle = FontStyle.Bold;
-            tm.alignment = TextAlignment.Center;
-            tm.anchor = TextAnchor.MiddleCenter;
-            tm.characterSize = 0.065f;
-            tm.fontSize = 60;
-            */
         }
 
         void Update()
         {
-            //playerName.gameObject.transform.position = localPlayerInstance.transform.position + Vector3.up * 3f;
-            //Camera.main.transform.position + Vector3.forward * 3f;
-            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
-            //playerName.gameObject.transform.position = Camera.main.WorldToScreenPoint(localPlayerInstance.transform.position);
-            //sign.transform.position = localPlayerInstance.transform.position + Vector3.up * 3f;
+            // the player's name always faces the main camera : use Camera.main to get the main
+            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;   
 
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
@@ -129,29 +112,20 @@ namespace Game.SweetsWar
             if (Input.GetButtonDown(GameConstants.BUTTON_CROUCH) && isGrounded)
             {
                 isCrouching = !isCrouching;
-                m_heightPlayer = isCrouching ? heightCrouching : heightStanding;
-                m_speedPlayer = isCrouching ? speedCrouching : speedNormal;             
+                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
+                
+                // #TODO: NEED TO SET TIMEOUT
+                
+                m_speedPlayer = isCrouching ? speedCrouching : speedNormal;
 
                 // change player's height
-                //transform.localScale = new Vector3(1, m_heightPlayer, 1);
-                //transform.localPosition = new Vector3(transform.localPosition.x, m_heightPlayer, transform.localPosition.z);
-                m_characterController.height = m_heightPlayer;
-                m_characterController.center = new Vector3(0, m_heightPlayer / 2, 0);
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.up * m_heightPlayer * m_cameraHeightRatio, 10 * Time.deltaTime);
+                groundCheckTransform.position += isCrouching ? new Vector3(0, 0.1f, 0) : new Vector3(0, -0.1f, 0);
+                m_characterController.height = isCrouching ? 1.2f : 1.5f;
+                //m_characterController.center = isCrouching ? new Vector3(0, -0.2f, 0) : new Vector3(0, 0, 0);
+                //playerCamera.transform.localPosition = isCrouching ? m_cameraCrouchingPosition : m_cameraPosition;
 
-                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
+                
 
-                /*if (m_characterController.height != m_heightPlayer)
-                {
-                    // resize player and adjust camera position
-                    m_characterController.height = m_heightPlayer;
-                    m_characterController.center = isCrouching ? new Vector3(0, 0.5f, 0) : new Vector3(0, 0, 0);
-                    //groundCheckTransform.localPosition = 
-                    //Vector3.up * m_heightPlayer * 0.5f;
-                    Debug.Log("m_characterController.center: " + m_characterController.center);
-                    playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.up * m_heightPlayer * m_cameraHeightRatio, 10 * Time.deltaTime);
-                    //m_Actor.aimPoint.transform.localPosition = m_characterController.center;
-                }*/
             }
 
             /* jump */
@@ -195,7 +169,18 @@ namespace Game.SweetsWar
 
         private void CheckGrounded()
         {
-            isGrounded = Physics.CheckSphere(groundCheckTransform.position, groundDistance, groundLayerMask);
+            isGrounded = Physics.CheckSphere(groundCheckTransform.position, groundCheckDistance, groundLayerMask);
+
+            if (!isGrounded)
+            {
+                Debug.Log("m_characterController.y: " + m_characterController.transform.localPosition.y);
+            }
+            else
+            {
+                //m_playerPositionY = m_characterController.transform.localPosition.y
+                Debug.Log("isGrounded: " + m_characterController.transform.localPosition.y);
+            }
+
             if (isGrounded && m_velocity.y < 0)
             {
                 m_velocity.y = -2f;

@@ -59,7 +59,13 @@ namespace Game.SweetsWar
             }
         }
 
-        public void SetPlayerName()
+        public void Login()
+        {
+            SetPlayerName();
+            Connect();
+        }
+
+        private void SetPlayerName()
         {
             string name = input_playerName.text;
 
@@ -76,10 +82,7 @@ namespace Game.SweetsWar
                 );
         }
 
-        public void Login()
-        {
-            Connect();
-        }
+      
 
         private void ShowLoader(bool show)
         {
