@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Chocolate
   m_EditorClassIdentifier: 
   ID: 0
-  DisplayName: 
+  DisplayName: "\u5DE7\u514B\u529B"
   Image: {fileID: 0}
   Number: 0
   Description: 

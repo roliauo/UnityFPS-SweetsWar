@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Egg
   m_EditorClassIdentifier: 
   ID: 0
-  DisplayName: 
-  Image: {fileID: 0}
+  DisplayName: "\u96DE\u86CB"
+  Image: {fileID: 21300000, guid: ae74bae4c5d4f994ea327f7ca3aa0cd4, type: 3}
   Number: 0
   Description: 

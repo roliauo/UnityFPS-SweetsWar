@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Candy
   m_EditorClassIdentifier: 
   ID: 0
-  DisplayName: 
-  Image: {fileID: 0}
+  DisplayName: "\u7CD6\u679C"
+  Image: {fileID: 21300000, guid: 5cdeda4e4dbbb8b4ab52090377eb6a4d, type: 3}
   Number: 0
   Description: 
