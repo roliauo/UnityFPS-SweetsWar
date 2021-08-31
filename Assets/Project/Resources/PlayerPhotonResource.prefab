@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9112298935210132360}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,9 +51,9 @@ GameObject:
   - component: {fileID: 8770461620917878646}
   - component: {fileID: 3610616242929569833}
   - component: {fileID: 644581889617222434}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PlayerPhotonResource
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 5839208083210482301}
   - component: {fileID: 6449018999142821689}
   - component: {fileID: 4605028831462150869}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere015
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -398,7 +398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2233593739254250675}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 5911830782426455320}
   - component: {fileID: 8929995484527146944}
   - component: {fileID: 4297816665206753563}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere016
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +515,7 @@ GameObject:
   - component: {fileID: 7321059620201684383}
   - component: {fileID: 7315096501394450359}
   - component: {fileID: 5851517446297451623}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -594,7 +594,7 @@ GameObject:
   - component: {fileID: 3056604956062449633}
   - component: {fileID: 5865262375515620505}
   - component: {fileID: 3321526942431565234}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -673,7 +673,7 @@ GameObject:
   - component: {fileID: 2977602049995214541}
   - component: {fileID: 7480049622605844627}
   - component: {fileID: 6760846733594616323}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere014
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -752,7 +752,7 @@ GameObject:
   - component: {fileID: 8336870236796006551}
   - component: {fileID: 9160421233690209806}
   - component: {fileID: 3325938150530384827}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere022
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,7 +831,7 @@ GameObject:
   - component: {fileID: 1866102338800851006}
   - component: {fileID: 3141351117084477099}
   - component: {fileID: 5661489315818791971}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere023
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +910,7 @@ GameObject:
   - component: {fileID: 2367454312068278004}
   - component: {fileID: 3868743765228682797}
   - component: {fileID: 8878458521350486391}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MainBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -989,7 +989,7 @@ GameObject:
   - component: {fileID: 5292452105508223684}
   - component: {fileID: 7877612603224498448}
   - component: {fileID: 2139578645110799509}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere021
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1066,7 +1066,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3102768771417276752}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GroundCheckTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1098,7 +1098,7 @@ GameObject:
   - component: {fileID: 396485382940242891}
   - component: {fileID: 7036981920522715443}
   - component: {fileID: 1992260547679663254}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1179,7 +1179,7 @@ GameObject:
   - component: {fileID: 9213701521727622251}
   - component: {fileID: 8324255538641783459}
   - component: {fileID: 1930037817262694879}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextPlayerName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1374,7 +1374,7 @@ GameObject:
   - component: {fileID: 359908680111573645}
   - component: {fileID: 8591441653638013652}
   - component: {fileID: 5774053431714730667}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1472,7 +1472,7 @@ GameObject:
   - component: {fileID: 8022044840379990622}
   - component: {fileID: 5257342333929850697}
   - component: {fileID: 5413967359463880105}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: First-person Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1555,7 +1555,7 @@ GameObject:
   - component: {fileID: 5696594031070825675}
   - component: {fileID: 5297849100257418273}
   - component: {fileID: 4842586857891282862}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Third-person Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1638,7 +1638,7 @@ GameObject:
   - component: {fileID: 5762452353609090806}
   - component: {fileID: 3818295900752140367}
   - component: {fileID: 4497999173287469003}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

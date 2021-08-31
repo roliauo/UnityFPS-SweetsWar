@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8148407602468235177}
   - component: {fileID: 8148407602464843657}
   - component: {fileID: 8148407602465940809}
-  m_Layer: 0
-  m_Name: LowPoly - Terrain
+  m_Layer: 8
+  m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

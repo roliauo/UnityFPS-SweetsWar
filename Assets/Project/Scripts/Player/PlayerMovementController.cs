@@ -187,6 +187,15 @@ namespace Game.SweetsWar
             }
             m_velocity.y += gravity * Time.deltaTime;
             m_characterController.Move(m_velocity * Time.deltaTime);
+
+            /*
+            if (m_characterController.transform.localPosition.y > 3) //TEST
+            {
+                m_velocity.y += gravity * Time.deltaTime;
+                m_characterController.Move(m_velocity * Time.deltaTime);
+            }
+            */
+            
         }
 
         #region IPunObservable implementation
