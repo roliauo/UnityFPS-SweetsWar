@@ -7,13 +7,14 @@ namespace Game.SweetsWar
     [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/New Item")]
     public class Item: ScriptableObject
     {
-        public int ID;
+        public short ID;
         public string DisplayName;
         public Sprite Image;
-        public int Number;
+        public byte Number = 0;
+        public byte MaxNumber = 10;
 
         [TextArea]
-        public string Description;
+        public string Description;      
     }
 }
 

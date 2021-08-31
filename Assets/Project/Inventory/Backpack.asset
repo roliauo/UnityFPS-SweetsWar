@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4cab24b6f637c64ba42c6b253904ed3, type: 3}
   m_Name: Backpack
   m_EditorClassIdentifier: 
-  ItemList: []
+  ItemList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
