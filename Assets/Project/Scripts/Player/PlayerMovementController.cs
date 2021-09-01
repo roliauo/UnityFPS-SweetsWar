@@ -25,8 +25,6 @@ namespace Game.SweetsWar
         public Transform groundCheckTransform;
         public LayerMask groundLayerMask;
 
-
-
         [Header("Movement")]
         public float speedNormal = 2f;
         public float speedMax = 8f;
@@ -45,12 +43,15 @@ namespace Game.SweetsWar
         private Vector3 m_velocity;  
         private Vector3 m_cameraPosition;
         private Vector3 m_cameraCrouchingPosition;
+        private Vector3 m_GroundNormal;
         private float m_speedPlayer;
         private float m_cameraHeightRatio = 0.9f;
-        private float m_rotationX = 0f;
-        private float groundCheckDistance = 0.05f;
+        private float m_rotationX = 0f;           
+        private float m_LastTimeJumped = 0f;
 
-        
+        private const float k_groundCheckDistance = 0.05f;
+        private const float k_JumpGroundingPreventionTime = 0.2f;
+        private const float k_GroundCheckDistanceInAir = 0.07f;
 
         public void Awake()
         {
@@ -104,6 +105,7 @@ namespace Game.SweetsWar
         private void Action() {
 
             CheckGrounded();
+            //GroundCheck();
 
             /* sprint */
             m_speedPlayer = isGrounded && Input.GetButton(GameConstants.BUTTON_SPRINT) ? speedSprinting : speedNormal;
@@ -133,6 +135,13 @@ namespace Game.SweetsWar
             {
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 m_animator.SetTrigger(GameConstants.ANIMATION_JUMP);
+                m_LastTimeJumped = Time.time;
+
+                /*
+                // Force grounding to false
+                isGrounded = false;
+                m_GroundNormal = Vector3.up;
+                */
             }
 
             /* fire */
@@ -169,7 +178,7 @@ namespace Game.SweetsWar
 
         private void CheckGrounded()
         {
-            isGrounded = Physics.CheckSphere(groundCheckTransform.position, groundCheckDistance, groundLayerMask);
+            isGrounded = Physics.CheckSphere(groundCheckTransform.position, k_groundCheckDistance, groundLayerMask);
 
             if (!isGrounded)
             {
@@ -197,6 +206,63 @@ namespace Game.SweetsWar
             */
             
         }
+
+        
+        private void GroundCheck()
+        {
+            // Make sure that the ground check distance while already in air is very small, to prevent suddenly snapping to ground
+            float chosenGroundCheckDistance = isGrounded ? (m_characterController.skinWidth + k_groundCheckDistance) : k_GroundCheckDistanceInAir;
+
+            // reset values before the ground check
+            isGrounded = false;
+            m_GroundNormal = Vector3.up;
+
+            // only try to detect ground if it's been a short amount of time since last jump; otherwise we may snap to the ground instantly after we try jumping
+            if (Time.time >= m_LastTimeJumped + k_JumpGroundingPreventionTime)
+            {
+                // if we're grounded, collect info about the ground normal with a downward capsule cast representing our character capsule
+                if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(m_characterController.height), m_characterController.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
+                {
+                    // storing the upward direction for the surface found
+                    m_GroundNormal = hit.normal;
+
+                    // Only consider this a valid ground hit if the ground normal goes in the same direction as the character up
+                    // and if the slope angle is lower than the character controller's limit
+                    if (Vector3.Dot(hit.normal, transform.up) > 0f &&
+                        IsNormalUnderSlopeLimit(m_GroundNormal))
+                    {
+                        isGrounded = true;
+
+                        // handle snapping to the ground
+                        if (hit.distance > m_characterController.skinWidth)
+                        {
+                            m_characterController.Move(Vector3.down * hit.distance);
+                        }
+                    }
+                }
+            }
+        }
+
+        private Vector3 GetCapsuleBottomHemisphere()
+        {
+            // Gets the center point of the bottom hemisphere of the character controller capsule    
+            return transform.position + (transform.up * m_characterController.radius);
+        }
+
+        
+        private Vector3 GetCapsuleTopHemisphere(float atHeight)
+        {
+            // Gets the center point of the top hemisphere of the character controller capsule    
+            return transform.position + (transform.up * (atHeight - m_characterController.radius));
+        }
+
+        
+        bool IsNormalUnderSlopeLimit(Vector3 normal)
+        {
+            // Returns true if the slope angle represented by the given normal is under the slope angle limit of the character controller
+            return Vector3.Angle(transform.up, normal) <= m_characterController.slopeLimit;
+        }
+
 
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
