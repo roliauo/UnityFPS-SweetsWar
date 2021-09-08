@@ -26,10 +26,10 @@ namespace Game.SweetsWar
         public LayerMask groundLayerMask;
 
         [Header("Movement")]
-        public float speedNormal = 2f;
-        public float speedMax = 8f;
-        public float speedCrouching = 1f;
-        public float speedSprinting = 4f;
+        public float speedNormal = 1f;
+        public float speedMax = 4f;
+        public float speedCrouching = 0.5f;
+        public float speedSprinting = 3f;
         public float jumpHeight = 1f;
 
         public bool isDead { get; private set; }
