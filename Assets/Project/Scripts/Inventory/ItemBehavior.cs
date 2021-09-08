@@ -7,25 +7,25 @@ namespace Game.SweetsWar
 {
     public class ItemBehavior : MonoBehaviour
     {
-        public Inventory inventory;
+        //public Inventory inventory;
         public Item item;
 
         private void OnTriggerEnter(Collider c)
         {
+            if (BackpackManerger._instance == null)
+            {
+                Debug.Log("Without BackpackManerger._instance!");
+                return;
+            }
+
             if(c.gameObject.tag == GameConstants.TAG_PLAYER)
             {
-                inventory.AddItems(item);
-                                
+                //inventory.AddItems(item);
+                BackpackManerger backpack = BackpackManerger._instance;
+                backpack.AddOneItem(item);
+
                 // Destroy the object in scene
                 Destroy(this.gameObject);
-
-                Debug.LogFormat("list size: {0}, {1}", inventory.ItemList.Capacity, inventory.ItemList.Count);
-                Debug.LogFormat("item: ", item.name);
-
-                foreach (var item in inventory.ItemList)
-                {
-                    Debug.LogFormat("backpack: {0}, {1}", item.DisplayName, item.Number);
-                }
             }
        
         }
