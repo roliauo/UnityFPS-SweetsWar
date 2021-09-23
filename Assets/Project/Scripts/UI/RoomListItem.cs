@@ -9,7 +9,7 @@ namespace Game.SweetsWar
     {
         public Text text_RoomName;
         public Text text_GameMode;
-        public Image Image_GameMode;
+        public Image image_GameMode;
         public Text text_Players;
         public Button btn_JoinRoom;
 
@@ -28,7 +28,7 @@ namespace Game.SweetsWar
             });
         }
 
-        public void Initialize(RoomInfo info)
+        public void SetInfo(RoomInfo info)
         {
             Debug.Log("info.ToStringFull(): " + info.ToStringFull());
             roomName = info.Name;
@@ -38,7 +38,7 @@ namespace Game.SweetsWar
             info.CustomProperties.TryGetValue(GameConstants.GAME_MODE, out gameMode);
             text_GameMode.text = (string)gameMode;
 
-            Image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);
+            image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);
             text_Players.text = info.PlayerCount + " / " + info.MaxPlayers;
         }
     }

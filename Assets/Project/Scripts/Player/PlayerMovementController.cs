@@ -43,11 +43,11 @@ namespace Game.SweetsWar
         private Vector3 m_velocity;  
         private Vector3 m_cameraPosition;
         private Vector3 m_cameraCrouchingPosition;
-        private Vector3 m_GroundNormal;
+        private Vector3 m_groundNormal;
         private float m_speedPlayer;
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;           
-        private float m_LastTimeJumped = 0f;
+        private float m_lastTimeJumped = 0f;
 
         private const float k_groundCheckDistance = 0.05f;
         private const float k_JumpGroundingPreventionTime = 0.2f;
@@ -135,7 +135,7 @@ namespace Game.SweetsWar
             {
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 m_animator.SetTrigger(GameConstants.ANIMATION_JUMP);
-                m_LastTimeJumped = Time.time;
+                m_lastTimeJumped = Time.time;
 
                 /*
                 // Force grounding to false
@@ -215,21 +215,21 @@ namespace Game.SweetsWar
 
             // reset values before the ground check
             isGrounded = false;
-            m_GroundNormal = Vector3.up;
+            m_groundNormal = Vector3.up;
 
             // only try to detect ground if it's been a short amount of time since last jump; otherwise we may snap to the ground instantly after we try jumping
-            if (Time.time >= m_LastTimeJumped + k_JumpGroundingPreventionTime)
+            if (Time.time >= m_lastTimeJumped + k_JumpGroundingPreventionTime)
             {
                 // if we're grounded, collect info about the ground normal with a downward capsule cast representing our character capsule
                 if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(m_characterController.height), m_characterController.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
                 {
                     // storing the upward direction for the surface found
-                    m_GroundNormal = hit.normal;
+                    m_groundNormal = hit.normal;
 
                     // Only consider this a valid ground hit if the ground normal goes in the same direction as the character up
                     // and if the slope angle is lower than the character controller's limit
                     if (Vector3.Dot(hit.normal, transform.up) > 0f &&
-                        IsNormalUnderSlopeLimit(m_GroundNormal))
+                        IsNormalUnderSlopeLimit(m_groundNormal))
                     {
                         isGrounded = true;
 

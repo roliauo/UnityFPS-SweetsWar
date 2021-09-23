@@ -31,9 +31,9 @@ namespace Game.SweetsWar
         public GameObject SettingPanel;
 
         
-        private Dictionary<string, RoomInfo> cachedRoomList;
-        private Dictionary<string, GameObject> roomListItems;
-        private Dictionary<int, GameObject> playerListItems;
+        private Dictionary<string, RoomInfo> m_cachedRoomList;
+        private Dictionary<string, GameObject> m_roomListItems;
+        private Dictionary<int, GameObject> m_playerListItems;
 
         private Hashtable CustomRoomProperties = new Hashtable() {
                 { GameConstants.GAME_MODE, GameConstants.GAME_MODE_PERSONAL_BATTLE }
@@ -46,8 +46,8 @@ namespace Game.SweetsWar
                 return;
             }
 
-            cachedRoomList = new Dictionary<string, RoomInfo>();
-            roomListItems = new Dictionary<string, GameObject>();
+            m_cachedRoomList = new Dictionary<string, RoomInfo>();
+            m_roomListItems = new Dictionary<string, GameObject>();
 
             Debug.Log("InLobby: " + PhotonNetwork.InLobby);
         }
@@ -178,7 +178,7 @@ namespace Game.SweetsWar
         {
             // connection info
             Debug.Log("player has connected to Photon master server. Now: " + PhotonNetwork.CountOfPlayers);
-            Debug.Log("rooms: " + PhotonNetwork.CountOfRooms + ", roomList.Count: " + cachedRoomList.Count);
+            Debug.Log("rooms: " + PhotonNetwork.CountOfRooms + ", roomList.Count: " + m_cachedRoomList.Count);
             Debug.Log("version: " + PhotonNetwork.GameVersion);
             Debug.Log("region: " + PhotonNetwork.CloudRegion);
         }
@@ -187,14 +187,14 @@ namespace Game.SweetsWar
         {
             // connection info
             GUILayout.Label("player has connected to Photon master server. Now: " + PhotonNetwork.CountOfPlayers);
-            GUILayout.Label("rooms: " + PhotonNetwork.CountOfRooms + ", roomList.Count: " + cachedRoomList.Count);
+            GUILayout.Label("rooms: " + PhotonNetwork.CountOfRooms + ", roomList.Count: " + m_cachedRoomList.Count);
             GUILayout.Label("version: " + PhotonNetwork.GameVersion);
             GUILayout.Label("region: " + PhotonNetwork.CloudRegion);
 
             GUILayout.Label("---------------------");
 
             short index = 0;
-            foreach(KeyValuePair<string, RoomInfo> r in cachedRoomList)
+            foreach(KeyValuePair<string, RoomInfo> r in m_cachedRoomList)
             {
                 GUILayout.Label("Room：" + r.Value.Name);
                 GUILayout.Label("players：" + r.Value.PlayerCount + "/" + r.Value.MaxPlayers);
@@ -203,7 +203,7 @@ namespace Game.SweetsWar
                     PhotonNetwork.JoinRoom(r.Value.Name);
                 }
 
-                if (index != cachedRoomList.Count - 1)
+                if (index != m_cachedRoomList.Count - 1)
                 {
                     GUILayout.Label("*************");
                 }
@@ -225,22 +225,22 @@ namespace Game.SweetsWar
             {
                 if (info.RemovedFromList) //!info.IsOpen || !info.IsVisible || 
                 {
-                    if (cachedRoomList.ContainsKey(info.Name))
+                    if (m_cachedRoomList.ContainsKey(info.Name))
                     {
-                        cachedRoomList.Remove(info.Name);
+                        m_cachedRoomList.Remove(info.Name);
                     }
 
                     continue;
                 }
 
 
-                if (cachedRoomList.ContainsKey(info.Name))
+                if (m_cachedRoomList.ContainsKey(info.Name))
                 {
-                    cachedRoomList[info.Name] = info;
+                    m_cachedRoomList[info.Name] = info;
                 }
                 else
                 {
-                    cachedRoomList.Add(info.Name, info);
+                    m_cachedRoomList.Add(info.Name, info);
                 }
             }*/
 
@@ -249,11 +249,11 @@ namespace Game.SweetsWar
                 RoomInfo targetInfo = roomList[i];
                 if (targetInfo.RemovedFromList) //!info.IsOpen || !info.IsVisible || 
                 {
-                    cachedRoomList.Remove(targetInfo.Name);
+                    m_cachedRoomList.Remove(targetInfo.Name);
                 }
                 else
                 {
-                    cachedRoomList[targetInfo.Name] = targetInfo;
+                    m_cachedRoomList[targetInfo.Name] = targetInfo;
                 }
             }
 
@@ -261,24 +261,24 @@ namespace Game.SweetsWar
 
         private void UpdateRoomListView()
         {
-            foreach (RoomInfo info in cachedRoomList.Values)
+            foreach (RoomInfo info in m_cachedRoomList.Values)
             {
                 GameObject item = Instantiate(RoomListItemPrefab);
                 item.transform.SetParent(RoomListContent.transform);
                 item.transform.localScale = Vector3.one;
-                item.GetComponent<RoomListItem>().Initialize(info);
-                roomListItems.Add(info.Name, item);
+                item.GetComponent<RoomListItem>().SetInfo(info);
+                m_roomListItems.Add(info.Name, item);
             }
         }
 
         private void ClearRoomListView()
         {
-            foreach (GameObject entry in roomListItems.Values)
+            foreach (GameObject entry in m_roomListItems.Values)
             {
                 Destroy(entry.gameObject);
             }
 
-            roomListItems.Clear();
+            m_roomListItems.Clear();
         }
 
         private void SetActivePanel(string activePanel)
@@ -321,12 +321,12 @@ namespace Game.SweetsWar
         #region PUN CALLBACKS
         public override void OnJoinedRoom()
         {
-            cachedRoomList.Clear();
+            m_cachedRoomList.Clear();
             //SetActivePanel(InsideRoomPanel.name);
 
-            if (playerListItems == null)
+            if (m_playerListItems == null)
             {
-                playerListItems = new Dictionary<int, GameObject>();
+                m_playerListItems = new Dictionary<int, GameObject>();
             }
             /*
             foreach (Player p in PhotonNetwork.PlayerList)
@@ -384,14 +384,14 @@ namespace Game.SweetsWar
         {
             Debug.Log("OnJoinedLobby");
             //base.OnJoinedLobby();
-            cachedRoomList.Clear();
+            m_cachedRoomList.Clear();
             ClearRoomListView();
         }
         
         public override void OnLeftLobby()
         {
             Debug.Log("OnLeftLobby");
-            cachedRoomList.Clear();
+            m_cachedRoomList.Clear();
             ClearRoomListView();
             //PhotonNetwork.Disconnect();
             //SceneManager.LoadScene(GameConstants.SCENE_TITLE);
@@ -400,7 +400,7 @@ namespace Game.SweetsWar
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.Log("Lobby: OnDisconnected()");
-            cachedRoomList.Clear();
+            m_cachedRoomList.Clear();
             ClearRoomListView();
         }
 
