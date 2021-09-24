@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b419e290822e847b4d51d8081b3ecb, type: 3}
   m_Name: Chocolate
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 1
   DisplayName: "\u5DE7\u514B\u529B"
   Image: {fileID: 0}
   Number: 0
+  MaxNumber: 10
   Description: 
