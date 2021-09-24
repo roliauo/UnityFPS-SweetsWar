@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b438b2fd61972469cb11578b847dbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 0}
-  inventoryUI: {fileID: 0}
-  gridPrefab: {fileID: 0}
+  inventory: {fileID: 11400000, guid: 5f2c66b95e81fe24b85692e83b4d8bb1, type: 2}
+  BackpackUI: {fileID: 0}
+  SlotPrefab: {fileID: 7332855965508960876, guid: 0e958303a50493246a94ecf1ff98f917,
+    type: 3}

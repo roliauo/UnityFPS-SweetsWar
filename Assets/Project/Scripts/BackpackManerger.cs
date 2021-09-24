@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ GameManager.prefab
+ */
 namespace Game.SweetsWar
 {
     public class BackpackManerger : MonoBehaviour
@@ -9,8 +12,11 @@ namespace Game.SweetsWar
         public static BackpackManerger _instance;
 
         public Inventory inventory;
-        public RectTransform inventoryUI;
-        public Grid gridPrefab;
+        //public RectTransform inventoryUI;
+        //public Grid gridPrefab;
+        public GameObject BackpackUI;
+        public GameObject SlotPrefab;
+        private Dictionary<short, GameObject> m_prefabDict;
 
         private void Awake()
         {
@@ -31,13 +37,45 @@ namespace Game.SweetsWar
         }
 
 
-        public void AddOneItem(Item item)
+        public void Collect(Item item)
         {
             string msg = _instance.inventory.Add(item);
-            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryUI);
+            UpdateView();
+            //UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryUI);
         }
-       
-       
+
+        private void UpdateView()
+        {
+            // clear
+            foreach (GameObject item in m_prefabDict.Values)
+            {
+                Destroy(item.gameObject);
+            }
+
+            m_prefabDict.Clear();
+
+            // build
+            foreach (Item item in inventory.ItemList)
+            {
+                GameObject slot = Instantiate(SlotPrefab);
+                slot.transform.SetParent(BackpackUI.transform);
+                slot.transform.localScale = Vector3.one;
+                slot.GetComponent<BackpackSlotPrefab>().SetItem(item);
+                m_prefabDict.Add(item.ID, slot);
+            }
+        }
+
+        private void ClearView()
+        {
+            foreach (GameObject item in m_prefabDict.Values)
+            {
+                Destroy(item.gameObject);
+            }
+
+            m_prefabDict.Clear();
+        }
+
+
         /*
         public void AddOneItem(Item item, Inventory inventory)
         {

@@ -10,7 +10,8 @@ namespace Game.SweetsWar
         //public Inventory inventory;
         public Item item;
 
-        private void OnTriggerEnter(Collider c)
+        // player touched
+        private void OnTriggerEnter(Collider c) 
         {
             if (BackpackManerger._instance == null)
             {
@@ -20,14 +21,29 @@ namespace Game.SweetsWar
 
             if(c.gameObject.tag == GameConstants.TAG_PLAYER)
             {
-                //inventory.AddItems(item);
                 BackpackManerger backpack = BackpackManerger._instance;
-                backpack.AddOneItem(item);
+                backpack.Collect(item);
 
                 // Destroy the object in scene
                 Destroy(this.gameObject);
             }
        
+        }
+
+        // on click item
+        private void OnMouseDown()
+        {
+            if (BackpackManerger._instance == null)
+            {
+                Debug.Log("Without BackpackManerger._instance!");
+                return;
+            }
+
+            BackpackManerger backpack = BackpackManerger._instance;
+            backpack.Collect(item);
+
+            // Destroy the object in scene
+            Destroy(this.gameObject);
         }
 
         /*

@@ -10,7 +10,7 @@ namespace Game.SweetsWar
     {
         public List<Item> ItemList = new List<Item>();
 
-        public string Add(Item item) // Backpack: 之後可放到相對應的Manager去處理
+        public string Add(Item item, byte num = 1) // Backpack: 之後可放到相對應的Manager去處理
         {
             //bool result = false;
             string errMsg = null;
@@ -19,7 +19,7 @@ namespace Game.SweetsWar
             {
                 if (item.Number < item.MaxNumber)
                 {
-                    item.Number += 1;
+                    item.Number += num;
                     //result = true;
                 }
                 else
@@ -33,12 +33,12 @@ namespace Game.SweetsWar
                 if (ItemList.Count < ItemList.Capacity)
                 {
                     ItemList.Add(item);
-                    item.Number += 1;
+                    item.Number += num;
                     //result = true;
                 }
                 else
                 {
-                    Debug.Log("背包滿了!");
+                    Debug.Log("背包滿了!" + ItemList.Capacity);
                     errMsg = "背包滿了!";
                 }
             }
