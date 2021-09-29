@@ -25,6 +25,7 @@ namespace Game.SweetsWar
                 Destroy(this);
             }
             _instance = this;
+            m_prefabDict = new Dictionary<short, GameObject>();
         }
 
         public static void SetupGrid(Item item)
@@ -37,10 +38,12 @@ namespace Game.SweetsWar
         }
 
 
-        public void Collect(Item item)
+        public bool Collect(Item item)
         {
             string msg = _instance.inventory.Add(item);
             UpdateView();
+
+            return msg == null; // Success
             //UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryUI);
         }
 
@@ -55,26 +58,21 @@ namespace Game.SweetsWar
             m_prefabDict.Clear();
 
             // build
-            foreach (Item item in inventory.ItemList)
+            foreach (Item item in _instance.inventory.ItemList)
             {
                 GameObject slot = Instantiate(SlotPrefab);
                 slot.transform.SetParent(BackpackUI.transform);
-                slot.transform.localScale = Vector3.one;
+                //slot.transform.localScale = Vector3.one;
                 slot.GetComponent<BackpackSlotPrefab>().SetItem(item);
                 m_prefabDict.Add(item.ID, slot);
             }
         }
 
-        private void ClearView()
+        void OnDestroy()
         {
-            foreach (GameObject item in m_prefabDict.Values)
-            {
-                Destroy(item.gameObject);
-            }
-
-            m_prefabDict.Clear();
+            Debug.Log("Backpack OnDestroy");
+            _instance.inventory.ItemList.Clear();
         }
-
 
         /*
         public void AddOneItem(Item item, Inventory inventory)

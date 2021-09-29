@@ -180,6 +180,7 @@ namespace Game.SweetsWar
         {
             isGrounded = Physics.CheckSphere(groundCheckTransform.position, k_groundCheckDistance, groundLayerMask);
 
+            /*
             if (!isGrounded)
             {
                 Debug.Log("m_characterController.y: " + m_characterController.transform.localPosition.y);
@@ -189,6 +190,7 @@ namespace Game.SweetsWar
                 //m_playerPositionY = m_characterController.transform.localPosition.y
                 Debug.Log("isGrounded: " + m_characterController.transform.localPosition.y);
             }
+            */
 
             if (isGrounded && m_velocity.y < 0)
             {

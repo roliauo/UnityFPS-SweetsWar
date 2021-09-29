@@ -22,10 +22,11 @@ namespace Game.SweetsWar
             if(c.gameObject.tag == GameConstants.TAG_PLAYER)
             {
                 BackpackManerger backpack = BackpackManerger._instance;
-                backpack.Collect(item);
+                if (backpack.Collect(item)) {
+                    // Destroy the object in scene
+                    Destroy(this.gameObject);
+                }
 
-                // Destroy the object in scene
-                Destroy(this.gameObject);
             }
        
         }
@@ -40,10 +41,11 @@ namespace Game.SweetsWar
             }
 
             BackpackManerger backpack = BackpackManerger._instance;
-            backpack.Collect(item);
-
-            // Destroy the object in scene
-            Destroy(this.gameObject);
+            if (backpack.Collect(item))
+            {
+                // Destroy the object in scene
+                Destroy(this.gameObject);
+            }
         }
 
         /*

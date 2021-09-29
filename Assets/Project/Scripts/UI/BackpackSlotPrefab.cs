@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,8 @@ namespace Game.SweetsWar
     public class BackpackSlotPrefab : MonoBehaviour
     {
         public Button btn_Slot;
+        public TMP_Text ItemName;
+        public TMP_Text ItemNumber;
 
         private Item m_item;
         void Start()
@@ -21,9 +24,9 @@ namespace Game.SweetsWar
         public void SetItem(Item item)
         {
             m_item = item;
-            btn_Slot.image.sprite = item.Image;            
-            btn_Slot.GetComponentInChildren<Text>().text = item.DisplayName;
-            Debug.Log("DisplayName: " + item.DisplayName);
+            btn_Slot.GetComponent<Image>().sprite = item.Image;
+            ItemName.text = item.DisplayName;
+            ItemNumber.text = item.Number.ToString();
         }
     }
 
