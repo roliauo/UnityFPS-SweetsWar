@@ -12,11 +12,11 @@ namespace Game.SweetsWar
     {
         static public GameManager Instance;
         public GameObject Menu;
+        public GameObject BackpackUI;
+        public bool StopAction;
 
         [SerializeField]
         private GameObject playerPrefab;
-
-        private GameObject m_instance;
 
         void Start()
         {
@@ -54,6 +54,8 @@ namespace Game.SweetsWar
             // SET CURSOR
             Cursor.lockState = CursorLockMode.Locked;
 
+            StopAction = false;
+
             /*
             // SHOW PLAYERS' NAME
             playerName.text = photonView.Owner.NickName;
@@ -74,6 +76,17 @@ namespace Game.SweetsWar
                 //Cursor.lockState = CursorLockMode.None;
                 PhotonNetwork.LeaveRoom();
             }
+
+            /*
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                
+                BackpackUI.SetActive(!BackpackUI.activeInHierarchy);
+                Cursor.lockState = BackpackUI.activeInHierarchy ? CursorLockMode.None : CursorLockMode.Locked;
+                //需設定人物不會旋轉
+                //StopAction = BackpackUI.activeInHierarchy;
+            }
+            */
         }
 
         /*

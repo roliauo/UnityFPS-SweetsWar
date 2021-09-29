@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game.SweetsWar
 {
@@ -10,6 +9,7 @@ namespace Game.SweetsWar
         //public Inventory inventory;
         public Item item;
 
+        /*
         // player touched
         private void OnTriggerEnter(Collider c) 
         {
@@ -26,10 +26,9 @@ namespace Game.SweetsWar
                     // Destroy the object in scene
                     Destroy(this.gameObject);
                 }
-
-            }
-       
+            }     
         }
+        */
 
         // on click item
         private void OnMouseDown()

@@ -36,6 +36,7 @@ namespace Game.SweetsWar
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
         public bool isFiring;
+        public bool stop;
 
         // private
         private CharacterController m_characterController;
@@ -74,7 +75,7 @@ namespace Game.SweetsWar
             m_speedPlayer = speedNormal;
             m_cameraPosition = Camera.main.transform.localPosition; 
             m_cameraCrouchingPosition = new Vector3(m_cameraPosition.x, m_cameraPosition.y / 2, m_cameraPosition.z);
-     
+            stop = false;
 
             playerName.text = photonView.Owner.NickName;
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
@@ -90,6 +91,7 @@ namespace Game.SweetsWar
 
         void Update()
         {
+            //bool StopAction = (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape));
             // the player's name always faces the main camera : use Camera.main to get the main
             playerName.gameObject.transform.rotation = Camera.main.transform.rotation;   
 
@@ -97,6 +99,13 @@ namespace Game.SweetsWar
             {
                 return;
             }
+
+            /*
+            if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                stop = !stop;
+            }
+            */
 
             Action();
 
@@ -106,6 +115,24 @@ namespace Game.SweetsWar
 
             CheckGrounded();
             //GroundCheck();
+
+            /* move */
+            m_animator.SetFloat(GameConstants.ANIMATION_SPEED, m_speedPlayer);
+            float x = Input.GetAxis(GameConstants.HORIZONTAL);
+            float y = Input.GetAxis(GameConstants.VERTICAL);
+            if (x == 0 && y == 0)
+            {
+                m_animator.SetBool(GameConstants.ANIMATION_MOVE, false);
+            }
+            else
+            {
+                Vector3 move = transform.right * x + transform.forward * y;
+                m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
+                m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
+            }
+
+
+            if (stop) return;
 
             /* sprint */
             m_speedPlayer = isGrounded && Input.GetButton(GameConstants.BUTTON_SPRINT) ? speedSprinting : speedNormal;
@@ -159,21 +186,7 @@ namespace Game.SweetsWar
             playerCamera.transform.localRotation = Quaternion.Euler(m_rotationX, 0f, 0f);
             transform.Rotate(Vector3.up * mouseX);
 
-            /* move */
-            m_animator.SetFloat(GameConstants.ANIMATION_SPEED, m_speedPlayer);
-            float x = Input.GetAxis(GameConstants.HORIZONTAL);
-            float y = Input.GetAxis(GameConstants.VERTICAL);
-            if (x == 0 && y == 0)
-            {
-                m_animator.SetBool(GameConstants.ANIMATION_MOVE, false);
-            }
-            else
-            {
-                Vector3 move = transform.right * x + transform.forward * y;
-                m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
-                m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
-
-            }
+            
         }
 
         private void CheckGrounded()
