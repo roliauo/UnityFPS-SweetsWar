@@ -10,10 +10,7 @@ namespace Game.SweetsWar
     public class BackpackManerger : MonoBehaviour
     {
         public static BackpackManerger _instance;
-
         public Inventory inventory;
-        //public RectTransform inventoryUI;
-        //public Grid gridPrefab;
         public GameObject BackpackUI;
         public GameObject SlotPrefab;
         private Dictionary<short, GameObject> m_prefabDict;
@@ -27,16 +24,6 @@ namespace Game.SweetsWar
             _instance = this;
             m_prefabDict = new Dictionary<short, GameObject>();
         }
-
-        public static void SetupGrid(Item item)
-        {
-            /*
-            Grid grid = Instantiate(_instance.gridPrefab, _instance.inventoryUI.transform);
-            grid.gridImage.sprite = item.Image;
-            grid.girdNum.text = item.Number.ToString();
-            */
-        }
-
 
         public bool Collect(Item item)
         {

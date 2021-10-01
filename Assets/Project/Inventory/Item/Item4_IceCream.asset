@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3b419e290822e847b4d51d8081b3ecb, type: 3}
-  m_Name: Egg
+  m_Name: Item4_IceCream
   m_EditorClassIdentifier: 
-  ID: 3
-  DisplayName: "\u96DE\u86CB"
-  Image: {fileID: 21300000, guid: ae74bae4c5d4f994ea327f7ca3aa0cd4, type: 3}
+  ID: 4
+  DisplayName: "\u51B0\u6DC7\u6DCB"
+  Image: {fileID: 21300000, guid: 0c4d43a99629297479cb8584a62a8dcf, type: 3}
   Number: 0
   MaxNumber: 10
   Description: 

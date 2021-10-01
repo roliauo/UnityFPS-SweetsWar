@@ -11,12 +11,18 @@ namespace Game.SweetsWar
     public class GameManager : MonoBehaviourPunCallbacks
     {
         static public GameManager Instance;
-        public GameObject Menu;
-        public GameObject BackpackUI;
-        public bool StopAction;
 
+        public GameObject Menu;
+        public GameObject[] ItemPrefabList;
+        public Transform[] PlayerLocations;
         [SerializeField]
-        private GameObject playerPrefab;
+        private GameObject PlayerPrefab;
+
+        // for show/hide backpack
+        //public GameObject BackpackUI;
+        //public bool StopAction;
+
+        private short m_RandomItemNumber;
 
         void Start()
         {
@@ -27,10 +33,11 @@ namespace Game.SweetsWar
                 SceneManager.LoadScene(GameConstants.SCENE_TITLE);
                 return;
             }
-                
-            if (playerPrefab == null) //PlayerManager.LocalPlayerInstance == null
+            
+            /* SET PLAYER */
+            if (PlayerPrefab == null) //PlayerManager.LocalPlayerInstance == null
             {
-                Debug.LogFormat("Missing playerPrefab Reference");
+                Debug.LogFormat("Missing PlayerPrefab Reference");
 
             }
             else
@@ -41,7 +48,7 @@ namespace Game.SweetsWar
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                     // generate the player : it gets synced by using PhotonNetwork.Instantiate
-                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(10f, 10f, 10f), Quaternion.identity, 0);
+                    PhotonNetwork.Instantiate(this.PlayerPrefab.name, new Vector3(10f, 20f, 10f), Quaternion.identity, 0);
                 }
                 else
                 {
@@ -51,10 +58,11 @@ namespace Game.SweetsWar
 
             }
 
-            // SET CURSOR
+            /* SET THE CURSOR MODE */
             Cursor.lockState = CursorLockMode.Locked;
 
-            StopAction = false;
+            generateItems();
+
 
             /*
             // SHOW PLAYERS' NAME
@@ -92,7 +100,7 @@ namespace Game.SweetsWar
         /*
         void OnGUI()
         {
-            Vector3 characterPos = Camera.main.WorldToScreenPoint(playerPrefab.transform.position);
+            Vector3 characterPos = Camera.main.WorldToScreenPoint(PlayerPrefab.transform.position);
            
             characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (windowWidth / 2), Screen.width - (windowWidth / 2)),
                                                Mathf.Clamp(characterPos.y, 50, Screen.height),
@@ -104,9 +112,31 @@ namespace Game.SweetsWar
         }
         */
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        private void generateItems()
+        {
+            //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
+            float RandomX;
+            float RandomZ;
+
+            foreach (GameObject obj in ItemPrefabList)
+            {
+                m_RandomItemNumber = (short)Random.Range(5, 10);
+                Debug.LogFormat("Instantiate: {0}, {1}", obj.name, m_RandomItemNumber);
+
+                for (short i = 0; i < m_RandomItemNumber; i++)
+                {
+                    RandomX = Random.Range(2, 55);
+                    RandomZ = Random.Range(2, 80);
+
+                    Instantiate(obj, new Vector3(RandomX, 15f, RandomZ), Quaternion.identity);
+                }
+
+            }
         }
 
         void LoadArena()

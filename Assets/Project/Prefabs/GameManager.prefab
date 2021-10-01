@@ -121,9 +121,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Menu: {fileID: 4311914309193787081}
-  BackpackUI: {fileID: 4630531090488650700}
-  StopAction: 0
-  playerPrefab: {fileID: 194672513326284442, guid: 829914bfd4228a643a7c7ac9fa8fce02,
+  ItemPrefabList:
+  - {fileID: 3708234880747616235, guid: 2fc4118b5c5e9154a99f3aa06c006459, type: 3}
+  - {fileID: 3708234880747616235, guid: 7b0ed8ee34d9e6843ab31e47efa5a11f, type: 3}
+  - {fileID: 3708234880747616235, guid: 6311d6b10cfd19e478ad9f1f8f35376b, type: 3}
+  - {fileID: 3708234880747616235, guid: 0b2f4bc58c77bc84b8bf79d9c3808174, type: 3}
+  - {fileID: 3708234880747616235, guid: 4871545057459a4489a430c7e310356c, type: 3}
+  - {fileID: 3708234880747616235, guid: 52d7b2f0235888044919edf87599b6f8, type: 3}
+  PlayerLocations: []
+  PlayerPrefab: {fileID: 194672513326284442, guid: 829914bfd4228a643a7c7ac9fa8fce02,
     type: 3}
 --- !u!114 &6249064224585968942
 MonoBehaviour:

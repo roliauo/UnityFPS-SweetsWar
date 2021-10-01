@@ -16,7 +16,6 @@ namespace Game.SweetsWar
         public string Add(Item item, byte num = 1) // Backpack: 之後可放到相對應的Manager去處理
         {
             string errMsg = null;
-            Debug.LogFormat("Add: {0}, {1}, {2}", item.DisplayName, ItemList.Count, ItemList.Capacity);
             if (ItemList.Contains(item))
             {
                 if (item.Number < item.MaxNumber)

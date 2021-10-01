@@ -6,7 +6,6 @@ namespace Game.SweetsWar
 {
     public class ItemBehavior : MonoBehaviour
     {
-        //public Inventory inventory;
         public Item item;
 
         /*
@@ -30,7 +29,7 @@ namespace Game.SweetsWar
         }
         */
 
-        // on click item
+        // on click item (collider)
         private void OnMouseDown()
         {
             if (BackpackManerger._instance == null)
@@ -46,15 +45,6 @@ namespace Game.SweetsWar
                 Destroy(this.gameObject);
             }
         }
-
-        /*
-        public void OnPointerClick(PointerEventData pointerEventData)
-        {
-            Debug.Log(name + " Game Object Clicked!");
-
-            if (inventory.ItemList.Contains())
-        }
-        */
 
     }
 }
