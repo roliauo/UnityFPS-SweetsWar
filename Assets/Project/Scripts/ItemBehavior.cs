@@ -7,7 +7,12 @@ namespace Game.SweetsWar
     public class ItemBehavior : MonoBehaviour
     {
         public Item item;
+        public float MaxItemDistance = 4f;
 
+        private void Update()
+        {
+            //transform.Rotate(new Vector3(0, 1, 0), Space.World);
+        }
         /*
         // player touched
         private void OnTriggerEnter(Collider c) 
@@ -38,12 +43,15 @@ namespace Game.SweetsWar
                 return;
             }
 
-            BackpackManerger backpack = BackpackManerger._instance;
-            if (backpack.Collect(item))
+            float itemDistance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
+            Debug.Log("itemDistance: " + itemDistance);
+
+            if ( itemDistance < MaxItemDistance && BackpackManerger._instance.Collect(item))
             {
-                // Destroy the object in scene
+                // Destroy this item in scene
                 Destroy(this.gameObject);
             }
+
         }
 
     }
