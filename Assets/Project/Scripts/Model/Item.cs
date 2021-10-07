@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.SweetsWar
 {
@@ -9,12 +7,16 @@ namespace Game.SweetsWar
     {
         public short ID;
         public string DisplayName;
-        public Sprite Image;
+        public Sprite Icon;
         public byte Number = 0;
         public byte MaxNumber = 10;
+        public Ingredient[] Ingredients;
 
         [TextArea]
-        public string Description;      
+        public string Description;
+
+        // [SerializeField]
+        // public Dictionary<Item, byte> IngredientDict = new Dictionary<Item, byte>();    
     }
 }
 

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3b419e290822e847b4d51d8081b3ecb, type: 3}
-  m_Name: Item3_Egg
+  m_Name: Item0_Candy
   m_EditorClassIdentifier: 
-  ID: 3
-  DisplayName: "\u96DE\u86CB"
-  Image: {fileID: 21300000, guid: ae74bae4c5d4f994ea327f7ca3aa0cd4, type: 3}
-  Number: 0
+  ID: 0
+  DisplayName: "\u7CD6\u679C"
+  Icon: {fileID: 21300000, guid: 5cdeda4e4dbbb8b4ab52090377eb6a4d, type: 3}
+  Number: 3
   MaxNumber: 10
+  Ingredients: []
   Description: 

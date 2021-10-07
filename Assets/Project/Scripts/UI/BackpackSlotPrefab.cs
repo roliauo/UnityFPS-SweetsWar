@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,7 +23,7 @@ namespace Game.SweetsWar
         public void SetItem(Item item)
         {
             m_item = item;
-            btn_Slot.GetComponent<Image>().sprite = item.Image;
+            btn_Slot.GetComponent<Image>().sprite = item.Icon;
             ItemName.text = item.DisplayName;
             ItemNumber.text = item.Number.ToString();
         }

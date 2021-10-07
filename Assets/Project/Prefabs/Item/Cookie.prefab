@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c692821a25d006a4990cf7659f0918e0, type: 2}
+  MaxItemDistance: 4
 --- !u!1 &5570882877608091510
 GameObject:
   m_ObjectHideFlags: 0
