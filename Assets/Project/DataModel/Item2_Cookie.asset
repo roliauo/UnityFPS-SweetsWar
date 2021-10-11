@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 2
   DisplayName: "\u9905\u4E7E"
   Icon: {fileID: 21300000, guid: 9df528476a2d07d45b5494a5f585b568, type: 3}
-  Number: 2
+  Number: 0
   MaxNumber: 10
   Ingredients: []
   Description: 

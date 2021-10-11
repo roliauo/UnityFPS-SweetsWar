@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Game.SweetsWar
 {
@@ -13,16 +14,33 @@ namespace Game.SweetsWar
         static public GameManager Instance;
 
         public GameObject Menu;
-        public GameObject[] ItemPrefabList;
-        public Transform[] PlayerLocations;
+
+        [Header("Items")]
+        public GameObject[] ItemPrefabs;
+        //public int[] MinMaxX = { 2, 55 };
+        public int MinX = 2;
+        public int MaxX = 55;
+        public int MinZ = 2;
+        public int MaxZ = 80;
+
+        [Header("Player")]
+        //public Transform[] PlayerLocations;
+        public List<Transform> PlayerLocations;
         [SerializeField]
         private GameObject PlayerPrefab;
+
+        [Header("Fridge")]
+        //public Transform[] FridgeLocations;
+        public List<Transform> FridgeLocations;
+        public GameObject FridgePrefab;
 
         // for show/hide backpack
         //public GameObject BackpackUI;
         //public bool StopAction;
 
         private short m_RandomItemNumber;
+        private bool m_gameState;
+        private byte playerIndex;
 
         void Start()
         {
@@ -46,13 +64,14 @@ namespace Game.SweetsWar
                 if (PlayerMovementController.localPlayerInstance == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+                    ////playerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
+                    //GeneratePlayersInReadyStage();
+                    MovePlayersToGameStage_Test();
 
-                    // generate the player : it gets synced by using PhotonNetwork.Instantiate
-                    PhotonNetwork.Instantiate(this.PlayerPrefab.name, new Vector3(10f, 20f, 10f), Quaternion.identity, 0);
                 }
                 else
                 {
-
+                    //MovePlayersToGameStage_old();
                     Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
                 }
 
@@ -61,8 +80,7 @@ namespace Game.SweetsWar
             /* SET THE CURSOR MODE */
             Cursor.lockState = CursorLockMode.Locked;
 
-            generateItems();
-
+            GenerateItems();
 
             /*
             // SHOW PLAYERS' NAME
@@ -78,6 +96,13 @@ namespace Game.SweetsWar
 
         void Update()
         {
+            
+            if (!PhotonNetwork.IsConnected)
+            {
+                SceneManager.LoadScene(GameConstants.SCENE_TITLE);
+                return;
+            }          
+
             // show the menu
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -115,23 +140,102 @@ namespace Game.SweetsWar
         void OnDestroy()
         {
             Cursor.lockState = CursorLockMode.None;
+            ClearGameData();
         }
 
-        private void generateItems()
+        private void ClearGameData() {
+            ResetItemNumber();
+        }
+
+        private void ResetItemNumber() {
+            foreach (GameObject obj in ItemPrefabs)
+            {
+                Item item = obj.GetComponent<ItemBehavior>().item;
+                item.Number = 0;
+            }
+        }
+
+        private void GeneratePlayersInReadyStage() // random range
+        {
+            // generate the player : it gets synced by using PhotonNetwork.Instantiate
+            PhotonNetwork.Instantiate(PlayerPrefab.name, new Vector3(Random.Range(-80, -10), -80f, Random.Range(-80, -5)), Quaternion.identity, 0);
+        }
+
+        private bool IsPlayerReady()
+        {
+            // TODO: need to modify number of player (2~4)
+            // 時間: 1分鐘內, 
+            // 個人戰: 人數>1, 團體: 人數==MAX_PLAYERS_PER_ROOM
+
+            return (
+                //PhotonNetwork.IsMasterClient && 
+                m_gameState == false &&
+                PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM
+                );
+        }
+
+        [PunRPC]
+        void MovePlayersToGameStage() // Personal
+        {
+            int index = Random.Range(0, PlayerLocations.Count);
+            PlayerMovementController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+            Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
+            //FridgeLocations[index].GetComponentInChildren<GameObject>().SetActive();
+            m_gameState = true;
+            Debug.Log("=========MovePlayersToGameStage Personal");
+        }
+
+        void MovePlayersToGameStage_Test() //PhotonNetwork.Instantiate
+        {
+            int index = Random.Range(0, PlayerLocations.Count);
+
+            // generate the player : it gets synced by using PhotonNetwork.Instantiate
+            PhotonNetwork.Instantiate(PlayerPrefab.name, PlayerLocations[index].position, Quaternion.identity, 0);
+            Instantiate(FridgePrefab, FridgeLocations[index].position, Camera.main.transform.rotation);
+            //FridgeLocations[index].Find(FridgePrefab.name).gameObject.SetActive(true);
+
+            m_gameState = true;
+            Debug.Log("=========MovePlayersToGameStage TEST=====");
+        }
+
+        private void MovePlayersToGameStage_old() // player locations
+        {
+            int index, playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            //IEnumerable<int> tmpList = Enumerable.Range(1, max); //PlayerLocations.Count
+            List<int> indexList = Enumerable.Range(0, playerCount).ToList();
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                index = Random.Range(0, indexList.Count);
+                Debug.Log(index);
+                //PlayerPrefab.transform.position = PlayerLocations[index].position;
+                //FridgePrefab.transform.position = FridgeLocations[index].position;
+                //PhotonNetwork.PlayerList[i]
+                PlayerMovementController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+                Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
+                indexList.RemoveAt(index);
+            }            
+
+
+            Debug.Log("=========MovePlayersToGameStage _OLD");
+            m_gameState = true;
+        }
+
+        private void GenerateItems()
         {
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
             float RandomX;
             float RandomZ;
 
-            foreach (GameObject obj in ItemPrefabList)
+            foreach (GameObject obj in ItemPrefabs)
             {
                 m_RandomItemNumber = (short)Random.Range(5, 10);
-                Debug.LogFormat("Instantiate: {0}, {1}", obj.name, m_RandomItemNumber);
+                Debug.LogFormat("GenerateItems: {0}, {1}", obj.name, m_RandomItemNumber);
 
                 for (short i = 0; i < m_RandomItemNumber; i++)
                 {
-                    RandomX = Random.Range(2, 55);
-                    RandomZ = Random.Range(2, 80);
+                    RandomX = Random.Range(MinX, MaxX);
+                    RandomZ = Random.Range(MinZ, MaxZ);
 
                     Instantiate(obj, new Vector3(RandomX, 15f, RandomZ), Quaternion.identity);
                 }
@@ -141,15 +245,29 @@ namespace Game.SweetsWar
 
         void LoadArena()
         {
+            /*
             if (!PhotonNetwork.IsMasterClient)
             {
                 Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+                return;
             }
-            /*
-            Debug.LogFormat("PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount);
-            PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME_PLAYER + PhotonNetwork.CurrentRoom.PlayerCount);
             */
-            PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME);
+  
+            PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
+
+            /*
+            if (IsPlayerReady())
+            {
+                //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
+                MovePlayersToGameStage_old();
+                //PhotonView photonView = PhotonView.Get(this);
+                //photonView.RPC("MovePlayersToGameStage", RpcTarget.All);
+            }
+            /*else
+            {
+                PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
+            }*/
+            
         }
 
         private bool CheckAllPlayerLoadedLevel()
@@ -181,22 +299,20 @@ namespace Game.SweetsWar
         public override void OnPlayerEnteredRoom(Player other)
         {
             Debug.Log(other.NickName + " entered this room!"); // not seen if you're the player connecting
+            Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
 
             if (PhotonNetwork.IsMasterClient)
             {
-                Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
                 LoadArena();
             }
         }
         public override void OnPlayerLeftRoom(Player other)
         {
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
+            Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
 
             if (PhotonNetwork.IsMasterClient)
             {
-                Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
                 LoadArena();
             }
         }
