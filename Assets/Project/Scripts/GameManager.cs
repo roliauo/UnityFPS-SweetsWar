@@ -191,7 +191,9 @@ namespace Game.SweetsWar
 
             // generate the player : it gets synced by using PhotonNetwork.Instantiate
             PhotonNetwork.Instantiate(PlayerPrefab.name, PlayerLocations[index].position, Quaternion.identity, 0);
-            Instantiate(FridgePrefab, FridgeLocations[index].position, Camera.main.transform.rotation);
+            PhotonNetwork.Instantiate(FridgePrefab.name, FridgeLocations[index].position, Camera.main.transform.rotation, 0);
+
+            //Instantiate(FridgePrefab, FridgeLocations[index].position, Camera.main.transform.rotation);
             //FridgeLocations[index].Find(FridgePrefab.name).gameObject.SetActive(true);
 
             m_gameState = true;
@@ -223,6 +225,7 @@ namespace Game.SweetsWar
 
         private void GenerateItems()
         {
+            // TODO: 需同步物品: 用PhotonNetwork.Instantiate
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
             float RandomX;
             float RandomZ;

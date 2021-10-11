@@ -58,6 +58,11 @@ namespace Game.SweetsWar
         void OnDestroy()
         {
             Debug.Log("Backpack OnDestroy");
+            /*
+            foreach (Item item in _instance.inventory.ItemList) {
+                item.Number = 0;
+            }
+            */
             _instance.inventory.ItemList.Clear();
         }
 

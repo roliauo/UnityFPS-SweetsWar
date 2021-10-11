@@ -28,6 +28,7 @@ namespace Game.SweetsWar
         // Scene
         public const string SCENE_TITLE = "TitleScene";
         public const string SCENE_LOBBY = "LobbyScene";
+        public const string SCENE_READY = "ReadyScene";
         public const string SCENE_GAME = "GameScene";
         public const string SCENE_GAME_TEAM = "GameSceneTeam";
 
@@ -43,7 +44,7 @@ namespace Game.SweetsWar
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
 
         // Game Settings
-        public const byte MAX_PLAYERS_PER_ROOM = 4;
+        public const byte MAX_PLAYERS_PER_ROOM = 2;
         public const string FIXED_REGION_ASIA = "asia";
 
         // Animation
