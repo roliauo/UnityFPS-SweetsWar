@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1107 &-6684184028940896127
+--- !u!1107 &-990212408236273226
 AnimatorStateMachine:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Layer
+  m_Name: Base Layer
   m_ChildStates: []
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
@@ -30,8 +30,8 @@ AnimatorController:
   m_AnimatorParameters: []
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: New Layer
-    m_StateMachine: {fileID: -6684184028940896127}
+    m_Name: Base Layer
+    m_StateMachine: {fileID: -990212408236273226}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
