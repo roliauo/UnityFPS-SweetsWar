@@ -77,12 +77,23 @@ namespace Game.SweetsWar
             
             if (distance < MaxDistance && ID == me)
             {
-                Debug.Log("冰箱打開");
-                m_animator.SetBool(k_Animation_FridgeOpen, true);
+                Debug.Log("冰箱打開: " + !isOpened);
+                //m_animator.SetBool(k_Animation_FridgeOpen, true);
+                //isOpened = true;
+
+
                 //m_animation.Play(k_Animation_FridgeOpen);
-                //isOpened = !isOpened;
+
+                // switch
+                isOpened = !isOpened;
+                m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
+                if (isOpened == false)
+                {
+                    m_animator.SetTrigger(k_Animation_FridgeClose);
+                }
+
                 //CraftUI.SetActive(isOpened);
-                isOpened = true;
+
                 //CraftUI.SetActive(isOpened);
                 // Destroy this item in scene
                 //Destroy(this.gameObject);
