@@ -10,7 +10,6 @@ namespace Game.SweetsWar
         public string ID;
         public float MaxDistance = 4f;
         public float HP = 100;
-        //public GameObject CraftUI;
         public bool isOpened = false;
 
         private Animation m_animation;
@@ -63,7 +62,7 @@ namespace Game.SweetsWar
         */
 
         // on click item (collider)
-        private void OnMouseDown()
+        void OnMouseDown()
         {
             if (BackpackManerger._instance == null)
             {
@@ -71,10 +70,43 @@ namespace Game.SweetsWar
                 return;
             }
 
+            OpenFridge(true);
+
+        }
+
+        public void OpenFridge(bool state)
+        {
+
             float distance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
             string me = PlayerMovementController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
             //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
-            
+
+            if (distance < MaxDistance && ID == me)
+            {
+                Debug.Log("冰箱打開state: " + state);
+                isOpened = state;
+
+                m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
+                if (isOpened == false)
+                {
+                    m_animator.SetTrigger(k_Animation_FridgeClose);
+                }
+                GameManager.Instance.setCraftPanel(isOpened);
+
+            }
+        }
+
+        private void old_onMouseDown() {
+            // 由介面關閉冰箱
+            if (isOpened == true)
+            {
+                return;
+            }
+
+            float distance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
+            string me = PlayerMovementController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
+            //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
+
             if (distance < MaxDistance && ID == me)
             {
                 Debug.Log("冰箱打開: " + !isOpened);
@@ -86,19 +118,22 @@ namespace Game.SweetsWar
 
                 // switch
                 isOpened = !isOpened;
+                //playAnimation(isOpened);
                 m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
                 if (isOpened == false)
                 {
                     m_animator.SetTrigger(k_Animation_FridgeClose);
                 }
+                GameManager.Instance.setCraftPanel(isOpened);
 
-                //CraftUI.SetActive(isOpened);
-
-                //CraftUI.SetActive(isOpened);
-                // Destroy this item in scene
-                //Destroy(this.gameObject);
             }
-
+        }
+        public void playAnimation(bool isOpened) {
+            m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
+            if (isOpened == false)
+            {
+                m_animator.SetTrigger(k_Animation_FridgeClose);
+            }
         }
 
         #region IPunObservable implementation

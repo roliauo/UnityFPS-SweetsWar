@@ -14,6 +14,8 @@ namespace Game.SweetsWar
         static public GameManager Instance;
 
         public GameObject Menu;
+        public GameObject CraftPanel;
+        public GameObject AimTarget;
 
         [Header("Items")]
         public GameObject[] ItemPrefabs;
@@ -143,6 +145,16 @@ namespace Game.SweetsWar
             ClearGameData();
         }
 
+        public void setCraftPanel(bool state)
+        {
+            AimTarget.SetActive(!state);
+            CraftPanel.SetActive(state);
+            PlayerMovementController._instance.stopMove = state;
+            Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        #region Private method
+
         private void ClearGameData() {
             ResetItemNumber();
         }
@@ -174,8 +186,7 @@ namespace Game.SweetsWar
                 );
         }
 
-        [PunRPC]
-        void MovePlayersToGameStage() // Personal
+        private void MovePlayersToGameStage() // Personal
         {
             int index = Random.Range(0, PlayerLocations.Count);
             PlayerMovementController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
@@ -185,7 +196,7 @@ namespace Game.SweetsWar
             Debug.Log("=========MovePlayersToGameStage Personal");
         }
 
-        void MovePlayersToGameStage_Test() //PhotonNetwork.Instantiate
+        private void MovePlayersToGameStage_Test() //PhotonNetwork.Instantiate
         {
             int index = Random.Range(0, PlayerLocations.Count);
 
@@ -246,7 +257,7 @@ namespace Game.SweetsWar
             }
         }
 
-        void LoadArena()
+        private void LoadArena()
         {
             /*
             if (!PhotonNetwork.IsMasterClient)
@@ -293,6 +304,9 @@ namespace Game.SweetsWar
             return true;
         }
 
+        #endregion
+
+        #region PUN callback
         public override void OnLeftRoom()
         {
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
@@ -319,6 +333,7 @@ namespace Game.SweetsWar
                 LoadArena();
             }
         }
+        #endregion
     }
 }
 

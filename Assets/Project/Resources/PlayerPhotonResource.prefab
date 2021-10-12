@@ -125,7 +125,6 @@ MonoBehaviour:
   speedSprinting: 3
   jumpHeight: 1
   isFiring: 0
-  stop: 0
 --- !u!95 &5218969826787995188
 Animator:
   serializedVersion: 3
