@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
 namespace Game.SweetsWar
@@ -10,7 +11,7 @@ namespace Game.SweetsWar
         public string ID;
         public float MaxDistance = 4f;
         public float HP = 100;
-        public bool isOpened = false;
+        public bool IsOpened = false;
 
         private Animation m_animation;
         private Animator m_animator;
@@ -76,7 +77,7 @@ namespace Game.SweetsWar
 
         public void OpenFridge(bool state)
         {
-
+            // Play the Animation and control the permission 
             float distance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
             string me = PlayerMovementController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
             //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
@@ -84,56 +85,31 @@ namespace Game.SweetsWar
             if (distance < MaxDistance && ID == me)
             {
                 Debug.Log("冰箱打開state: " + state);
-                isOpened = state;
+                IsOpened = state;
 
-                m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
-                if (isOpened == false)
+                m_animator.SetBool(k_Animation_FridgeOpen, IsOpened);
+
+                if (IsOpened == false)
                 {
                     m_animator.SetTrigger(k_Animation_FridgeClose);
                 }
-                GameManager.Instance.setCraftPanel(isOpened);
 
+                // Open Craft System. 不監聽。由冰箱發送控制。
+                Invoke("SetCraftPanel", IsOpened ? 2f : 0);
             }
         }
 
-        private void old_onMouseDown() {
-            // 由介面關閉冰箱
-            if (isOpened == true)
-            {
-                return;
-            }
-
-            float distance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
-            string me = PlayerMovementController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
-            //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
-
-            if (distance < MaxDistance && ID == me)
-            {
-                Debug.Log("冰箱打開: " + !isOpened);
-                //m_animator.SetBool(k_Animation_FridgeOpen, true);
-                //isOpened = true;
-
-
-                //m_animation.Play(k_Animation_FridgeOpen);
-
-                // switch
-                isOpened = !isOpened;
-                //playAnimation(isOpened);
-                m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
-                if (isOpened == false)
-                {
-                    m_animator.SetTrigger(k_Animation_FridgeClose);
-                }
-                GameManager.Instance.setCraftPanel(isOpened);
-
-            }
-        }
         public void playAnimation(bool isOpened) {
             m_animator.SetBool(k_Animation_FridgeOpen, isOpened);
             if (isOpened == false)
             {
                 m_animator.SetTrigger(k_Animation_FridgeClose);
             }
+        }
+
+        private void SetCraftPanel()
+        {
+            GameManager.Instance.setCraftPanel(IsOpened);
         }
 
         #region IPunObservable implementation

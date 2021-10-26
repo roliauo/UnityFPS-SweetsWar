@@ -13,6 +13,7 @@ namespace Game.SweetsWar
         public Inventory inventory;
         public GameObject BackpackUI;
         public GameObject SlotPrefab;
+
         private Dictionary<short, GameObject> m_prefabDict;
 
         private void Awake()
@@ -25,45 +26,74 @@ namespace Game.SweetsWar
             m_prefabDict = new Dictionary<short, GameObject>();
         }
 
-        public bool Collect(Item item)
+        void OnDestroy()
         {
-            string msg = _instance.inventory.Add(item);
-            UpdateView();
+            Debug.Log("Backpack OnDestroy");
+            
+            _instance.inventory.ItemList.Clear();
+            ClearSlots();
+        }
 
-            return msg == null; // Success
+        public bool Collect(Item item, byte num = 1)
+        {
+            string msg = _instance.inventory.Add(item, num);
+            if (msg == null) // Success
+            {
+                UpdateView();
+                // show msg
+            }
+
+            return msg == null; 
             //UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryUI);
+        }
+
+        public void Subtract(Item item, byte num = 1)
+        {          
+            Item target = _instance.inventory.ItemList.Find(obj => obj.ID == item.ID);
+            target.Number -= num;
+            if (target.Number == 0)
+            {
+                _instance.inventory.ItemList.Remove(item);
+            }
+            Invoke("UpdateView", 0.5f);
+        }
+
+        public void Remove(Item item)
+        {
+            _instance.inventory.ItemList.Remove(item);            
+            Invoke("UpdateView", 0.5f);
+        }
+
+        public void OnClickSlot(Item m_item) 
+        {
+            // move into the craft box
+            _instance.Subtract(m_item);
+            CraftUIManager._instance.AddToCraftSlots(m_item);
         }
 
         private void UpdateView()
         {
-            // clear
-            foreach (GameObject item in m_prefabDict.Values)
-            {
-                Destroy(item.gameObject);
-            }
-
-            m_prefabDict.Clear();
+            ClearSlots();
 
             // build
             foreach (Item item in _instance.inventory.ItemList)
             {
                 GameObject slot = Instantiate(SlotPrefab);
                 slot.transform.SetParent(BackpackUI.transform);
-                //slot.transform.localScale = Vector3.one;
+                slot.transform.localScale = new Vector3(1, 1, 1);
                 slot.GetComponent<BackpackSlotPrefab>().SetItem(item);
                 m_prefabDict.Add(item.ID, slot);
             }
-        }
-
-        void OnDestroy()
+        }  
+        
+        private void ClearSlots()
         {
-            Debug.Log("Backpack OnDestroy");
-            /*
-            foreach (Item item in _instance.inventory.ItemList) {
-                item.Number = 0;
+            foreach (GameObject item in m_prefabDict.Values)
+            {
+                Destroy(item.gameObject);
             }
-            */
-            _instance.inventory.ItemList.Clear();
+
+            m_prefabDict.Clear();
         }
 
         /*

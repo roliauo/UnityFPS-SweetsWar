@@ -97,7 +97,7 @@ MonoBehaviour:
   ID: 
   MaxDistance: 4
   HP: 100
-  isOpened: 0
+  IsOpened: 0
 --- !u!114 &6640288581350444787
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,7 +16,15 @@ namespace Game.SweetsWar
         {
             btn_Slot.onClick.AddListener(() =>
             {
-                Debug.Log("slot click: " + m_item.DisplayName);
+                Debug.Log("slot click(remove): " + m_item.DisplayName);
+
+                BackpackManerger._instance.OnClickSlot(m_item);
+
+                /*
+                // move into the craft box
+                BackpackManerger._instance.Subtract(m_item);
+                CraftUIManager._instance.AddToCraftSlots(m_item);
+                */
             });
         }
 
@@ -42,6 +50,7 @@ namespace Game.SweetsWar
             ItemName.gameObject.SetActive(false);
 
         }
+
     }
 
 }
