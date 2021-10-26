@@ -16,6 +16,6 @@ MonoBehaviour:
   DisplayName: "\u7CD6\u679C"
   Icon: {fileID: 21300000, guid: 5cdeda4e4dbbb8b4ab52090377eb6a4d, type: 3}
   Number: 0
-  MaxNumber: 10
+  MaxNumber: 5
   Ingredients: []
   Description: 

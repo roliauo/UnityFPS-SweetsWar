@@ -16,6 +16,6 @@ MonoBehaviour:
   DisplayName: "\u5DE7\u514B\u529B"
   Icon: {fileID: 21300000, guid: be55176eeb1486a409cb4b34bf1122bf, type: 3}
   Number: 0
-  MaxNumber: 10
+  MaxNumber: 5
   Ingredients: []
   Description: 

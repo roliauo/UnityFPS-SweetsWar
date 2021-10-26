@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: "\u751F\u6C23\u7684\u96DE\u86CB"
   Icon: {fileID: 0}
   Number: 0
-  MaxNumber: 10
+  MaxNumber: 1
   Ingredients:
   - ItemID: 3
     Number: 3
