@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
-  m_Name: Weapon_Bomb_Cake
+  m_Name: Weapon_100_Axe_Lollipop
   m_EditorClassIdentifier: 
-  ID: 3
-  DisplayName: "\u96DE\u86CB\u7CD5\u70B8\u5F48"
-  Icon: {fileID: 21300000, guid: ee2592d4f7f278f46835651208e923af, type: 3}
+  ID: 100
+  DisplayName: "\u68D2\u68D2\u7CD6\u65A7\u982D"
+  Icon: {fileID: 0}
   Number: 0
   MaxNumber: 10
   Ingredients:
-  - item: {fileID: 11400000, guid: fe61c3b531f59cf4682581e48bb6cc2a, type: 2}
-    number: 3
-  - item: {fileID: 11400000, guid: c692821a25d006a4990cf7659f0918e0, type: 2}
-    number: 3
+  - ItemID: 0
+    Number: 3
+  - ItemID: 2
+    Number: 1
   Description: 
-  Damage: 30
-  AttackRange: 15
-  FireLoadingTime: 2
+  Damage: 20
+  AttackRange: 4
+  FireLoadingTime: 3

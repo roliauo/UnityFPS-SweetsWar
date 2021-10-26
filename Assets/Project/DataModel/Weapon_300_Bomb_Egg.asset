@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
-  m_Name: Weapon_Bomb_Egg
+  m_Name: Weapon_300_Bomb_Egg
   m_EditorClassIdentifier: 
-  ID: 2
+  ID: 300
   DisplayName: "\u751F\u6C23\u7684\u96DE\u86CB"
   Icon: {fileID: 0}
   Number: 0
   MaxNumber: 10
   Ingredients:
-  - item: {fileID: 11400000, guid: fe61c3b531f59cf4682581e48bb6cc2a, type: 2}
-    number: 3
+  - ItemID: 3
+    Number: 3
   Description: 
   Damage: 15
   AttackRange: 10

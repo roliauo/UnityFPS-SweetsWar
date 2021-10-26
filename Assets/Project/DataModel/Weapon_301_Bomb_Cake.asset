@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
-  m_Name: Weapon_Sword_Candy
+  m_Name: Weapon_301_Bomb_Cake
   m_EditorClassIdentifier: 
-  ID: 0
-  DisplayName: "\u62D0\u6756\u7CD6\u528D"
-  Icon: {fileID: 0}
+  ID: 301
+  DisplayName: "\u96DE\u86CB\u7CD5\u70B8\u5F48"
+  Icon: {fileID: 21300000, guid: ee2592d4f7f278f46835651208e923af, type: 3}
   Number: 0
   MaxNumber: 10
   Ingredients:
-  - item: {fileID: 11400000, guid: 5ba8ff2b94f9d1643b1dfb97889e447c, type: 2}
-    number: 3
+  - ItemID: 3
+    Number: 3
+  - ItemID: 2
+    Number: 3
   Description: 
-  Damage: 10
-  AttackRange: 5
-  FireLoadingTime: 0.5
+  Damage: 30
+  AttackRange: 15
+  FireLoadingTime: 2

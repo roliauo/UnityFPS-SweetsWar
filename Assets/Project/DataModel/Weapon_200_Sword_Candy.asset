@@ -10,21 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
-  m_Name: Weapon_Gun_IceCream
+  m_Name: Weapon_200_Sword_Candy
   m_EditorClassIdentifier: 
-  ID: 4
-  DisplayName: "\u51B0\u6DC7\u6DCB\u69CD"
+  ID: 200
+  DisplayName: "\u62D0\u6756\u7CD6\u528D"
   Icon: {fileID: 0}
   Number: 0
   MaxNumber: 10
   Ingredients:
-  - item: {fileID: 11400000, guid: 5ba8ff2b94f9d1643b1dfb97889e447c, type: 2}
-    number: 1
-  - item: {fileID: 11400000, guid: 95a81ab270a225f42bead4fd906614ad, type: 2}
-    number: 2
-  - item: {fileID: 11400000, guid: c692821a25d006a4990cf7659f0918e0, type: 2}
-    number: 2
+  - ItemID: 0
+    Number: 3
   Description: 
-  Damage: 30
-  AttackRange: 10
-  FireLoadingTime: 1
+  Damage: 10
+  AttackRange: 5
+  FireLoadingTime: 0.5
