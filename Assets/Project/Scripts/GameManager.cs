@@ -82,7 +82,12 @@ namespace Game.SweetsWar
             /* SET THE CURSOR MODE */
             Cursor.lockState = CursorLockMode.Locked;
 
-            GenerateItems();
+            //GenerateItems();
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            {
+                GenerateItems();
+            }
 
             /*
             // SHOW PLAYERS' NAME
@@ -236,14 +241,14 @@ namespace Game.SweetsWar
 
         private void GenerateItems()
         {
-            // TODO: 需同步物品: 用PhotonNetwork.Instantiate
+            // TODO: 需同步物品: 用PhotonNetwork.Instantiate會當掉，無法監控太多
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
             float RandomX;
             float RandomZ;
 
             foreach (GameObject obj in ItemPrefabs)
             {
-                m_RandomItemNumber = (short)Random.Range(5, 10);
+                m_RandomItemNumber = (short)Random.Range(10, 20);
                 Debug.LogFormat("GenerateItems: {0}, {1}", obj.name, m_RandomItemNumber);
 
                 for (short i = 0; i < m_RandomItemNumber; i++)
@@ -251,7 +256,8 @@ namespace Game.SweetsWar
                     RandomX = Random.Range(MinX, MaxX);
                     RandomZ = Random.Range(MinZ, MaxZ);
 
-                    Instantiate(obj, new Vector3(RandomX, 15f, RandomZ), Quaternion.identity);
+                    Instantiate(obj, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
+                    //PhotonNetwork.Instantiate(obj.name, new Vector3(RandomX, 15f, RandomZ), Quaternion.identity);
                 }
 
             }

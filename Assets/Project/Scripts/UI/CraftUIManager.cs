@@ -10,10 +10,15 @@ namespace Game.SweetsWar
         public static CraftUIManager _instance;
         public Inventory inventory;
         public GameObject SlotContainer;
+        public GameObject InfoPanel;
         public Button Button_SlotPrefab;
         public Button Button_Mix;
         public Button Button_Close;
         public Button Button_Info;
+        public Button Button_CloseInfo;
+        public GameObject[] OutputItemPrefabs;
+
+        private Dictionary<short, short> m_itemCount;
 
         private void Awake()
         {
@@ -31,17 +36,25 @@ namespace Game.SweetsWar
             });
 
             Button_Mix.onClick.AddListener(Mix);
-
-            Button_Info.onClick.AddListener(ShowInfo);
-
-            //Button_SlotPrefab.onClick.AddListener((Item item) => RemoveFromCraftSlots);
-
+            Button_Info.onClick.AddListener(() => ShowInfo(true));
+            Button_CloseInfo.onClick.AddListener(() => ShowInfo(false));
+            //m_itemCount = new Dictionary<short, short>();
         }
 
         void OnDestroy()
         {
             Debug.Log("Craft OnDestroy");
+            Clear();
+        }
+
+        public void Clear()
+        {
             _instance.inventory.ItemList.Clear();
+            m_itemCount.Clear();
+            foreach (Transform child in SlotContainer.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         public void AddToCraftSlots(Item item)
@@ -66,13 +79,75 @@ namespace Game.SweetsWar
             Destroy(obj);
         }     
 
-        private void Mix() { 
-        
+        private void Mix() {
+            Ingredient[] ingredients = { };
+            short outputItemID = -1;
+            m_itemCount = new Dictionary<short, short>();
+
+            // count
+            foreach (Item item in _instance.inventory.ItemList)
+            {
+                if (m_itemCount.ContainsKey(item.ID))
+                {
+                    m_itemCount[item.ID] += 1;
+                } else
+                {
+                    m_itemCount.Add(item.ID, 1);
+                }
+            }
+            /*
+            foreach(KeyValuePair<short, short> dic in m_itemCount)
+            {
+                Debug.Log("key: " + dic.Key + " value: " + dic.Value);
+            }
+            */
+            foreach(GameObject obj in OutputItemPrefabs)
+            {
+                //outputItemID = -1;
+                //Ingredient[] ingredients = obj.GetComponent<WeaponBehavior>().WeaponData.Ingredients;
+                if (obj.TryGetComponent<WeaponBehavior>(out WeaponBehavior behavior_w))
+                {
+                    ingredients = behavior_w.WeaponData.Ingredients;
+                    
+                    
+                }              
+                else if (obj.TryGetComponent<ItemBehavior>(out ItemBehavior behavior_i))
+                {
+                    ingredients = behavior_i.item.Ingredients;
+
+                }
+
+                if (m_itemCount.Count == ingredients.Length)
+                {
+                    foreach (Ingredient ingre in ingredients)
+                    {
+                        /*if (m_itemCount.ContainsKey(ingre.ItemID) && m_itemCount[ingre.ItemID] == ingre.Number)
+                        {
+
+                        }*/
+                        if (!m_itemCount.ContainsKey(ingre.ItemID) || m_itemCount[ingre.ItemID] != ingre.Number)
+                        {
+                            outputItemID = -1;
+                            break; // 一項成份不匹配即跳出
+                        }
+                        outputItemID = behavior_w.WeaponData.ID;
+                    }
+                }
+
+                if (outputItemID > 0)
+                {
+                    break; // 已有配對物即跳出
+                }
+                
+            }
+
+            Debug.Log("MIX------outputItemID: "+ outputItemID);
+
         }
 
-        private void ShowInfo()
+        private void ShowInfo(bool state)
         {
-
+            InfoPanel.SetActive(state);
         }
     }
 }

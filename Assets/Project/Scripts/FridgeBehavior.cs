@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.SweetsWar
 {
-    [RequireComponent(typeof(Animation))]
+    [RequireComponent(typeof(Animator))]
     public class FridgeBehavior : MonoBehaviourPunCallbacks, IPunObservable
     {
         public static FridgeBehavior _instance;
@@ -13,7 +13,7 @@ namespace Game.SweetsWar
         public float HP = 100;
         public bool IsOpened = false;
 
-        private Animation m_animation;
+        //private Animation m_animation;
         private Animator m_animator;
         private const string k_Animation_FridgeOpen = "FridgeOpen";
         private const string k_Animation_FridgeClose = "FridgeClose";
@@ -37,32 +37,6 @@ namespace Game.SweetsWar
             // 如果不是自己的冰箱就用紅框表示
         }
 
-        private void Update()
-        {
-            //transform.Rotate(new Vector3(0, 1, 0), Space.World);
-        }
-        /*
-        // player touched
-        private void OnTriggerEnter(Collider c) 
-        {
-            if (BackpackManerger._instance == null)
-            {
-                Debug.Log("Without BackpackManerger._instance!");
-                return;
-            }
-
-            if(c.gameObject.tag == GameConstants.TAG_PLAYER)
-            {
-                BackpackManerger backpack = BackpackManerger._instance;
-                if (backpack.Collect(item)) {
-                    // Destroy the object in scene
-                    Destroy(this.gameObject);
-                }
-            }     
-        }
-        */
-
-        // on click item (collider)
         void OnMouseDown()
         {
             if (BackpackManerger._instance == null)
@@ -84,7 +58,6 @@ namespace Game.SweetsWar
 
             if (distance < MaxDistance && ID == me)
             {
-                Debug.Log("冰箱打開state: " + state);
                 IsOpened = state;
 
                 m_animator.SetBool(k_Animation_FridgeOpen, IsOpened);

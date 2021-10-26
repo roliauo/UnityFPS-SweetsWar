@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1147568765773772477}
   - component: {fileID: 3276875572678729663}
+  - component: {fileID: -3440092227854812589}
   m_Layer: 0
   m_Name: "\u68D2\u68D2\u7CD6\u65A7\u982D"
   m_TagString: Untagged
@@ -50,6 +51,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &-3440092227854812589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335284091252845575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 252664d1dc510d14ba2ecc9b616ace18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WeaponData: {fileID: 11400000, guid: 8c3ccd0281048a14e82492d68c76c1bd, type: 2}
+  MaxPickUpDistance: 4
 --- !u!1 &1864009449191603722
 GameObject:
   m_ObjectHideFlags: 0

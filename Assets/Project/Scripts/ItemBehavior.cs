@@ -1,13 +1,14 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.SweetsWar
 {
-    public class ItemBehavior : MonoBehaviour
+    public class ItemBehavior : MonoBehaviour//, IPunObservable
     {
         public Item item;
-        public float MaxItemDistance = 4f;
+        public float MaxPickUpDistance = 4f;
 
         private void Update()
         {
@@ -46,7 +47,7 @@ namespace Game.SweetsWar
             float itemDistance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
             Debug.Log("itemDistance: " + itemDistance);
 
-            if ( itemDistance < MaxItemDistance && BackpackManerger._instance.Collect(item))
+            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
             {
                 // Destroy this item in scene
                 Destroy(this.gameObject);
@@ -54,6 +55,15 @@ namespace Game.SweetsWar
 
         }
 
+        /*
+        #region IPunObservable implementation
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            //throw new System.NotImplementedException();
+            OnPhotonSerializeView(stream, info);
+        }
+        #endregion
+        */
     }
 }
 

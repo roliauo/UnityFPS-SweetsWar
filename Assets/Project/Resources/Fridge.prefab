@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: -222052855071946433}
   - component: {fileID: 1899373281371808609}
   - component: {fileID: 8240811221696766463}
-  - component: {fileID: 9129793153976944051}
   m_Layer: 0
   m_Name: Fridge
   m_TagString: Untagged
@@ -182,23 +181,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!111 &9129793153976944051
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7585002509453674488}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 0}
-  - {fileID: 0}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1001 &755224774010113426
 PrefabInstance:
   m_ObjectHideFlags: 0
