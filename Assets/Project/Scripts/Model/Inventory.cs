@@ -38,8 +38,8 @@ namespace Game.SweetsWar
                 }
                 else
                 {
-                    Debug.Log("背包滿了!" + ItemList.Count + "/" + ItemList.Capacity);
-                    errMsg = "背包滿了!";
+                    Debug.Log("沒有空間了!" + ItemList.Count + "/" + ItemList.Capacity);
+                    errMsg = "沒有空間了!";
                 }
             }
             return errMsg;

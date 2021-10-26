@@ -9,7 +9,7 @@ namespace Game.SweetsWar
         public string DisplayName;
         public Sprite Icon;
         public byte Number = 0;
-        public byte MaxNumber = 10;
+        public byte MaxNumber = 5;
         public Ingredient[] Ingredients;
 
         [TextArea]
