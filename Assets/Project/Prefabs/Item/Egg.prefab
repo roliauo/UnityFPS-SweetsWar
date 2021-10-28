@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 5942588809250038235}
   - component: {fileID: 4085738129296870038}
   m_Layer: 0
-  m_Name: Item_Egg
+  m_Name: Egg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: fe61c3b531f59cf4682581e48bb6cc2a, type: 2}
-  MaxItemDistance: 4
+  MaxPickUpDistance: 4
 --- !u!1001 &575374956810249864
 PrefabInstance:
   m_ObjectHideFlags: 0

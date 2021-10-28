@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Weapon_300_Bomb_Egg
   m_EditorClassIdentifier: 
   ID: 300
-  DisplayName: "\u751F\u6C23\u7684\u96DE\u86CB"
+  DisplayName: "\u96DE\u86CB\u624B\u69B4\u5F48"
   Icon: {fileID: 0}
   Number: 0
   MaxNumber: 1
