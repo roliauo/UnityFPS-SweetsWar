@@ -360,8 +360,7 @@ MonoBehaviour:
   m_text: Name123456
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4daf351afcea4c04e98ff8effa0b57bb, type: 2}
-  m_sharedMaterial: {fileID: -7208764771059180100, guid: 4daf351afcea4c04e98ff8effa0b57bb,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 25e964f2ba276324fbc356831201e739, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
