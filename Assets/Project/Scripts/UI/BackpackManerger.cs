@@ -55,13 +55,14 @@ namespace Game.SweetsWar
             {
                 _instance.inventory.ItemList.Remove(item);
             }
-            Invoke("UpdateView", 0.5f);
+            //Invoke("UpdateView", 0.5f);
+            UpdateView();
         }
 
         public void Remove(Item item)
         {
-            _instance.inventory.ItemList.Remove(item);            
-            Invoke("UpdateView", 0.5f);
+            _instance.inventory.ItemList.Remove(item);
+            UpdateView();
         }
 
         public void OnClickSlot(Item m_item) 

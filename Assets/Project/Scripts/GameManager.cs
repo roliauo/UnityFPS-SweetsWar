@@ -82,12 +82,12 @@ namespace Game.SweetsWar
             /* SET THE CURSOR MODE */
             Cursor.lockState = CursorLockMode.Locked;
 
-            //GenerateItems();
+            GenerateItems();
 
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            /*if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
                 GenerateItems();
-            }
+            }*/
 
             /*
             // SHOW PLAYERS' NAME
@@ -203,11 +203,12 @@ namespace Game.SweetsWar
 
         private void MovePlayersToGameStage_Test() //PhotonNetwork.Instantiate
         {
-            int index = Random.Range(0, PlayerLocations.Count);
+            int index = PhotonNetwork.CurrentRoom.PlayerCount; //Random.Range(0, PlayerLocations.Count);
 
             // generate the player : it gets synced by using PhotonNetwork.Instantiate
             PhotonNetwork.Instantiate(PlayerPrefab.name, PlayerLocations[index].position, Quaternion.identity, 0);
-            PhotonNetwork.Instantiate(FridgePrefab.name, FridgeLocations[index].position, Camera.main.transform.rotation, 0);
+            //PhotonNetwork.Instantiate(FridgePrefab.name, FridgeLocations[index].position, Camera.main.transform.rotation, 0);
+            PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[index].position, Camera.main.transform.rotation);
 
             //Instantiate(FridgePrefab, FridgeLocations[index].position, Camera.main.transform.rotation);
             //FridgeLocations[index].Find(FridgePrefab.name).gameObject.SetActive(true);
@@ -334,10 +335,6 @@ namespace Game.SweetsWar
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                LoadArena();
-            }
         }
         #endregion
     }

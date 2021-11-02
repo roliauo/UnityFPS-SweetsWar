@@ -11,12 +11,22 @@ namespace Game.SweetsWar
         public Inventory inventory;
         public GameObject SlotContainer;
         public GameObject InfoPanel;
+
+        [Header("Result")]
+        public GameObject ResultPanel;
+        public GameObject ResultSuccess;
+        public GameObject ResultFail;
+        public Image ResultImg;
+
+        [Header("Buttons")]
         public Button Button_SlotPrefab;
         public Button Button_Mix;
         public Button Button_Close;
         public Button Button_Info;
         public Button Button_CloseInfo;
-        public GameObject[] OutputItemPrefabs;
+
+        //public GameObject[] OutputItemPrefabs; //del
+        public Item[] OutputItems;
 
         private Dictionary<short, short> m_itemCount;
 
@@ -39,8 +49,17 @@ namespace Game.SweetsWar
             Button_Info.onClick.AddListener(() => ShowInfo(true));
             Button_CloseInfo.onClick.AddListener(() => ShowInfo(false));
             //m_itemCount = new Dictionary<short, short>();
+            ValidMix();
         }
-
+        
+        void Update()
+        {
+            if (ResultPanel.activeInHierarchy && Input.anyKeyDown)
+            {
+                ResultPanel.SetActive(false);
+            }
+        }
+        
         void OnDestroy()
         {
             Debug.Log("Craft OnDestroy");
@@ -50,11 +69,11 @@ namespace Game.SweetsWar
         public void Clear()
         {
             _instance.inventory.ItemList.Clear();
-            m_itemCount.Clear();
             foreach (Transform child in SlotContainer.transform)
             {
                 Destroy(child.gameObject);
             }
+            ValidMix();
         }
 
         public void AddToCraftSlots(Item item)
@@ -68,7 +87,7 @@ namespace Game.SweetsWar
             slot.transform.SetParent(SlotContainer.transform);
             slot.transform.localScale = new Vector3(1, 1, 1);
             slot.GetComponent<CraftSlotPrefab>().SetItem(item);
-
+            ValidMix();
         }
 
         public void RemoveFromCraftSlots(Item item, GameObject obj)
@@ -77,11 +96,19 @@ namespace Game.SweetsWar
             BackpackManerger._instance.Collect(item);
             _instance.inventory.ItemList.Remove(item); // list.remove: only remove the first item.
             Destroy(obj);
-        }     
+            ValidMix();
+        }  
+        
+        private void ValidMix()
+        {
+            Button_Mix.interactable = (_instance.inventory.ItemList.Count > 1);
+        }
 
         private void Mix() {
             Ingredient[] ingredients = { };
             short outputItemID = -1;
+            Item outputItem = null;
+
             m_itemCount = new Dictionary<short, short>();
 
             // count
@@ -101,47 +128,43 @@ namespace Game.SweetsWar
                 Debug.Log("key: " + dic.Key + " value: " + dic.Value);
             }
             */
-            foreach(GameObject obj in OutputItemPrefabs)
+            // Matching
+            foreach(Item itemData in OutputItems)
             {
-                //outputItemID = -1;
-                //Ingredient[] ingredients = obj.GetComponent<WeaponBehavior>().WeaponData.Ingredients;
-                if (obj.TryGetComponent<WeaponBehavior>(out WeaponBehavior behavior_w))
+                if (m_itemCount.Count == itemData.Ingredients.Length)
                 {
-                    ingredients = behavior_w.WeaponData.Ingredients;
-                    
-                    
-                }              
-                else if (obj.TryGetComponent<ItemBehavior>(out ItemBehavior behavior_i))
-                {
-                    ingredients = behavior_i.item.Ingredients;
-
-                }
-
-                if (m_itemCount.Count == ingredients.Length)
-                {
-                    foreach (Ingredient ingre in ingredients)
+                    foreach (Ingredient ingre in itemData.Ingredients)
                     {
-                        /*if (m_itemCount.ContainsKey(ingre.ItemID) && m_itemCount[ingre.ItemID] == ingre.Number)
-                        {
-
-                        }*/
                         if (!m_itemCount.ContainsKey(ingre.ItemID) || m_itemCount[ingre.ItemID] != ingre.Number)
                         {
                             outputItemID = -1;
                             break; // 一項成份不匹配即跳出
                         }
-                        outputItemID = behavior_w.WeaponData.ID;
+                        outputItemID = itemData.ID;
                     }
                 }
 
                 if (outputItemID > 0)
                 {
+                    outputItem = itemData;
                     break; // 已有配對物即跳出
                 }
-                
+            }
+ 
+            Debug.Log("MIX------outputItemID: "+ outputItemID + " ( "+ (outputItem ? outputItem.DisplayName : ""));
+
+            if (outputItemID > 0)
+            {
+                ResultImg.sprite = outputItem.Icon;
+                // generated by GameManager
             }
 
-            Debug.Log("MIX------outputItemID: "+ outputItemID);
+            // result panel
+            ResultPanel.SetActive(true);
+            ResultSuccess.SetActive(outputItemID > 0);
+            ResultFail.SetActive(outputItemID == -1);
+            
+            Clear();
 
         }
 

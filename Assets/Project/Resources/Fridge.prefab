@@ -157,7 +157,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: FridgeOpen
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: FridgeClose
   m_SynchronizeLayers:
   - SynchronizeType: 0
