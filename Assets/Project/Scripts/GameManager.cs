@@ -40,6 +40,9 @@ namespace Game.SweetsWar
         //public GameObject BackpackUI;
         //public bool StopAction;
 
+        [Header("Craft")]
+        public GameObject[] CraftItemPrefabs;
+
         private short m_RandomItemNumber;
         private bool m_gameState;
         private byte playerIndex;
@@ -156,6 +159,20 @@ namespace Game.SweetsWar
             CraftPanel.SetActive(state);
             PlayerMovementController._instance.stopMove = state;
             Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        public void Craft(string prefabName)
+        {
+            foreach(GameObject obj in CraftItemPrefabs)
+            {
+                //Item data = obj.GetComponent<>
+                if (obj.name.Equals(prefabName))
+                {
+                    Instantiate(obj, PlayerMovementController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
+                    break;
+                }
+            }
+            
         }
 
         #region Private method

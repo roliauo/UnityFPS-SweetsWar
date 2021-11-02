@@ -139,6 +139,11 @@ MonoBehaviour:
   FridgeLocations: []
   FridgePrefab: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}
+  CraftItemPrefabs:
+  - {fileID: 335284091252845575, guid: 359b2a7a7d461644e9f867b48b54887c, type: 3}
+  - {fileID: 116512905515055735, guid: a145feb75ac11374096d059271958f7f, type: 3}
+  - {fileID: 2866439397371875834, guid: 3bd664a638c8c5346bc29beca352a008, type: 3}
+  - {fileID: 4376784070544656137, guid: 5241ae4edaeda8143a8b2449f0d7a579, type: 3}
 --- !u!1001 &8070959559974334943
 PrefabInstance:
   m_ObjectHideFlags: 0
