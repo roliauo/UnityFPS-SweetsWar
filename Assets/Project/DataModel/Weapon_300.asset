@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
-  m_Name: Weapon_300_Bomb_Egg
+  m_Name: Weapon_300
   m_EditorClassIdentifier: 
   ID: 300
   DisplayName: "\u96DE\u86CB\u624B\u69B4\u5F48"

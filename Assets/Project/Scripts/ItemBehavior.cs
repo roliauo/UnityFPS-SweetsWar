@@ -50,7 +50,8 @@ namespace Game.SweetsWar
             if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
             {
                 // Destroy this item in scene
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
 
         }

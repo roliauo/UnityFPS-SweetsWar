@@ -123,12 +123,12 @@ MonoBehaviour:
   CraftPanel: {fileID: 5585198012180280209}
   AimTarget: {fileID: 6320040993962393844}
   ItemPrefabs:
-  - {fileID: 3708234880747616235, guid: 22ebaa959e7f48b4495aa16b2ecffcf4, type: 3}
-  - {fileID: 3708234880747616235, guid: 18b9c621512e6784bb3afaec2925cd0d, type: 3}
-  - {fileID: 3708234880747616235, guid: 00e93afa18c3ba5438afc746f0a3b875, type: 3}
-  - {fileID: 3708234880747616235, guid: 3b33b1982daf9b449987f9d09ee00363, type: 3}
-  - {fileID: 3708234880747616235, guid: b606503d64cee5e4a972f3b1c622dc3f, type: 3}
-  - {fileID: 3708234880747616235, guid: c925991ceaa7b55408c2dfda303c83ef, type: 3}
+  - {fileID: 3708234880747616235, guid: 7e02c8111499370458bb9dcc7e08d974, type: 3}
+  - {fileID: 3708234880747616235, guid: c7bed4038ae4b0443a421f24a15c599b, type: 3}
+  - {fileID: 3708234880747616235, guid: 21af60e7124021a4c8fe08100cee77dc, type: 3}
+  - {fileID: 3708234880747616235, guid: 040098b0517121042b8c5cdf55dbbfc1, type: 3}
+  - {fileID: 3708234880747616235, guid: 4f7f1c75d3e17304ca55749b71f14004, type: 3}
+  - {fileID: 3708234880747616235, guid: 3e327777eaef9d24baf964c5856ac5c7, type: 3}
   MinX: 2
   MaxX: 55
   MinZ: 2
@@ -480,6 +480,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 5373830554285739235, guid: f6db3427b88bf644aa7f700fe9c36b66,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -4.800049
       objectReference: {fileID: 0}
     - target: {fileID: 5861579970346736024, guid: f6db3427b88bf644aa7f700fe9c36b66,
         type: 3}

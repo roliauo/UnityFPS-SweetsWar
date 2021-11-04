@@ -85,13 +85,13 @@ namespace Game.SweetsWar
             /* SET THE CURSOR MODE */
             Cursor.lockState = CursorLockMode.Locked;
 
-            GenerateItems();
-
-            /*if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            //GenerateItems();
+            
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2) // Ready then setup
             {
                 GenerateItems();
-            }*/
-
+            }
+            
             /*
             // SHOW PLAYERS' NAME
             playerName.text = photonView.Owner.NickName;
@@ -274,8 +274,8 @@ namespace Game.SweetsWar
                     RandomX = Random.Range(MinX, MaxX);
                     RandomZ = Random.Range(MinZ, MaxZ);
 
-                    Instantiate(obj, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
-                    //PhotonNetwork.Instantiate(obj.name, new Vector3(RandomX, 15f, RandomZ), Quaternion.identity);
+                    //Instantiate(obj, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject(obj.name, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
                 }
 
             }
