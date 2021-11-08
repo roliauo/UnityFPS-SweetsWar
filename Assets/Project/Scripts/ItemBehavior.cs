@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.SweetsWar
 {
-    public class ItemBehavior : MonoBehaviour//, IPunObservable
+    public class ItemBehavior : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public Item item;
         public float MaxPickUpDistance = 4f;
@@ -35,26 +35,60 @@ namespace Game.SweetsWar
         }
         */
 
-        // on click item (collider)
         private void OnMouseDown()
         {
+            //way1
             if (BackpackManerger._instance == null)
             {
-                Debug.Log("Without BackpackManerger._instance!");
                 return;
             }
 
-            float itemDistance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
-            Debug.Log("itemDistance: " + itemDistance);
+            float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
 
-            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
+            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
             {
                 // Destroy this item in scene
-                //Destroy(this.gameObject);
-                PhotonNetwork.Destroy(gameObject);
+                photonView.RPC("RPC_ForceMasterClientDestroy", RpcTarget.MasterClient, photonView.ViewID);
             }
 
+            /*
+            // way2
+            if (BackpackManerger._instance == null)
+            {
+                return;
+            }
+
+            float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
+
+            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
+            {
+                // Destroy this item in scene
+                Destroy(this.gameObject);
+                PlayerController._instance
+            }
+            */
         }
+        [PunRPC] void RPC_ForceMasterClientDestroy(int viewID)
+        {
+            PhotonNetwork.Destroy(PhotonView.Find(viewID).gameObject);
+        }
+
+        /*
+        [PunRPC] void RPC_Destroy()
+        {
+            Debug.Log("photonView.IsMine: " + photonView.IsMine + "IsRoomView: " + photonView.IsRoomView + "---owner: " + photonView.Owner + "----" + PhotonNetwork.IsMasterClient);
+            if (photonView.IsMine == false) return;
+
+            float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
+            Debug.Log("itemDistance: " + itemDistance);
+
+            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
+            {
+                // Destroy this item in scene
+                Destroy(gameObject);
+            }
+        }
+        */
 
         /*
         #region IPunObservable implementation

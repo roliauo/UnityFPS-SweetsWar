@@ -52,8 +52,8 @@ namespace Game.SweetsWar
         public void OpenFridge(bool state)
         {
             // Play the Animation and control the permission 
-            float distance = Vector3.Distance(PlayerMovementController.localPlayerInstance.transform.position, transform.position);
-            string me = PlayerMovementController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
+            float distance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
+            string me = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
             //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
 
             if (distance < MaxDistance && ID == me)

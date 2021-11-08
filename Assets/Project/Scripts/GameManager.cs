@@ -66,7 +66,7 @@ namespace Game.SweetsWar
             else
             {
 
-                if (PlayerMovementController.localPlayerInstance == null)
+                if (PlayerController.localPlayerInstance == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                     ////playerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
@@ -87,11 +87,33 @@ namespace Game.SweetsWar
 
             //GenerateItems();
             
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 2) // Ready then setup
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient) // Ready then setup
             {
+
+                /*
+                // way2: rpc
+                float RandomX;
+                float RandomZ;
+                //foreach (GameObject obj in ItemPrefabs)
+                for(short i=0; i< ItemPrefabs.Length; i++)
+                {
+                    m_RandomItemNumber = (short)Random.Range(10, 20);
+                    Debug.LogFormat("GenerateItems: {0}, {1}", ItemPrefabs[i].name, m_RandomItemNumber);
+
+                    for (short j = 0; j < m_RandomItemNumber; j++)
+                    {
+                        RandomX = Random.Range(MinX, MaxX);
+                        RandomZ = Random.Range(MinZ, MaxZ);
+                        photonView.RPC("RPC_GenerateItems", RpcTarget.All, RandomX, RandomZ, i);
+                    }
+
+                }
+                */
+
+                // way1: photon instantiate
                 GenerateItems();
             }
-            
+
             /*
             // SHOW PLAYERS' NAME
             playerName.text = photonView.Owner.NickName;
@@ -157,7 +179,7 @@ namespace Game.SweetsWar
         {
             AimTarget.SetActive(!state);
             CraftPanel.SetActive(state);
-            PlayerMovementController._instance.stopMove = state;
+            PlayerController._instance.stopMove = state;
             Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
@@ -168,7 +190,7 @@ namespace Game.SweetsWar
                 //Item data = obj.GetComponent<>
                 if (obj.name.Equals(prefabName))
                 {
-                    Instantiate(obj, PlayerMovementController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
+                    Instantiate(obj, PlayerController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
                     break;
                 }
             }
@@ -211,7 +233,7 @@ namespace Game.SweetsWar
         private void MovePlayersToGameStage() // Personal
         {
             int index = Random.Range(0, PlayerLocations.Count);
-            PlayerMovementController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
             Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
             //FridgeLocations[index].GetComponentInChildren<GameObject>().SetActive();
             m_gameState = true;
@@ -247,7 +269,7 @@ namespace Game.SweetsWar
                 //PlayerPrefab.transform.position = PlayerLocations[index].position;
                 //FridgePrefab.transform.position = FridgeLocations[index].position;
                 //PhotonNetwork.PlayerList[i]
-                PlayerMovementController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+                PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
                 Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
                 indexList.RemoveAt(index);
             }            
@@ -257,6 +279,10 @@ namespace Game.SweetsWar
             m_gameState = true;
         }
 
+        /*[PunRPC]private void RPC_GenerateItems(float x, float z, short ItemPrefabIndex)
+        {
+            Instantiate(ItemPrefabs[ItemPrefabIndex], new Vector3(x, 10f, z), Quaternion.identity);
+        }*/
         private void GenerateItems()
         {
             // TODO: 需同步物品: 用PhotonNetwork.Instantiate會當掉，無法監控太多
@@ -275,6 +301,8 @@ namespace Game.SweetsWar
                     RandomZ = Random.Range(MinZ, MaxZ);
 
                     //Instantiate(obj, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
+                    
+                    //way1
                     PhotonNetwork.InstantiateRoomObject(obj.name, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
                 }
 

@@ -48,10 +48,11 @@ namespace Game.SweetsWar
         public const string FIXED_REGION_ASIA = "asia";
 
         // Animation
-        public const string ANIMATION_SPEED = "Speed";
+        public const string ANIMATION_SPEED = "SpeedTest"; //"Speed";
         public const string ANIMATION_MOVE = "Move";
         public const string ANIMATION_JUMP = "Jump";
         public const string ANIMATION_CHROUCH = "Crouch";
+        public const string ANIMATION_EQUIP = "EquipWeapon";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";

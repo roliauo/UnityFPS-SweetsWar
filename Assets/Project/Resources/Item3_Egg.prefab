@@ -43,8 +43,8 @@ GameObject:
   - component: {fileID: 4504358792875337150}
   - component: {fileID: 5942588809250038235}
   - component: {fileID: 4085738129296870038}
-  - component: {fileID: -94173763939524200}
-  - component: {fileID: 3715668272790869431}
+  - component: {fileID: 3767308710095782827}
+  - component: {fileID: -3551352688691344688}
   m_Layer: 0
   m_Name: Item3_Egg
   m_TagString: Untagged
@@ -110,7 +110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: fe61c3b531f59cf4682581e48bb6cc2a, type: 2}
   MaxPickUpDistance: 4
---- !u!114 &-94173763939524200
+--- !u!114 &3767308710095782827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3708234880747616235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-3551352688691344688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,22 +148,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3715668272790869431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708234880747616235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1001 &575374956810249864
 PrefabInstance:
   m_ObjectHideFlags: 0

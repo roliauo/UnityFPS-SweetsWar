@@ -45,8 +45,8 @@ GameObject:
   - component: {fileID: 4504358792875337150}
   - component: {fileID: 5942588809250038235}
   - component: {fileID: 6476809188821128086}
-  - component: {fileID: 227914864130282672}
-  - component: {fileID: -4173698677234538528}
+  - component: {fileID: 8275327022541723332}
+  - component: {fileID: 5197765121513243901}
   m_Layer: 0
   m_Name: Item1_Chocolate
   m_TagString: Untagged
@@ -112,7 +112,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: f5b7d643e5e17d74d8196e33159dac9c, type: 2}
   MaxPickUpDistance: 4
---- !u!114 &227914864130282672
+--- !u!114 &8275327022541723332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3708234880747616235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &5197765121513243901
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,22 +150,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-4173698677234538528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708234880747616235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &5570882877608091510
 GameObject:
   m_ObjectHideFlags: 0

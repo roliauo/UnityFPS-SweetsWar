@@ -133,6 +133,7 @@ namespace Game.SweetsWar
                 roomName, //null, 
                 new RoomOptions
                 {
+                    CleanupCacheOnLeave = false, // set false for scene objects
                     MaxPlayers = GameConstants.MAX_PLAYERS_PER_ROOM,
                     IsVisible = true,
                     IsOpen = true,

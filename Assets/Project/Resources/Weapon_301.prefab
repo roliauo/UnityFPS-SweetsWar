@@ -504,7 +504,7 @@ Transform:
   m_GameObject: {fileID: 2866439397371875834}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 5520003530905440255}
   - {fileID: 4857259050503272439}
@@ -578,9 +578,10 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -2833629621189001441}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

@@ -44,8 +44,8 @@ GameObject:
   - component: {fileID: 4504358792875337150}
   - component: {fileID: 5942588809250038235}
   - component: {fileID: 4588597930798265737}
-  - component: {fileID: 7277554920767002709}
-  - component: {fileID: -7361468068901865198}
+  - component: {fileID: -7592002006623972547}
+  - component: {fileID: -1974432923142298521}
   m_Layer: 0
   m_Name: Item2_Cookie
   m_TagString: Untagged
@@ -111,7 +111,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c692821a25d006a4990cf7659f0918e0, type: 2}
   MaxPickUpDistance: 4
---- !u!114 &7277554920767002709
+--- !u!114 &-7592002006623972547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3708234880747616235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-1974432923142298521
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,22 +149,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-7361468068901865198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708234880747616235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &5570882877608091510
 GameObject:
   m_ObjectHideFlags: 0

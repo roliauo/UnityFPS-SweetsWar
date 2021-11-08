@@ -43,8 +43,8 @@ GameObject:
   - component: {fileID: 4504358792875337150}
   - component: {fileID: 5942588809250038235}
   - component: {fileID: 4302609999486903762}
-  - component: {fileID: -6749705699026722989}
-  - component: {fileID: -6148240145203829264}
+  - component: {fileID: 7927279799641037412}
+  - component: {fileID: -99788639078577377}
   m_Layer: 0
   m_Name: Item4_IceCream
   m_TagString: Untagged
@@ -110,7 +110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 95a81ab270a225f42bead4fd906614ad, type: 2}
   MaxPickUpDistance: 4
---- !u!114 &-6749705699026722989
+--- !u!114 &7927279799641037412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3708234880747616235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-99788639078577377
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,22 +148,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-6148240145203829264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708234880747616235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1001 &8300409132160740089
 PrefabInstance:
   m_ObjectHideFlags: 0

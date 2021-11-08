@@ -40,6 +40,12 @@ MonoBehaviour:
   - RespawnSpaceship
   - TP1
   - MovePlayersToGameStage
+  - GenerateItems
+  - EquipWeapon
+  - RPC_ForceMasterClientReplaceTreeWithStump
+  - RPC_Destroy
+  - RPC_GenerateItems
+  - RPC_ForceMasterClientDestroy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

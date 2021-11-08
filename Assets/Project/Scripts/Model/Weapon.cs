@@ -8,6 +8,7 @@ namespace Game.SweetsWar
         public float Damage;
         public float AttackRange;
         public float FireLoadingTime;
+        public AudioClip fireSFX;
         //public new byte MaxNumber = 1;
 
 

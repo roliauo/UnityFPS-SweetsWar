@@ -8,13 +8,12 @@ using Photon.Realtime;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
-    public class PlayerMovementController : MonoBehaviourPunCallbacks, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
-        public static PlayerMovementController _instance;
+        public static PlayerController _instance;
         public static GameObject localPlayerInstance;
         public Camera playerCamera;
-        public TextMesh playerName;
-        public AudioSource playerAudioSource;
+        public TextMesh playerName;       
 
         public float lookSensitivity = 200f;
         public float gravity = -20f;
@@ -33,6 +32,15 @@ namespace Game.SweetsWar
         public float speedSprinting = 3f;
         public float jumpHeight = 1f;
 
+        [Header("Weapon")]
+        public Transform weaponSlot;
+
+        [Header("Audio")]
+        public AudioSource audioSource;
+        public AudioClip footstepSFX;
+        public AudioClip equipSFX;
+        public AudioClip jumpSFX;
+
         public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
@@ -50,6 +58,7 @@ namespace Game.SweetsWar
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;           
         private float m_lastTimeJumped = 0f;
+        float m_footstepDistance;
 
         private const float k_groundCheckDistance = 0.05f;
         private const float k_JumpGroundingPreventionTime = 0.2f;
@@ -93,14 +102,13 @@ namespace Game.SweetsWar
 
         void Update()
         {
-            //bool StopAction = (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape));
-            // the player's name always faces the main camera : use Camera.main to get the main
-            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;   
-
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
                 return;
             }
+
+            // the player's name always faces the main camera : use Camera.main to get the main
+            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
 
             /*
             if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape))
@@ -112,6 +120,15 @@ namespace Game.SweetsWar
             Action();
 
         }
+      
+        [PunRPC] public void EquipWeapon(GameObject weaponPrefab)
+        {
+            Weapon held_weapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
+            weaponPrefab.transform.parent = weaponSlot;
+            m_animator.Play(GameConstants.ANIMATION_EQUIP);
+            audioSource.PlayOneShot(equipSFX);
+        }
+
 
         private void Action() {
 
@@ -133,6 +150,15 @@ namespace Game.SweetsWar
                 Vector3 move = transform.right * x + transform.forward * y;
                 m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
                 m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
+
+                // sound                
+                if (m_footstepDistance >= 1f)
+                {
+                    m_footstepDistance = 0f;
+                    audioSource.PlayOneShot(footstepSFX);
+                }
+
+                m_footstepDistance += m_velocity.magnitude * Time.deltaTime;
             }    
 
             /* sprint */
@@ -164,6 +190,7 @@ namespace Game.SweetsWar
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 m_animator.SetTrigger(GameConstants.ANIMATION_JUMP);
                 m_lastTimeJumped = Time.time;
+                audioSource.PlayOneShot(jumpSFX);
 
                 /*
                 // Force grounding to false
