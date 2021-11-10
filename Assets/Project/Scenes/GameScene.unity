@@ -7365,7 +7365,7 @@ PrefabInstance:
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
       propertyPath: m_Name
-      value: Fridge
+      value: Fridge1
       objectReference: {fileID: 0}
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
@@ -7377,6 +7377,12 @@ PrefabInstance:
 --- !u!4 &164652608 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6852242503433205227, guid: a9abdd7c1b69bcd429edeccb998e3e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 164652607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &164652609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}
   m_PrefabInstance: {fileID: 164652607}
   m_PrefabAsset: {fileID: 0}
@@ -13202,7 +13208,7 @@ PrefabInstance:
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
       propertyPath: m_Name
-      value: Fridge
+      value: Fridge3
       objectReference: {fileID: 0}
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
@@ -13215,6 +13221,12 @@ PrefabInstance:
 --- !u!4 &332434463 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6852242503433205227, guid: a9abdd7c1b69bcd429edeccb998e3e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 332434462}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &332434464 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}
   m_PrefabInstance: {fileID: 332434462}
   m_PrefabAsset: {fileID: 0}
@@ -48401,7 +48413,7 @@ PrefabInstance:
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
       propertyPath: m_Name
-      value: Fridge
+      value: Fridge2
       objectReference: {fileID: 0}
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
@@ -48413,6 +48425,12 @@ PrefabInstance:
 --- !u!4 &1304489471 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6852242503433205227, guid: a9abdd7c1b69bcd429edeccb998e3e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 1304489470}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1304489472 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}
   m_PrefabInstance: {fileID: 1304489470}
   m_PrefabAsset: {fileID: 0}
@@ -65508,7 +65526,7 @@ PrefabInstance:
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
       propertyPath: m_Name
-      value: Fridge
+      value: Fridge4
       objectReference: {fileID: 0}
     - target: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
         type: 3}
@@ -65520,6 +65538,12 @@ PrefabInstance:
 --- !u!4 &1842630346 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6852242503433205227, guid: a9abdd7c1b69bcd429edeccb998e3e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 1842630345}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1842630347 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}
   m_PrefabInstance: {fileID: 1842630345}
   m_PrefabAsset: {fileID: 0}
@@ -73934,6 +73958,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
         type: 3}
+      propertyPath: FridgeList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
       propertyPath: FridgeLocations.Array.data[0]
       value: 
       objectReference: {fileID: 1432403109}
@@ -73972,6 +74001,26 @@ PrefabInstance:
       propertyPath: PlayerLocations.Array.data[3]
       value: 
       objectReference: {fileID: 1216175987}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: FridgeList.Array.data[0]
+      value: 
+      objectReference: {fileID: 164652609}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: FridgeList.Array.data[1]
+      value: 
+      objectReference: {fileID: 1304489472}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: FridgeList.Array.data[2]
+      value: 
+      objectReference: {fileID: 332434464}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: FridgeList.Array.data[3]
+      value: 
+      objectReference: {fileID: 1842630347}
     - target: {fileID: 6164175624205947980, guid: bae5f999cf3f2ec4e83050e064aafe76,
         type: 3}
       propertyPath: m_AnchorMin.y

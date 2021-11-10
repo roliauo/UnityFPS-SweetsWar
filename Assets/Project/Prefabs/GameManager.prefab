@@ -138,6 +138,7 @@ MonoBehaviour:
   PlayerLocations: []
   PlayerPrefab: {fileID: 194672513326284442, guid: 829914bfd4228a643a7c7ac9fa8fce02,
     type: 3}
+  FridgeList: []
   FridgeLocations: []
   FridgePrefab: {fileID: 7585002509453674488, guid: a9abdd7c1b69bcd429edeccb998e3e93,
     type: 3}

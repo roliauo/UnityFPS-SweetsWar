@@ -321,6 +321,7 @@ namespace Photon.Pun
 
                 if (parameter.SynchronizeType == SynchronizeType.Continuous)
                 {
+                    Debug.Log("parameter.Type: " + parameter.Type + " parameter.Name: "+ parameter.Name);
                     switch (parameter.Type)
                     {
                         case ParameterType.Bool:

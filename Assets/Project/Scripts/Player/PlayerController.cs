@@ -70,6 +70,7 @@ namespace Game.SweetsWar
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
             if (photonView.IsMine)
             {
+                _instance = this;
                 localPlayerInstance = gameObject;
                 playerCamera.gameObject.SetActive(true);
             }
@@ -79,8 +80,7 @@ namespace Game.SweetsWar
             DontDestroyOnLoad(gameObject);
         }
         void Start()
-        {
-            _instance = this;
+        {         
             m_animator = GetComponent<Animator>();
             m_characterController = GetComponent<CharacterController>();
             m_speedPlayer = speedNormal;

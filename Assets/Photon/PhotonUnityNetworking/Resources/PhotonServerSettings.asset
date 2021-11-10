@@ -46,6 +46,9 @@ MonoBehaviour:
   - RPC_Destroy
   - RPC_GenerateItems
   - RPC_ForceMasterClientDestroy
+  - RPC_OpenFridge
+  - RPC_FridgeAnimation
+  - RPC_SyncCraftingInventories
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

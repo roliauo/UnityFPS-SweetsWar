@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(Animator))]
-    public class FridgeBehavior : MonoBehaviourPunCallbacks, IPunObservable
+    public class FridgeBehavior : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback  //, IPunObservable
     {
         public static FridgeBehavior _instance;
         public string ID;
@@ -20,22 +20,30 @@ namespace Game.SweetsWar
 
         private void Awake()
         {
-            if (_instance != null)
-            {
-                Destroy(this);
-            }
-
             _instance = this;
-
+            DontDestroyOnLoad(gameObject);
         }
 
         void Start()
         {
             m_animator = GetComponent<Animator>();
-            ID = PhotonNetwork.LocalPlayer.UserId;
-            Debug.Log("ID: " + ID);
+            //inventory = new Inventory(9);
+            //ID = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId; //PhotonNetwork.LocalPlayer.UserId; //PhotonNetwork.PlayerList[PhotonNetwork.CurrentRoom.PlayerCount-1].UserId; //PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId
+
             // 如果不是自己的冰箱就用紅框表示
         }
+
+        #region PUN callback
+        public void OnPhotonInstantiate(PhotonMessageInfo info)
+        {
+            object[] instantiationData = info.photonView.InstantiationData;
+            ID = (string)instantiationData[0];
+            //inventory = (Inventory)instantiationData[1];
+            Debug.Log("OnPhotonInstantiate: " + ID);
+            //inventory = new Inventory(9);
+            //CraftUIManager._instance.inventory = FridgeBehavior._instance.inventory; // Binding gameObject's data. if needed just show it.
+        }
+        #endregion
 
         void OnMouseDown()
         {
@@ -47,17 +55,23 @@ namespace Game.SweetsWar
 
             OpenFridge(true);
 
+            // w2
+            //OpenFridge_New(true);
+            //photonView.RPC("RPC_OpenFridge", RpcTarget.MasterClient, photonView.ViewID);
+
         }
 
         public void OpenFridge(bool state)
         {
             // Play the Animation and control the permission 
-            float distance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
-            string me = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
-            //Debug.Log("冰箱: " + ID + "我是: " + me + " " + ID == me);
+            //float distance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, _instance.transform.position);
+            float distance = Vector3.Distance(PlayerController._instance.gameObject.transform.position, _instance.transform.position);
+            string me = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId; //PhotonNetwork.LocalPlayer.UserId; 
+            Debug.Log("冰箱: " + ID + " 我是: " + me + " distance: " + distance);
 
-            if (distance < MaxDistance && ID == me)
+            if (distance < MaxDistance) //&& ID == me
             {
+
                 IsOpened = state;
 
                 m_animator.SetBool(k_Animation_FridgeOpen, IsOpened);
@@ -82,15 +96,10 @@ namespace Game.SweetsWar
 
         private void SetCraftPanel()
         {
-            GameManager.Instance.setCraftPanel(IsOpened);
+            Debug.Log("SetCraftPanel-ID: " + ID);
+            GameManager.Instance.setCraftPanel(IsOpened, ID);
         }
 
-        #region IPunObservable implementation
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            ((IPunObservable)_instance).OnPhotonSerializeView(stream, info);
-        }
-        #endregion
     }
 }
 

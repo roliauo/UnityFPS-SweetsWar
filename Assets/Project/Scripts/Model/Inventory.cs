@@ -13,6 +13,11 @@ namespace Game.SweetsWar
 
         public byte InventoryCapacity = 6;
 
+        public Inventory(byte size)
+        {
+            InventoryCapacity = size;
+        }
+
         public string Add(Item item, byte num = 1) // Backpack: 之後可放到相對應的Manager去處理
         {
             string errMsg = null;

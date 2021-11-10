@@ -64,7 +64,6 @@ namespace Game.SweetsWar
             {
                 // Destroy this item in scene
                 Destroy(this.gameObject);
-                PlayerController._instance
             }
             */
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace Game.SweetsWar
     public class CraftUIManager : MonoBehaviour
     {
         public static CraftUIManager _instance;
-        public Inventory inventory;
+        public Inventory inventory; 
         public GameObject SlotContainer;
         public GameObject InfoPanel;
 
@@ -29,17 +30,24 @@ namespace Game.SweetsWar
         public Item[] OutputItems;
 
         private Dictionary<short, short> m_itemCount;
+        private Dictionary<short, GameObject> m_prefabDict;
 
         private void Awake()
         {
+            
+            //hide: for show others' inventory
             if (_instance != null)
             {
                 Destroy(this);
             }
+            
             _instance = this;
+            m_prefabDict = new Dictionary<short, GameObject>();
         }
         void Start()
         {
+            //inventory = FridgeBehavior._instance.inventory; // Binding gameObject's data. if needed just show it.
+            //inventory = new Inventory(9);
             Button_Close.onClick.AddListener(() =>
             {
                 FridgeBehavior._instance.OpenFridge(false);
@@ -77,17 +85,50 @@ namespace Game.SweetsWar
         }
 
         public void AddToCraftSlots(Item item)
-        {          
-            if (_instance.inventory.ItemList.Count < _instance.inventory.InventoryCapacity)
+        {
+            Inventory box = _instance.inventory;
+            if (box.ItemList.Count < box.InventoryCapacity)
             {
-                _instance.inventory.ItemList.Add(item);
+                box.ItemList.Add(item);
+                Button slot = Instantiate(Button_SlotPrefab);
+                slot.transform.SetParent(SlotContainer.transform);
+                slot.transform.localScale = new Vector3(1, 1, 1);
+                slot.GetComponent<CraftSlotPrefab>().SetItem(item);
+                m_prefabDict.Add(item.ID, slot.gameObject);
+                ValidMix();
+
+                Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
+                // use FridgeBehavior._instance.ID to get the data
+                GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, FridgeBehavior._instance.ID, item.ID, true);
+                
+
             }
-            
-            Button slot = Instantiate(Button_SlotPrefab);
-            slot.transform.SetParent(SlotContainer.transform);
-            slot.transform.localScale = new Vector3(1, 1, 1);
-            slot.GetComponent<CraftSlotPrefab>().SetItem(item);
-            ValidMix();
+
+        }
+
+        public void AddToCraftSlots(Item item, Inventory craftBox, bool sendRPC = false)
+        {
+            Inventory box = craftBox == null ? _instance.inventory : craftBox;
+            if (box.ItemList.Count < box.InventoryCapacity)
+            {
+                box.ItemList.Add(item);
+                Button slot = Instantiate(Button_SlotPrefab);
+                slot.transform.SetParent(SlotContainer.transform);
+                slot.transform.localScale = new Vector3(1, 1, 1);
+                slot.GetComponent<CraftSlotPrefab>().SetItem(item);
+                m_prefabDict.Add(item.ID, slot.gameObject);
+                ValidMix();
+
+                if (sendRPC)
+                {
+                    Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
+                    // use FridgeBehavior._instance.ID to get the data
+                    GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, FridgeBehavior._instance.ID, item.ID, true);
+                    //sendRPCSync(item, true);
+                }
+
+            }
+
         }
 
         public void RemoveFromCraftSlots(Item item, GameObject obj)
@@ -95,10 +136,47 @@ namespace Game.SweetsWar
             // move into the backpack
             BackpackManerger._instance.Collect(item);
             _instance.inventory.ItemList.Remove(item); // list.remove: only remove the first item.
+            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, FridgeBehavior._instance.ID, item.ID, false);
+            //sendRPCSync(item);
             Destroy(obj);
+            m_prefabDict.Remove(item.ID);
             ValidMix();
-        }  
+        }
+
+        public void UpdateView()
+        {
+            ClearSlots();
+
+            // build
+            foreach (Item item in _instance.inventory.ItemList)
+            {
+                Button slot = Instantiate(Button_SlotPrefab);
+                slot.transform.SetParent(SlotContainer.transform);
+                slot.transform.localScale = new Vector3(1, 1, 1);
+                slot.GetComponent<CraftSlotPrefab>().SetItem(item);
+                m_prefabDict.Add(item.ID, slot.gameObject);
+            }
+        }
+
+        private void ClearSlots()
+        {
+            foreach (GameObject item in m_prefabDict.Values)
+            {
+                Destroy(item.gameObject);
+            }
+
+            m_prefabDict.Clear();
+        }
+
         
+
+        public void sendRPCSync(Item item, bool add = false)
+        {
+            object[] data = { PhotonNetwork.LocalPlayer.UserId, item, add };
+            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, data);
+
+        }
+
         private void ValidMix()
         {
             Button_Mix.interactable = (_instance.inventory.ItemList.Count > 1);
