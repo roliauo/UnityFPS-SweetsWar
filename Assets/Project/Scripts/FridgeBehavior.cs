@@ -5,10 +5,11 @@ using UnityEngine;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(Animator))]
-    public class FridgeBehavior : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback  //, IPunObservable
+    public class FridgeBehavior : MonoBehaviourPunCallbacks//, IPunInstantiateMagicCallback  //, IPunObservable
     {
-        public static FridgeBehavior _instance;
-        public string ID;
+        //public static FridgeBehavior _instance;
+        //public static GameObject _objectInstance;
+        public int ID;
         public float MaxDistance = 4f;
         public float HP = 100;
         public bool IsOpened = false;
@@ -20,13 +21,16 @@ namespace Game.SweetsWar
 
         private void Awake()
         {
-            _instance = this;
+            //_instance = this;
+            //_objectInstance = gameObject;
             DontDestroyOnLoad(gameObject);
         }
 
         void Start()
         {
             m_animator = GetComponent<Animator>();
+            ID = photonView.ViewID;
+            GameManager.Instance.AllPlayerCraftingInventories.Add(ID, new Inventory(9));
             //inventory = new Inventory(9);
             //ID = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId; //PhotonNetwork.LocalPlayer.UserId; //PhotonNetwork.PlayerList[PhotonNetwork.CurrentRoom.PlayerCount-1].UserId; //PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId
 
@@ -34,15 +38,17 @@ namespace Game.SweetsWar
         }
 
         #region PUN callback
+        /*
         public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
             object[] instantiationData = info.photonView.InstantiationData;
-            ID = (string)instantiationData[0];
+            //ID = (string)instantiationData[0];
             //inventory = (Inventory)instantiationData[1];
             Debug.Log("OnPhotonInstantiate: " + ID);
             //inventory = new Inventory(9);
             //CraftUIManager._instance.inventory = FridgeBehavior._instance.inventory; // Binding gameObject's data. if needed just show it.
         }
+        */
         #endregion
 
         void OnMouseDown()
@@ -65,7 +71,7 @@ namespace Game.SweetsWar
         {
             // Play the Animation and control the permission 
             //float distance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, _instance.transform.position);
-            float distance = Vector3.Distance(PlayerController._instance.gameObject.transform.position, _instance.transform.position);
+            float distance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, gameObject.transform.position);
             string me = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId; //PhotonNetwork.LocalPlayer.UserId; 
             Debug.Log("冰箱: " + ID + " 我是: " + me + " distance: " + distance);
 

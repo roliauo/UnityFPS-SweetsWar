@@ -73,23 +73,6 @@ namespace Game.SweetsWar
         }
 
         /*
-        [PunRPC] void RPC_Destroy()
-        {
-            Debug.Log("photonView.IsMine: " + photonView.IsMine + "IsRoomView: " + photonView.IsRoomView + "---owner: " + photonView.Owner + "----" + PhotonNetwork.IsMasterClient);
-            if (photonView.IsMine == false) return;
-
-            float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
-            Debug.Log("itemDistance: " + itemDistance);
-
-            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
-            {
-                // Destroy this item in scene
-                Destroy(gameObject);
-            }
-        }
-        */
-
-        /*
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {

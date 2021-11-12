@@ -36,7 +36,7 @@ namespace Game.SweetsWar
         public List<GameObject> FridgeList;
         public List<Transform> FridgeLocations;
         public GameObject FridgePrefab;
-        public Dictionary<string, Inventory> AllPlayerCraftingInventories;
+        public Dictionary<int, Inventory> AllPlayerCraftingInventories;
 
         // for show/hide backpack
         //public GameObject BackpackUI;
@@ -58,7 +58,7 @@ namespace Game.SweetsWar
             }
 
             Instance = this;
-            AllPlayerCraftingInventories = new Dictionary<string, Inventory>();
+            AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
 
             /* SET PLAYER */
             if (PlayerPrefab == null) //PlayerManager.LocalPlayerInstance == null
@@ -91,20 +91,16 @@ namespace Game.SweetsWar
             //GenerateItems();
             
 
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient) // Ready then setup
+            if (IsPlayerReady()) // Ready then setup
             {
 
                 for (short i=0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
                 {
-                    AllPlayerCraftingInventories.Add(PhotonNetwork.PlayerList[i].UserId, new Inventory(9)); // everyone should update 
+                    //AllPlayerCraftingInventories.Add(PhotonNetwork.PlayerList[i].UserId, new Inventory(9)); 
                     Debug_ShowAllPlayerCraftingInventories();
 
-                    object[] initData = { PhotonNetwork.PlayerList[i].UserId };
-                    PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0, initData); // pass
-
-                    //FridgeList[i].GetComponent<FridgeBehavior>().ID = PhotonNetwork.PlayerList[i].UserId; //PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId;
-                    //FridgeList[i].SetActive(true);
-                    //Debug.Log("GameManager-FridgeBehavior: " + photonView.IsMine + " ID: " + FridgeList[i].GetComponent<FridgeBehavior>().ID);
+                    //object[] initData = { PhotonNetwork.PlayerList[i].UserId };
+                    PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
                 }
                 
                 // way1: photon instantiate
@@ -174,22 +170,27 @@ namespace Game.SweetsWar
             ClearGameData();
         }
 
-        public void setCraftPanel(bool state, string craftID)
+        public void setCraftPanel(bool state, int craftID)
         {
             Debug_ShowAllPlayerCraftingInventories();
             if (AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
             {
+                // show the target data
                 //CraftUIManager._instance.inventory = AllPlayerCraftingInventories[craftID]; // show the target data
-                CraftUIManager._instance.inventory = box; // show the target data
-            }else
+                //CraftUIManager._instance.inventory = box; 
+                CraftUIManager._instance.setData(craftID, box);
+            }
+            else
             {
                 AllPlayerCraftingInventories.Add(craftID, new Inventory(9));
             }
             
             AimTarget.SetActive(!state);
             CraftPanel.SetActive(state);
-            CraftUIManager._instance.UpdateView();
+            if (state) CraftUIManager._instance.UpdateView();
+            //GetComponentInChildren<CraftUIManager>().UpdateView();
             PlayerController._instance.stopMove = state;
+            //PlayerController.localPlayerInstance.GetComponent<PlayerController>().stopMove = state;
             Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
@@ -201,7 +202,7 @@ namespace Game.SweetsWar
                 if (obj.name.Equals(prefabName))
                 {
                     //Instantiate(obj, PlayerController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
-                    PhotonNetwork.InstantiateRoomObject(obj.name, PlayerController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject(obj.name, PlayerController.localPlayerInstance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
                     break;
                 }
             }
@@ -209,7 +210,7 @@ namespace Game.SweetsWar
         }
         
         #region RPC
-        [PunRPC] public void RPC_SyncCraftingInventories(string craftID, short itemID, bool add)
+        [PunRPC] public void RPC_SyncCraftingInventories(int craftID, short itemID, bool add)
         {
             // ERROR: RPC can't recieve object: Item
             Debug.Log("RPC_SyncCraftingInventories: " + craftID);
@@ -241,7 +242,7 @@ namespace Game.SweetsWar
             // DEBUG
             Debug.Log("AllPlayerCraftingInventories: " + Instance.AllPlayerCraftingInventories.Count);
 
-            foreach (KeyValuePair<string, Inventory> dic in Instance.AllPlayerCraftingInventories)
+            foreach (KeyValuePair<int, Inventory> dic in Instance.AllPlayerCraftingInventories)
             {
                 Debug.Log("AllPlayerCraftingInventories-KEY: " + dic.Key);
                 foreach (Item v in dic.Value.ItemList)
@@ -273,13 +274,14 @@ namespace Game.SweetsWar
 
         private bool IsPlayerReady()
         {
+            // use MasterClient to update the scene
             // TODO: need to modify number of player (2~4)
             // 時間: 1分鐘內, 
             // 個人戰: 人數>1, 團體: 人數==MAX_PLAYERS_PER_ROOM
 
             return (
-                //PhotonNetwork.IsMasterClient && 
-                m_gameState == false &&
+                PhotonNetwork.IsMasterClient && 
+                //m_gameState == false &&
                 PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM
                 );
         }
@@ -334,7 +336,6 @@ namespace Game.SweetsWar
         }*/
         private void GenerateItems()
         {
-            // TODO: 需同步物品: 用PhotonNetwork.Instantiate會當掉，無法監控太多
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
             float RandomX;
             float RandomZ;
@@ -342,7 +343,7 @@ namespace Game.SweetsWar
             foreach (GameObject obj in ItemPrefabs)
             {
                 m_RandomItemNumber = (short)Random.Range(8, 15);
-                Debug.LogFormat("GenerateItems: {0}, {1}", obj.name, m_RandomItemNumber);
+                //Debug.LogFormat("GenerateItems: {0}, {1}", obj.name, m_RandomItemNumber);
 
                 for (short i = 0; i < m_RandomItemNumber; i++)
                 {
