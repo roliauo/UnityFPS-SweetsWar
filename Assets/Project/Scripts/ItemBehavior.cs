@@ -8,7 +8,7 @@ namespace Game.SweetsWar
     public class ItemBehavior : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public Item item;
-        public float MaxPickUpDistance = 4f;
+        public float MaxPickUpDistance = 3.5f;
 
         private void Update()
         {
