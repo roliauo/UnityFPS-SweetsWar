@@ -8,7 +8,7 @@ namespace Game.SweetsWar
     public class WeaponController : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public Weapon WeaponData;
-        public float MaxPickUpDistance = 4f;
+        public float MaxPickUpDistance = 3f;
 
         private void OnMouseDown()
         {
@@ -19,29 +19,24 @@ namespace Game.SweetsWar
             }
 
             float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
-            Debug.Log("itemDistance: " + itemDistance);
+            //Debug.Log("itemDistance: " + itemDistance);
 
-            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData))
+            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData)) 
             {
-                PlayerController._instance.EquipWeapon(gameObject);
-                //photonView.RPC("RPC_ForceMasterEquipWeapon", RpcTarget.MasterClient, photonView.ViewID);
-                
-                //PlayerController._instance.photonView.RPC("RPC_EquipWeapon", RpcTarget.All, WeaponData.ID); //PhotonNetwork.LocalPlayer.UserId
-
-
-                //gameObject.transform.parent = PlayerController._instance.WeaponSlot;
-                //PlayerController._instance.EquipWeapon(gameObject);
-
-                //photonView.RPC("RPC_ForceMasterEquipWeapon", RpcTarget.MasterClient, photonView.ViewID);
+                // TODO: (GUI) set Weapon Slot
+                //PlayerController._instance.EquipWeapon(photonView.ViewID);
+                //PlayerController._instance.EquipWeapon_SetActive(WeaponData.ID);
+                PlayerController._instance.EquipWeapon_SetActive(name.Substring(0, name.IndexOf("("))); // prefab name: replace "(Clone)"
+                photonView.RPC("RPC_ForceMasterDestoryWeapon", RpcTarget.MasterClient, photonView.ViewID);
             }
             
         }
 
-        [PunRPC] void RPC_ForceMasterEquipWeapon(int viewID)
+        [PunRPC] void RPC_ForceMasterDestoryWeapon(int viewID)
         {
             GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
-            PlayerController._instance.EquipWeapon(weaponPrefab);
-            //PhotonNetwork.Destroy(weaponPrefab);
+            //PlayerController._instance.EquipWeapon(weaponPrefab);
+            PhotonNetwork.Destroy(weaponPrefab);
             //PlayerController._instance.EquipWeapon(WeaponData.ID);
 
         }

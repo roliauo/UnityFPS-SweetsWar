@@ -69756,10 +69756,20 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1768870185239604411, guid: 829914bfd4228a643a7c7ac9fa8fce02,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 2220464088355075127, guid: 829914bfd4228a643a7c7ac9fa8fce02,
         type: 3}
       propertyPath: sceneViewId
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2848797292443714546, guid: 829914bfd4228a643a7c7ac9fa8fce02,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3236829930539630642, guid: 829914bfd4228a643a7c7ac9fa8fce02,
         type: 3}
@@ -69770,6 +69780,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneViewId
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3683095778727547322, guid: 829914bfd4228a643a7c7ac9fa8fce02,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4117659841946216075, guid: 829914bfd4228a643a7c7ac9fa8fce02,
         type: 3}
@@ -69810,6 +69825,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Height
       value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968112664076833958, guid: 829914bfd4228a643a7c7ac9fa8fce02,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8987391610570448164, guid: 829914bfd4228a643a7c7ac9fa8fce02,
         type: 3}
@@ -74021,6 +74041,16 @@ PrefabInstance:
       propertyPath: FridgeList.Array.data[3]
       value: 
       objectReference: {fileID: 1842630347}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: ItemNumberRange.Array.data[0]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6066621236593612347, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: ItemNumberRange.Array.data[1]
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6164175624205947980, guid: bae5f999cf3f2ec4e83050e064aafe76,
         type: 3}
       propertyPath: m_AnchorMin.y

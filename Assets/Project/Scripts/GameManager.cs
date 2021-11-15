@@ -91,10 +91,7 @@ namespace Game.SweetsWar
 
                 for (short i=0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
                 {
-                    //AllPlayerCraftingInventories.Add(PhotonNetwork.PlayerList[i].UserId, new Inventory(9)); 
-                    Debug_ShowAllPlayerCraftingInventories();
-
-                    //object[] initData = { PhotonNetwork.PlayerList[i].UserId };
+                    //Debug_ShowAllPlayerCraftingInventories();
                     PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
                 }
                 
@@ -173,7 +170,7 @@ namespace Game.SweetsWar
 
         public void SetCraftPanel(bool state, int craftID)
         {
-            Debug_ShowAllPlayerCraftingInventories();
+            //Debug_ShowAllPlayerCraftingInventories();
             CraftUIManager._instance.SetData(craftID);
             
             AimTarget.SetActive(!state);
@@ -224,7 +221,7 @@ namespace Game.SweetsWar
             }
 
             CraftUIManager._instance.UpdateView();
-            Debug_ShowAllPlayerCraftingInventories();
+            //Debug_ShowAllPlayerCraftingInventories();
             
         }
         [PunRPC] public void RPC_CraftingClear(int craftID)
