@@ -13,7 +13,7 @@ namespace Game.SweetsWar
         private void OnMouseDown()
         {
             // 點擊即裝備，並丟掉目前裝備
-            if (photonView.IsMine == false || BackpackManerger._instance == null)
+            if (PhotonNetwork.LocalPlayer.IsLocal == false || BackpackManerger._instance == null)
             {
                 return;
             }
@@ -23,19 +23,27 @@ namespace Game.SweetsWar
 
             if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData))
             {
+                PlayerController._instance.EquipWeapon(gameObject);
+                //photonView.RPC("RPC_ForceMasterEquipWeapon", RpcTarget.MasterClient, photonView.ViewID);
+                
+                //PlayerController._instance.photonView.RPC("RPC_EquipWeapon", RpcTarget.All, WeaponData.ID); //PhotonNetwork.LocalPlayer.UserId
+
+
                 //gameObject.transform.parent = PlayerController._instance.WeaponSlot;
                 //PlayerController._instance.EquipWeapon(gameObject);
-                photonView.RPC("EquipWeapon", RpcTarget.All, gameObject);
-                // Destroy this item in scene
-                Destroy(this.gameObject);
+
+                //photonView.RPC("RPC_ForceMasterEquipWeapon", RpcTarget.MasterClient, photonView.ViewID);
             }
             
         }
 
-        [PunRPC]
-        private void EquipWeapon(GameObject weaponPrefab)
+        [PunRPC] void RPC_ForceMasterEquipWeapon(int viewID)
         {
+            GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
             PlayerController._instance.EquipWeapon(weaponPrefab);
+            //PhotonNetwork.Destroy(weaponPrefab);
+            //PlayerController._instance.EquipWeapon(WeaponData.ID);
+
         }
 
         /*

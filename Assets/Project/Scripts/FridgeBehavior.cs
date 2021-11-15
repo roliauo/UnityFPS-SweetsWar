@@ -7,8 +7,6 @@ namespace Game.SweetsWar
     [RequireComponent(typeof(Animator))]
     public class FridgeBehavior : MonoBehaviourPunCallbacks//, IPunInstantiateMagicCallback  //, IPunObservable
     {
-        //public static FridgeBehavior _instance;
-        //public static GameObject _objectInstance;
         public int ID;
         public float MaxDistance = 4f;
         public float HP = 100;
@@ -21,8 +19,6 @@ namespace Game.SweetsWar
 
         private void Awake()
         {
-            //_instance = this;
-            //_objectInstance = gameObject;
             DontDestroyOnLoad(gameObject);
         }
 
@@ -30,7 +26,7 @@ namespace Game.SweetsWar
         {
             m_animator = GetComponent<Animator>();
             ID = photonView.ViewID;
-            GameManager.Instance.AllPlayerCraftingInventories.Add(ID, new Inventory(9));
+            CraftUIManager._instance.AllPlayerCraftingInventories.Add(ID, new Inventory(9));
             //inventory = new Inventory(9);
             //ID = PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId; //PhotonNetwork.LocalPlayer.UserId; //PhotonNetwork.PlayerList[PhotonNetwork.CurrentRoom.PlayerCount-1].UserId; //PlayerController.localPlayerInstance.GetComponent<PhotonView>().Owner.UserId
 
@@ -103,7 +99,7 @@ namespace Game.SweetsWar
         private void SetCraftPanel()
         {
             Debug.Log("SetCraftPanel-ID: " + ID);
-            GameManager.Instance.setCraftPanel(IsOpened, ID);
+            GameManager.Instance.SetCraftPanel(IsOpened, ID);
         }
 
     }

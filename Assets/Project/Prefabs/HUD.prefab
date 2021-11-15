@@ -2149,7 +2149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2882547944018466157
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2854,6 +2854,7 @@ GameObject:
   - component: {fileID: 4797072193707366931}
   - component: {fileID: 2392094340186236675}
   - component: {fileID: 3955573102774837815}
+  - component: {fileID: 2777400122866353629}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -2905,6 +2906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 651d4bd761966e04db23ef48aacbdeba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CraftID: 0
   inventory: {fileID: 11400000, guid: 07ddf68e718b71d4cb5f3fdf0b0f34be, type: 2}
   SlotContainer: {fileID: 5768019836829016351}
   InfoPanel: {fileID: 2945415595306258639}
@@ -2924,6 +2926,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d6e0fdbc157538144bd27890c955709a, type: 2}
   - {fileID: 11400000, guid: db4a8e2842c613f4bb23ec26a8bf3103, type: 2}
   - {fileID: 11400000, guid: 067458ac4de96dc429deb6e2e08bdd71, type: 2}
+--- !u!114 &2777400122866353629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5861579970346736024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efeb5029fb7b2e4e958d732f8d468d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerName: {fileID: 1020473616328261688}
 --- !u!1 &5926332797370293271
 GameObject:
   m_ObjectHideFlags: 0

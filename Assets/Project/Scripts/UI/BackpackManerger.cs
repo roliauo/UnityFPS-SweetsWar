@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,20 +18,37 @@ namespace Game.SweetsWar
 
         private void Awake()
         {
+            /*
+            if (!PhotonNetwork.IsConnected || !GameManager.Instance)
+            {
+                //Debug.Log("!GameManager.Instance: " + !GameManager.Instance);
+                return;
+            }
+            */
+            
             if (_instance != null)
             {
+                //Debug.Log("Destroy Instance");
                 Destroy(this);
             }
             _instance = this;
             m_prefabDict = new Dictionary<short, GameObject>();
+
+            _instance.inventory.ItemList.Clear();
+            ClearSlots();
         }
 
         void OnDestroy()
         {
-            Debug.Log("Backpack OnDestroy");
-            
+            /*
+            //Debug.Log("Backpack OnDestroy"); //yes
+            if (!inventory || !GameManager.Instance)
+            {
+                return;
+            }
             _instance.inventory.ItemList.Clear();
             ClearSlots();
+            */
         }
 
         public bool Collect(Item item, byte num = 1)

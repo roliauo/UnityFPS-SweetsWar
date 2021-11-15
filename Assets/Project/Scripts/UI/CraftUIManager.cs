@@ -13,7 +13,7 @@ namespace Game.SweetsWar
         public Inventory inventory; 
         public GameObject SlotContainer;
         public GameObject InfoPanel;
-        //public Dictionary<int, Inventory> AllPlayerCraftingInventories;
+        public Dictionary<int, Inventory> AllPlayerCraftingInventories;
 
         [Header("Result")]
         public GameObject ResultPanel;
@@ -28,30 +28,27 @@ namespace Game.SweetsWar
         public Button Button_Info;
         public Button Button_CloseInfo;
 
-        //public GameObject[] OutputItemPrefabs; //del
         public Item[] OutputItems;
 
         private Dictionary<short, short> m_itemCount;
-        //private Dictionary<short, GameObject> m_prefabDict;
-        //private List<GameObject> m_prefabDict;
 
-        private void Awake()
+        void Start()
         {
-            
-            //hide: for show others' inventory
+            /*
+            if (!PhotonNetwork.IsConnected)
+            {
+                return;
+            }
+            */
+
             if (_instance != null)
             {
                 Destroy(this);
             }
-            
+
             _instance = this;
-            //m_prefabDict = new List<GameObject>();
-            //m_prefabDict = new Dictionary<short, GameObject>();
-        }
-        void Start()
-        {
-            //inventory = FridgeBehavior._instance.inventory; // Binding gameObject's data. if needed just show it.
-            //inventory = new Inventory(9);
+            AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
+
             Button_Close.onClick.AddListener(() =>
             {
                 //FridgeBehavior._instance.OpenFridge(false);
@@ -75,20 +72,39 @@ namespace Game.SweetsWar
         
         void OnDestroy()
         {
-            Debug.Log("Craft OnDestroy");
-            Clear();
+            //Debug.Log("Craft OnDestroy"); //yes
+            //Clear();
         }
 
-        public void setData(int id, Inventory box)
+        public void SetData(int id)
         {
             CraftID = id;
-            inventory = box;
+            if (AllPlayerCraftingInventories.TryGetValue(id, out Inventory box))
+            {             
+                inventory = box;
+            }
+            else
+            {
+                AllPlayerCraftingInventories.Add(id, new Inventory(9));
+            }
+            
         }
 
         public void Clear()
         {
+            if (!inventory || !GameManager.Instance)
+            {
+                return;
+            }
+            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_CraftingClear", RpcTarget.Others, CraftID);
+
+            // local data
             _instance.inventory.ItemList.Clear();
-            //GameManager.Instance.AllPlayerCraftingInventories.
+
+            Inventory box;
+            AllPlayerCraftingInventories.TryGetValue(CraftID, out box);
+            box.ItemList.Clear();
+
             foreach (Transform child in SlotContainer.transform)
             {
                 Destroy(child.gameObject);
@@ -106,8 +122,6 @@ namespace Game.SweetsWar
                 slot.transform.SetParent(SlotContainer.transform);
                 slot.transform.localScale = new Vector3(1, 1, 1);
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
-                //m_prefabDict.Add(item.ID, slot.gameObject);
-                //m_prefabDict.Add(slot.gameObject);
                 ValidMix();
 
                 Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
@@ -124,10 +138,7 @@ namespace Game.SweetsWar
             BackpackManerger._instance.Collect(item);
             _instance.inventory.ItemList.Remove(item); // list.remove: only remove the first item.
             GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, false);
-            //sendRPCSync(item);
             Destroy(obj);
-            //m_prefabDict.Remove(item.ID);
-            //m_prefabDict.Remove(obj);
             ValidMix();
         }
 
@@ -149,26 +160,8 @@ namespace Game.SweetsWar
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
                 //m_prefabDict.Add(slot.gameObject);
             }
-        }
-        
-        /*
-        private void ClearSlots()
-        {
-            foreach (GameObject item in m_prefabDict)
-            {
-                Destroy(item.gameObject);
-            }
-
-            m_prefabDict.Clear();
-        }
-        */      
-
-        public void sendRPCSync(Item item, bool add = false)
-        {
-            object[] data = { PhotonNetwork.LocalPlayer.UserId, item, add };
-            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, data);
-
-        }
+            ValidMix();
+        }    
 
         private void ValidMix()
         {
@@ -224,7 +217,9 @@ namespace Game.SweetsWar
             {
                 ResultImg.sprite = outputItem.Icon;
                 // generated by GameManager
-                GameManager.Instance.Craft(outputItem.name);
+                //GameManager.Instance.Craft(outputItem.name);
+                Vector3 position = PlayerController.localPlayerInstance.transform.position;
+                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, outputItem.name, position.x, position.y, position.z);
             }
 
             // result panel

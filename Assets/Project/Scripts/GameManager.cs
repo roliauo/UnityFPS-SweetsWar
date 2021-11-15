@@ -18,25 +18,21 @@ namespace Game.SweetsWar
         public GameObject AimTarget;
 
         [Header("Items")]
-        //public GameObject[] ItemPrefabs;
         public List<GameObject> ItemPrefabs;
-        //public int[] MinMaxX = { 2, 55 };
-        public int MinX = 2;
-        public int MaxX = 55;
-        public int MinZ = 2;
-        public int MaxZ = 80;
+        public int[] MinMaxX = { 2, 55 };
+        public int[] MinMaxZ = { 2, 80 };
+        public int[] ItemNumberRange = { 10, 20 };
 
         [Header("Player")]
         //public Transform[] PlayerLocations;
         public List<Transform> PlayerLocations;
-        [SerializeField]
-        private GameObject PlayerPrefab;
+        [SerializeField] private GameObject PlayerPrefab;
 
         [Header("Fridge")]
         public List<GameObject> FridgeList;
         public List<Transform> FridgeLocations;
         public GameObject FridgePrefab;
-        public Dictionary<int, Inventory> AllPlayerCraftingInventories;
+        //public Dictionary<int, Inventory> AllPlayerCraftingInventories;
 
         // for show/hide backpack
         //public GameObject BackpackUI;
@@ -58,7 +54,7 @@ namespace Game.SweetsWar
             }
 
             Instance = this;
-            AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
+            //AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
 
             /* SET PLAYER */
             if (PlayerPrefab == null) //PlayerManager.LocalPlayerInstance == null
@@ -85,11 +81,10 @@ namespace Game.SweetsWar
 
             }
 
-            /* SET THE CURSOR MODE */
-            Cursor.lockState = CursorLockMode.Locked;
+            SetCursorMode(false);
 
             //GenerateItems();
-            
+
 
             if (IsPlayerReady()) // Ready then setup
             {
@@ -166,56 +161,53 @@ namespace Game.SweetsWar
 
         void OnDestroy()
         {
-            Cursor.lockState = CursorLockMode.None;
+            SetCursorMode(true);
             ClearGameData();
         }
 
-        public void setCraftPanel(bool state, int craftID)
+        public void SetCursorMode(bool show)
+        {
+            Cursor.visible = show;
+            Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        public void SetCraftPanel(bool state, int craftID)
         {
             Debug_ShowAllPlayerCraftingInventories();
-            if (AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
-            {
-                // show the target data
-                //CraftUIManager._instance.inventory = AllPlayerCraftingInventories[craftID]; // show the target data
-                //CraftUIManager._instance.inventory = box; 
-                CraftUIManager._instance.setData(craftID, box);
-            }
-            else
-            {
-                AllPlayerCraftingInventories.Add(craftID, new Inventory(9));
-            }
+            CraftUIManager._instance.SetData(craftID);
             
             AimTarget.SetActive(!state);
             CraftPanel.SetActive(state);
             if (state) CraftUIManager._instance.UpdateView();
-            //GetComponentInChildren<CraftUIManager>().UpdateView();
+
             PlayerController._instance.stopMove = state;
-            //PlayerController.localPlayerInstance.GetComponent<PlayerController>().stopMove = state;
-            Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+            SetCursorMode(state);
         }
 
-        public void Craft(string prefabName)
+        #region RPC
+        [PunRPC] public void RPC_CraftForMasterClient(string prefabName, float x, float y, float z) //string userID //int actorNum
         {
-            foreach(GameObject obj in CraftItemPrefabs)
+            foreach (GameObject obj in CraftItemPrefabs)
             {
-                //Item data = obj.GetComponent<>
                 if (obj.name.Equals(prefabName))
                 {
                     //Instantiate(obj, PlayerController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
-                    PhotonNetwork.InstantiateRoomObject(obj.name, PlayerController.localPlayerInstance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
+
+                    PhotonNetwork.InstantiateRoomObject(prefabName, new Vector3(x, y + 10f, z), Quaternion.identity);
                     break;
                 }
             }
-            
+
         }
-        
-        #region RPC
+
         [PunRPC] public void RPC_SyncCraftingInventories(int craftID, short itemID, bool add)
         {
             // ERROR: RPC can't recieve object: Item
             Debug.Log("RPC_SyncCraftingInventories: " + craftID);
-            Item item = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID).GetComponent<ItemBehavior>().item;
-            if (Instance.AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
+            GameObject targetPrefab = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID);
+            if (targetPrefab == null) return;
+            Item item = targetPrefab.GetComponent<ItemBehavior>().item;
+            if (CraftUIManager._instance.AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
             {
                 if (add)
                 {
@@ -224,25 +216,34 @@ namespace Game.SweetsWar
                 else
                 {
                     box.ItemList.Remove(item);
-                }
-                CraftUIManager._instance.UpdateView();
+                }               
             }
             else
             {
-                Instance.AllPlayerCraftingInventories.Add(craftID, new Inventory(9));
+                CraftUIManager._instance.AllPlayerCraftingInventories.Add(craftID, new Inventory(9));
             }
 
+            CraftUIManager._instance.UpdateView();
             Debug_ShowAllPlayerCraftingInventories();
             
         }
+        [PunRPC] public void RPC_CraftingClear(int craftID)
+        {
+            if (CraftUIManager._instance.AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
+            {
+                box.ItemList.Clear();
+                CraftUIManager._instance.UpdateView();
+            }
+        }
         #endregion
-        
+
         public void Debug_ShowAllPlayerCraftingInventories()
         {
+            if (CraftUIManager._instance == null) return;
             // DEBUG
-            Debug.Log("AllPlayerCraftingInventories: " + Instance.AllPlayerCraftingInventories.Count);
+            Debug.Log("AllPlayerCraftingInventories: " + CraftUIManager._instance.AllPlayerCraftingInventories.Count);
 
-            foreach (KeyValuePair<int, Inventory> dic in Instance.AllPlayerCraftingInventories)
+            foreach (KeyValuePair<int, Inventory> dic in CraftUIManager._instance.AllPlayerCraftingInventories)
             {
                 Debug.Log("AllPlayerCraftingInventories-KEY: " + dic.Key);
                 foreach (Item v in dic.Value.ItemList)
@@ -342,13 +343,13 @@ namespace Game.SweetsWar
 
             foreach (GameObject obj in ItemPrefabs)
             {
-                m_RandomItemNumber = (short)Random.Range(8, 15);
+                m_RandomItemNumber = (short)Random.Range(ItemNumberRange[0], ItemNumberRange[1]);
                 //Debug.LogFormat("GenerateItems: {0}, {1}", obj.name, m_RandomItemNumber);
 
                 for (short i = 0; i < m_RandomItemNumber; i++)
                 {
-                    RandomX = Random.Range(MinX, MaxX);
-                    RandomZ = Random.Range(MinZ, MaxZ);
+                    RandomX = Random.Range(MinMaxX[0], MinMaxX[1]);
+                    RandomZ = Random.Range(MinMaxZ[0], MinMaxZ[1]);
 
                     //Instantiate(obj, new Vector3(RandomX, 10f, RandomZ), Quaternion.identity);
                     

@@ -123,14 +123,38 @@ namespace Game.SweetsWar
 
         }
       
-        [PunRPC] public void EquipWeapon(GameObject weaponPrefab)
+        public void EquipWeapon(GameObject weaponPrefab)
         {
             Weapon held_weapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
-            weaponPrefab.transform.parent = weaponSlot;
-            m_animator.Play(GameConstants.ANIMATION_EQUIP);
+            //weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
+            weaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll; //RigidbodyConstraints.FreezePosition;
+            weaponPrefab.transform.position = weaponSlot.position;
+            weaponPrefab.transform.parent = gameObject.transform; // outside
+            weaponPrefab.transform.parent = weaponSlot; // inside
+            
+            
+            //m_animator.Play(GameConstants.ANIMATION_EQUIP);
+            m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
             audioSource.PlayOneShot(equipSFX);
         }
 
+        [PunRPC] public void RPC_EquipWeapon(short weaponID)
+        {
+            if (!photonView.IsMine) return;
+            //short held_weapon = weaponID;
+            foreach(GameObject go in weaponSlot.GetComponentsInChildren<GameObject>())
+            {
+                if(go.GetComponent<WeaponController>().WeaponData.ID == weaponID)
+                {
+                    go.SetActive(true);
+                }
+            }
+
+
+            //m_animator.Play(GameConstants.ANIMATION_EQUIP);
+            m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
+            audioSource.PlayOneShot(equipSFX);
+        }
 
         private void Action() {
 

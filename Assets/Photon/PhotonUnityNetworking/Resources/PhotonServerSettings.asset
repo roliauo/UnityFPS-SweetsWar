@@ -49,6 +49,11 @@ MonoBehaviour:
   - RPC_OpenFridge
   - RPC_FridgeAnimation
   - RPC_SyncCraftingInventories
+  - RPC_CraftingClear
+  - RPC_ForceMasterEquipWeapon
+  - RPC_EquipWeapon
+  - Craft
+  - RPC_CraftForMasterClient
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
