@@ -90,7 +90,7 @@ namespace Game.SweetsWar
 
             playerName.text = photonView.Owner.NickName;
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
-                PhotonNetwork.NickName, 
+                PhotonNetwork.LocalPlayer.NickName, 
                 PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY), 
                 photonView.Owner.NickName
               );
@@ -102,13 +102,15 @@ namespace Game.SweetsWar
 
         void Update()
         {
+            playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // photon version
+
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
                 return;
             }
 
             // the player's name always faces the main camera : use Camera.main to get the main
-            playerName.gameObject.transform.rotation = Camera.main.transform.rotation;
+            //playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // local version
 
             /*
             if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape))
