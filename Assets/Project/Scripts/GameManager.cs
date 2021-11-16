@@ -164,6 +164,7 @@ namespace Game.SweetsWar
 
         public void SetCursorMode(bool show)
         {
+            PlayerController._instance.stopMove = show;
             Cursor.visible = show;
             Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
         }
@@ -177,7 +178,6 @@ namespace Game.SweetsWar
             CraftPanel.SetActive(state);
             if (state) CraftUIManager._instance.UpdateView();
 
-            PlayerController._instance.stopMove = state;
             SetCursorMode(state);
         }
 

@@ -10,7 +10,7 @@ namespace Game.SweetsWar
     {
         public Weapon WeaponData;
         public float MaxPickUpDistance = 3f;
-        public bool Used = false;
+        public bool isInUse = false;
 
         AudioSource m_ShootAudioSource;
         private Animator m_animator;
@@ -36,7 +36,7 @@ namespace Game.SweetsWar
         private void OnMouseDown()
         {
             // 點擊即裝備，並丟掉目前裝備
-            if (Used || PhotonNetwork.LocalPlayer.IsLocal == false || BackpackManerger._instance == null)
+            if (isInUse || PhotonNetwork.LocalPlayer.IsLocal == false || BackpackManerger._instance == null)
             {
                 return;
             }

@@ -150,12 +150,12 @@ namespace Game.SweetsWar
                 prevWeaponPrefab.GetComponent<Rigidbody>().useGravity = true;
                 prevWeaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 prevWeaponPrefab.transform.parent = null;
-                prevWeaponPrefab.GetComponent<WeaponController>().Used = false;
+                prevWeaponPrefab.GetComponent<WeaponController>().isInUse = false;
             }
             
             // setup
             GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
-            weaponPrefab.GetComponent<WeaponController>().Used = true;
+            weaponPrefab.GetComponent<WeaponController>().isInUse = true;
             m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
             m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("("));           
             m_heldWeaponViewID = viewID;
@@ -182,8 +182,6 @@ namespace Game.SweetsWar
                 }
             }
             
-            
-
             if (photonView.IsMine)
             {
                 Hashtable hash = new Hashtable();
