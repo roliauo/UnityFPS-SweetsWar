@@ -2894,6 +2894,7 @@ MonoBehaviour:
   BackpackUI: {fileID: 2004696500806894001}
   SlotPrefab: {fileID: 7332855965508960876, guid: 0e958303a50493246a94ecf1ff98f917,
     type: 3}
+  alert: {fileID: 1047888092510070995}
 --- !u!114 &3955573102774837815
 MonoBehaviour:
   m_ObjectHideFlags: 0

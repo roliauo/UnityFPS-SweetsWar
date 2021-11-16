@@ -17,22 +17,22 @@ namespace Game.SweetsWar
             Btn_Cancel.onClick.AddListener(() => gameObject.SetActive(false));
         }
 
-        void Show()
+        public void Show()
         {
             gameObject.SetActive(true);
         }
 
-        void Toggle()
+        public void Toggle()
         {
             gameObject.SetActive(!gameObject.activeInHierarchy);
         }
 
-        void Show(string title, string txt, bool hasCancelButton)
+        public void Show(string title, string txt, bool hasCancelButton)
         {
 
         }
 
-        void Show(string str, Action onClickOK = null) //bool isConfirmType, 
+        public void Show(string str, Action onClickOK = null) //bool isConfirmType, 
         {
             bool isConfirmType = (onClickOK != null);
             Title.text = isConfirmType ? "確認" : "警告";
@@ -46,10 +46,12 @@ namespace Game.SweetsWar
                 else
                 {
                     gameObject.SetActive(false);
+                    GameManager.Instance.SetCursorMode(false);
                 }
             });
 
             gameObject.SetActive(true);
+            GameManager.Instance.SetCursorMode(true);
         }
     }
 

@@ -13,6 +13,7 @@ namespace Game.SweetsWar
         public Inventory inventory;
         public GameObject BackpackUI;
         public GameObject SlotPrefab;
+        public Alert alert;
 
         private Dictionary<short, GameObject> m_prefabDict;
 
@@ -58,6 +59,10 @@ namespace Game.SweetsWar
             {
                 UpdateView();
                 // show msg
+            } 
+            else
+            {
+                alert.Show(msg);
             }
 
             return msg == null; 
