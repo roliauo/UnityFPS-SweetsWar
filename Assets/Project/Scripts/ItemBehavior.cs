@@ -47,6 +47,7 @@ namespace Game.SweetsWar
 
             if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
             {
+                PlayerController._instance.audioSource.PlayOneShot(PlayerController._instance.pickupSFX);
                 // Destroy this item in scene
                 photonView.RPC("RPC_ForceMasterClientDestroy", RpcTarget.MasterClient, photonView.ViewID);
             }
