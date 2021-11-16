@@ -5,15 +5,38 @@ using UnityEngine;
 
 namespace Game.SweetsWar
 {
+    [RequireComponent(typeof(AudioSource))]
     public class WeaponController : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public Weapon WeaponData;
         public float MaxPickUpDistance = 3f;
+        public bool Used = false;
 
+        AudioSource m_ShootAudioSource;
+        private Animator m_animator;
+        
+
+        void Awake()
+        {
+            m_ShootAudioSource = GetComponent<AudioSource>();
+            m_animator = GetComponent<Animator>();
+        }
+        void OnFire()
+        {
+            if (WeaponData.fireSFX) // && !ContinuousShootSound
+            {
+                m_ShootAudioSource.PlayOneShot(WeaponData.fireSFX);
+            }
+
+            if (m_animator && WeaponData.k_AnimationName != null)
+            {
+                m_animator.SetTrigger(WeaponData.k_AnimationName);
+            }
+        }
         private void OnMouseDown()
         {
             // 點擊即裝備，並丟掉目前裝備
-            if (PhotonNetwork.LocalPlayer.IsLocal == false || BackpackManerger._instance == null)
+            if (Used || PhotonNetwork.LocalPlayer.IsLocal == false || BackpackManerger._instance == null)
             {
                 return;
             }
@@ -24,10 +47,9 @@ namespace Game.SweetsWar
             if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData)) 
             {
                 // TODO: (GUI) set Weapon Slot
-                //PlayerController._instance.EquipWeapon(photonView.ViewID);
-                //PlayerController._instance.EquipWeapon_SetActive(WeaponData.ID);
-                PlayerController._instance.EquipWeapon_SetActive(name.Substring(0, name.IndexOf("("))); // prefab name: replace "(Clone)"
-                photonView.RPC("RPC_ForceMasterDestoryWeapon", RpcTarget.MasterClient, photonView.ViewID);
+                PlayerController._instance.EquipWeapon(photonView.ViewID);
+                //PlayerController._instance.EquipWeapon_SetActive(name.Substring(0, name.IndexOf("("))); // prefab name: replace "(Clone)"
+                //photonView.RPC("RPC_ForceMasterDestoryWeapon", RpcTarget.MasterClient, photonView.ViewID);
             }
             
         }

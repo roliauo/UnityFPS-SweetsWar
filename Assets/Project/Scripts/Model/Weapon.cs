@@ -9,6 +9,7 @@ namespace Game.SweetsWar
         public float AttackRange;
         public float FireLoadingTime;
         public AudioClip fireSFX;
+        public string k_AnimationName = null;
         //public new byte MaxNumber = 1;
 
 

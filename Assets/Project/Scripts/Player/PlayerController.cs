@@ -40,8 +40,9 @@ namespace Game.SweetsWar
         [Header("Audio")]
         public AudioSource audioSource;
         public AudioClip footstepSFX;
-        public AudioClip equipSFX;
         public AudioClip jumpSFX;
+        public AudioClip equipSFX;
+        public AudioClip pickupSFX;
 
         public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
@@ -52,7 +53,8 @@ namespace Game.SweetsWar
         // private
         private string m_heldWeaponPrefabName = null;
         private int m_heldWeaponViewID;
-        private short m_heldWeaponID = -1;
+        private Weapon m_heldWeapon;
+        //private short m_heldWeaponID = -1;
         private CharacterController m_characterController;
         private Animator m_animator;
         private Vector3 m_velocity;  
@@ -130,25 +132,62 @@ namespace Game.SweetsWar
       
         public void EquipWeapon(int viewID) //GameObject weaponPrefab
         {
+            if (m_heldWeaponPrefabName != null)
+            {
+                // Switch weapon (Drop)
+                // BackpackManerger - remove previous weapon 
+                foreach (GameObject go in weapons)
+                {
+                    if (photonView.IsMine && go.name == m_heldWeaponPrefabName)
+                    {
+                        BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
+                        break;
+                    }
+                }
+                // Scene - drop previous weapon
+                //Vector3 position = PlayerController.localPlayerInstance.transform.position;
+                GameObject prevWeaponPrefab = PhotonView.Find(m_heldWeaponViewID).gameObject;
+                prevWeaponPrefab.GetComponent<Rigidbody>().useGravity = true;
+                prevWeaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                prevWeaponPrefab.transform.parent = null;
+                prevWeaponPrefab.GetComponent<WeaponController>().Used = false;
+            }
+            
+            // setup
             GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
-            //Weapon held_weapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
-            //m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
+            weaponPrefab.GetComponent<WeaponController>().Used = true;
+            m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
+            m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("("));           
             m_heldWeaponViewID = viewID;
             weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
             weaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll; //RigidbodyConstraints.FreezePosition;
-            weaponPrefab.transform.position = weaponSlot.position;
-            weaponPrefab.transform.parent = gameObject.transform; // outside
-            weaponPrefab.transform.parent = weaponSlot; // inside
+
+            // position
+            //Transform weaponTransform;
+            foreach (GameObject go in weapons)
+            {
+                if (go.name == m_heldWeaponPrefabName)
+                {
+                    //weaponTransform = go.transform;
+                    weaponPrefab.transform.position = go.transform.position;
+                    weaponPrefab.transform.rotation = go.transform.rotation;
+                    weaponPrefab.transform.parent = gameObject.transform; // outside
+                    weaponPrefab.transform.parent = weaponSlot; // inside
+
+                    //m_animator.Play(GameConstants.ANIMATION_EQUIP);
+                    m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
+                    audioSource.PlayOneShot(equipSFX);
+
+                    break;
+                }
+            }
             
             
-            //m_animator.Play(GameConstants.ANIMATION_EQUIP);
-            m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
-            audioSource.PlayOneShot(equipSFX);
 
             if (photonView.IsMine)
             {
                 Hashtable hash = new Hashtable();
-                hash.Add("weaponPrefabName", weaponPrefab.name);
+                hash.Add("weaponViewID", viewID);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -191,7 +230,7 @@ namespace Game.SweetsWar
             {
                 // switch weapon (drop previous weapon)
                 Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, m_heldWeaponPrefabName, position.x, position.y, position.z);
+                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, m_heldWeaponPrefabName, position.x, position.y + 3f, position.z);
             }
             m_heldWeaponPrefabName = weaponPrefabName;
             //WeaponData data;
@@ -204,15 +243,14 @@ namespace Game.SweetsWar
                 if (photonView.IsMine && go.name == weaponPrefabName)
                 {
                     BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
+                    break;
                 }
                 
             }
 
-            //m_animator.Play(GameConstants.ANIMATION_EQUIP);
             m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
             audioSource.PlayOneShot(equipSFX);
-
-            
+          
             if (photonView.IsMine)
             {
                 Hashtable hash = new Hashtable();
@@ -225,8 +263,8 @@ namespace Game.SweetsWar
         {
             if(!photonView.IsMine && targetPlayer == photonView.Owner)
             {
-                //EquipWeapon(m_heldWeaponViewID);
-                EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
+                EquipWeapon((int)changedProps["weaponViewID"]);
+                //EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
             }
         }
 

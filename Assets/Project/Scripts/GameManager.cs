@@ -190,7 +190,7 @@ namespace Game.SweetsWar
                 {
                     //Instantiate(obj, PlayerController._instance.transform.position + new Vector3(0, 10f, 0), Quaternion.identity);
 
-                    PhotonNetwork.InstantiateRoomObject(prefabName, new Vector3(x, y + 10f, z), Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject(prefabName, new Vector3(x, y, z), Quaternion.identity);
                     break;
                 }
             }
