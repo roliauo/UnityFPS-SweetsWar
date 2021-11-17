@@ -51,7 +51,6 @@ GameObject:
   - component: {fileID: 8770461620917878646}
   - component: {fileID: 3610616242929569833}
   - component: {fileID: 644581889617222434}
-  - component: {fileID: 7059060526269098400}
   - component: {fileID: 3956192890349847952}
   m_Layer: 9
   m_Name: Player
@@ -326,20 +325,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!64 &7059060526269098400
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194672513326284442}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!114 &3956192890349847952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1569,7 +1554,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7545606883969085528}
   m_LocalRotation: {x: -0, y: -0.024434432, z: -0, w: 0.9997015}
-  m_LocalPosition: {x: 0, y: 0.342, z: 0.519}
+  m_LocalPosition: {x: 0, y: 0.392, z: 0.285}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 718409017959392288}
