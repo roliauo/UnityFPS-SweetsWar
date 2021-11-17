@@ -98,7 +98,7 @@ namespace Game.SweetsWar
 
         private void SetCraftPanel()
         {
-            Debug.Log("SetCraftPanel-ID: " + ID);
+            //Debug.Log("SetCraftPanel-ID: " + ID + " IsOpened: "+ IsOpened);
             GameManager.Instance.SetCraftPanel(IsOpened, ID);
         }
 

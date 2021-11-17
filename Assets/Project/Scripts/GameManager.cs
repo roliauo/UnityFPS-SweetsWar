@@ -164,7 +164,7 @@ namespace Game.SweetsWar
 
         public void SetCursorMode(bool show)
         {
-            PlayerController._instance.stopMove = show;
+            if(PlayerController._instance) PlayerController._instance.stopMove = show;
             Cursor.visible = show;
             Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
         }

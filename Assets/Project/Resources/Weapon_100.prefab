@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: 8c3ccd0281048a14e82492d68c76c1bd, type: 2}
   MaxPickUpDistance: 3.5
-  Used: 0
+  isInUse: 0
 --- !u!65 &2679943580230086673
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ namespace Game.SweetsWar
         public Inventory inventory; 
         public GameObject SlotContainer;
         public GameObject InfoPanel;
+        //public Alert alert;
         public Dictionary<int, Inventory> AllPlayerCraftingInventories;
 
         [Header("Result")]
@@ -112,7 +113,7 @@ namespace Game.SweetsWar
             ValidMix();
         }
 
-        public void AddToCraftSlots(Item item)
+        public bool AddToCraftSlots(Item item)
         {
             Inventory box = _instance.inventory;
             if (box.ItemList.Count < box.InventoryCapacity)
@@ -123,13 +124,13 @@ namespace Game.SweetsWar
                 slot.transform.localScale = new Vector3(1, 1, 1);
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
                 ValidMix();
-
-                Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
+                Debug.Log("count: " + box.ItemList.Count + " InventoryCapacity: " + box.InventoryCapacity);
+                //Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
                 // use FridgeBehavior._instance.ID to get the data
-                GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, true);              
-
+                GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, true);
+                return true;
             }
-
+            return false;
         }
 
         public void RemoveFromCraftSlots(Item item, GameObject obj)

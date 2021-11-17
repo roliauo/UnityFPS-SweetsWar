@@ -52,8 +52,40 @@ namespace Game.SweetsWar
             */
         }
 
+        public string Add(Item item, byte num = 1) // Backpack: 之後可放到相對應的Manager去處理
+        {
+            string errMsg = null;
+            if (_instance.inventory.ItemList.Contains(item))
+            {
+                if (item.Number < item.MaxNumber)
+                {
+                    item.Number += num;
+                }
+                else
+                {
+                    //Debug.Log("道具數量已達上限!");
+                    errMsg = "道具數量已達上限!";
+                }
+            }
+            else
+            {
+                if (_instance.inventory.ItemList.Count < _instance.inventory.InventoryCapacity)
+                {
+                    _instance.inventory.ItemList.Add(item);
+                    item.Number += num;
+                }
+                else
+                {
+                    //Debug.Log("沒有空間了!" + _instance.inventory.ItemList.Count + "/" + _instance.inventory.ItemList.Capacity);
+                    errMsg = "沒有空間了!";
+                }
+            }
+            return errMsg;
+        }
+
         public bool Collect(Item item, byte num = 1)
         {
+            
             string msg = _instance.inventory.Add(item, num);
             if (msg == null) // Success
             {
@@ -66,7 +98,35 @@ namespace Game.SweetsWar
             }
 
             return msg == null; 
-            //UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryUI);
+            
+            /*
+            if (_instance.inventory.ItemList.Contains(item))
+            {
+                if (item.Number < item.MaxNumber)
+                {
+                    item.Number += num;
+                    UpdateView();
+                }
+                else
+                {
+                    alert.Show("道具數量已達上限!");
+                }
+            }
+            else
+            {
+                if (_instance.inventory.ItemList.Count < _instance.inventory.InventoryCapacity)
+                {
+                    _instance.inventory.ItemList.Add(item);
+                    item.Number += num;
+                    UpdateView();
+                }
+                else
+                {
+                    //Debug.Log("沒有空間了!" + _instance.inventory.ItemList.Count + "/" + _instance.inventory.ItemList.Capacity);
+                    alert.Show("背包沒有空間了!");
+                }
+            }
+            */
         }
 
         public void Subtract(Item item, byte num = 1)
@@ -90,8 +150,15 @@ namespace Game.SweetsWar
         public void OnClickSlot(Item m_item) 
         {
             // move into the craft box
-            _instance.Subtract(m_item);
-            CraftUIManager._instance.AddToCraftSlots(m_item);
+            if (CraftUIManager._instance.AddToCraftSlots(m_item))
+            {
+                _instance.Subtract(m_item);
+            }
+            else
+            {
+                alert.Show("冰箱滿了!");
+            }
+            
         }
 
         private void UpdateView()

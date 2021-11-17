@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.93894625, g: 0.9406603, b: 0.9433962, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1386,6 +1386,8 @@ GameObject:
   - component: {fileID: 5747573026429210383}
   - component: {fileID: 7071188064112016478}
   - component: {fileID: 661516799815765595}
+  - component: {fileID: 6072740070893360100}
+  - component: {fileID: 3406614325882141981}
   m_Layer: 5
   m_Name: Mask
   m_TagString: Untagged
@@ -1449,6 +1451,49 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!223 &6072740070893360100
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881930452997580392}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &3406614325882141981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881930452997580392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
 --- !u!1 &2945415595306258639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,7 +1530,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.8000488, y: -4.799988}
+  m_AnchoredPosition: {x: 1.8000488, y: -4.800049}
   m_SizeDelta: {x: 1874.6357, y: 941.77344}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9124854552097800109
@@ -3467,14 +3512,14 @@ MonoBehaviour:
   m_text: "\u78BA\u5B9A\u5408\u6210\u55CE?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4daf351afcea4c04e98ff8effa0b57bb, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 25e964f2ba276324fbc356831201e739, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: d965b0740aea70d4ea50e69bd84f6f7d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279558143
-  m_fontColor: {r: 1, g: 0.87494814, b: 0.08018869, a: 1}
+    rgba: 4280032541
+  m_fontColor: {r: 0.11320752, g: 0.11211975, b: 0.11053753, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

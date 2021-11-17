@@ -135,7 +135,7 @@ MonoBehaviour:
   footstepSFX: {fileID: 8300000, guid: 7325e12462e38ad4c813443c0e77e01b, type: 3}
   jumpSFX: {fileID: 8300000, guid: 3749140efa9f33c4ca7b82520bd0ef0d, type: 3}
   equipSFX: {fileID: 8300000, guid: de482e1e99c362d4788ae3c4f4624bcf, type: 3}
-  pickupSFX: {fileID: 8300000, guid: 5bf7655467af3d44898e166374485858, type: 3}
+  pickupSFX: {fileID: 8300000, guid: b5e53e3ffa0d261499d3737eb62ca637, type: 3}
   isFiring: 0
 --- !u!95 &5218969826787995188
 Animator:
