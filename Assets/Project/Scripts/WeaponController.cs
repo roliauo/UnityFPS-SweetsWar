@@ -12,25 +12,37 @@ namespace Game.SweetsWar
         public float MaxPickUpDistance = 3f;
         public bool isInUse = false;
 
-        AudioSource m_ShootAudioSource;
+        AudioSource m_audioSource;
         private Animator m_animator;
         
 
         void Awake()
         {
-            m_ShootAudioSource = GetComponent<AudioSource>();
+            m_audioSource = GetComponent<AudioSource>();
             m_animator = GetComponent<Animator>();
         }
-        void OnFire()
+        public void Fire()
         {
-            if (WeaponData.fireSFX) // && !ContinuousShootSound
+            if (WeaponData.AttackSFX)
             {
-                m_ShootAudioSource.PlayOneShot(WeaponData.fireSFX);
+                m_audioSource.PlayOneShot(WeaponData.AttackSFX);
             }
 
             if (m_animator && WeaponData.k_AnimationName != null)
             {
                 m_animator.SetTrigger(WeaponData.k_AnimationName);
+            }
+
+            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.distance <= WeaponData.AttackRange)
+            {
+                Debug.Log("hit: " + hit.collider.name);
+                if (hit.collider.tag == GameConstants.TAG_PLAYER)
+                {
+                    hit.transform.GetComponent<PlayerController>().TakeDamage(WeaponData.Damage);
+
+                }
             }
         }
         private void OnMouseDown()

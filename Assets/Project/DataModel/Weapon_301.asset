@@ -24,5 +24,7 @@ MonoBehaviour:
     Number: 3
   Description: 
   Damage: 30
-  AttackRange: 15
-  FireLoadingTime: 2
+  AttackRange: 10
+  FireLoadingTime: 4
+  AttackSFX: {fileID: 0}
+  k_AnimationName: 

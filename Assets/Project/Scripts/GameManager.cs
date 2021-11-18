@@ -16,6 +16,7 @@ namespace Game.SweetsWar
         public GameObject Menu;
         public GameObject CraftPanel;
         public GameObject AimTarget;
+        public GameObject EndPanel;
 
         [Header("Items")]
         public List<GameObject> ItemPrefabs;
@@ -179,6 +180,18 @@ namespace Game.SweetsWar
             if (state) CraftUIManager._instance.UpdateView();
 
             SetCursorMode(state);
+        }
+
+        public void showEndPanel()
+        {
+            EndPanel.SetActive(true);
+            SetCursorMode(true);
+            // end panel: show score, can close and back to game to see others (transfer camera, and can't move)
+        }
+
+        public void End()
+        {
+            PhotonNetwork.LoadLevel(GameConstants.SCENE_END);
         }
 
         #region RPC

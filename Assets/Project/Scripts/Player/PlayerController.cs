@@ -52,7 +52,7 @@ namespace Game.SweetsWar
 
         // private
         private string m_heldWeaponPrefabName = null;
-        private int m_heldWeaponViewID;
+        private int m_heldWeaponViewID = -1;
         private Weapon m_heldWeapon;
         //private short m_heldWeaponID = -1;
         private CharacterController m_characterController;
@@ -65,11 +65,21 @@ namespace Game.SweetsWar
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;           
         private float m_lastTimeJumped = 0f;
-        float m_footstepDistance;
+        private float m_footstepDistance;
+        private GameObject m_weaponPrefab;
 
         private const float k_groundCheckDistance = 0.05f;
         private const float k_JumpGroundingPreventionTime = 0.2f;
         private const float k_GroundCheckDistanceInAir = 0.07f;
+        private const string k_weaponViewID = "weaponViewID";
+
+        // Animation
+        private const string k_ANIMATION_SPEED = "SpeedTest"; //"Speed";
+        private const string k_ANIMATION_MOVE = "Move";
+        private const string k_ANIMATION_JUMP = "Jump";
+        private const string k_ANIMATION_CHROUCH = "Crouch";
+        private const string k_ANIMATION_EQUIP = "EquipWeapon";
+        private const string k_TAKE_DAMAGE = "TakeDamage";
 
         public void Awake()
         {
@@ -156,6 +166,7 @@ namespace Game.SweetsWar
             // setup
             GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
             weaponPrefab.GetComponent<WeaponController>().isInUse = true;
+            m_weaponPrefab = weaponPrefab;
             m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
             m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("("));           
             m_heldWeaponViewID = viewID;
@@ -175,7 +186,7 @@ namespace Game.SweetsWar
                     weaponPrefab.transform.parent = weaponSlot; // inside
 
                     //m_animator.Play(GameConstants.ANIMATION_EQUIP);
-                    m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
+                    m_animator.SetBool(k_ANIMATION_EQUIP, true);
                     audioSource.PlayOneShot(equipSFX);
 
                     break;
@@ -246,7 +257,7 @@ namespace Game.SweetsWar
                 
             }
 
-            m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
+            m_animator.SetBool(k_ANIMATION_EQUIP, true);
             audioSource.PlayOneShot(equipSFX);
           
             if (photonView.IsMine)
@@ -257,13 +268,58 @@ namespace Game.SweetsWar
             }
         }
 
+        public void TakeDamage(float h)
+        {
+            health -= h;
+            Debug.Log("health: " + health);
+            //m_animator.SetTrigger(k_TAKE_DAMAGE);
+
+            if (health <= 0)
+            {
+                Die();
+            }
+        }
+
+        void Die()
+        {
+            // play animation
+            GameManager.Instance.showEndPanel();
+        }
+
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
             if(!photonView.IsMine && targetPlayer == photonView.Owner)
             {
-                EquipWeapon((int)changedProps["weaponViewID"]);
+                if (changedProps.TryGetValue(k_weaponViewID, out object id)) EquipWeapon((int)changedProps["weaponViewID"]);
                 //EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
             }
+        }
+
+        private void Attack()
+        {
+            if (m_heldWeaponViewID < 0)
+            {
+                Debug.Log("Attack: whithout weapon!");
+                return;
+            }
+
+            m_weaponPrefab.GetComponent<WeaponController>().Fire();
+
+            /*
+            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.distance <= m_heldWeapon.AttackRange)
+            {
+                Debug.Log("hit: " + hit.collider.name);
+                //audioSource.PlayOneShot(m_heldWeapon.AttackSFX);
+                m_weaponPrefab.GetComponent<WeaponController>().Fire();
+                if (hit.collider.tag == GameConstants.TAG_PLAYER)
+                {
+                    hit.transform.GetComponent<PlayerController>().TakeDamage(m_heldWeapon.Damage);
+                    
+                }
+            }
+            */
         }
 
         private void Action() {
@@ -274,18 +330,18 @@ namespace Game.SweetsWar
             if (stopMove) return;
 
             /* move */
-            m_animator.SetFloat(GameConstants.ANIMATION_SPEED, m_speedPlayer);
+            m_animator.SetFloat(k_ANIMATION_SPEED, m_speedPlayer);
             float x = Input.GetAxis(GameConstants.HORIZONTAL);
             float y = Input.GetAxis(GameConstants.VERTICAL);
             if (x == 0 && y == 0)
             {
-                m_animator.SetBool(GameConstants.ANIMATION_MOVE, false);
+                m_animator.SetBool(k_ANIMATION_MOVE, false);
             }
             else
             {
                 Vector3 move = transform.right * x + transform.forward * y;
                 m_characterController.Move(move * m_speedPlayer * Time.deltaTime);
-                m_animator.SetBool(GameConstants.ANIMATION_MOVE, true);
+                m_animator.SetBool(k_ANIMATION_MOVE, true);
 
                 // sound                
                 if (m_footstepDistance >= 1f)
@@ -304,7 +360,7 @@ namespace Game.SweetsWar
             if (Input.GetButtonDown(GameConstants.BUTTON_CROUCH) && isGrounded)
             {
                 isCrouching = !isCrouching;
-                m_animator.SetBool(GameConstants.ANIMATION_CHROUCH, isCrouching);
+                m_animator.SetBool(k_ANIMATION_CHROUCH, isCrouching);
                 
                 // #TODO: NEED TO SET TIMEOUT
                 
@@ -324,7 +380,7 @@ namespace Game.SweetsWar
             if (Input.GetButtonDown(GameConstants.BUTTON_JUMP) && isGrounded)
             {
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                m_animator.SetTrigger(GameConstants.ANIMATION_JUMP);
+                m_animator.SetTrigger(k_ANIMATION_JUMP);
                 m_lastTimeJumped = Time.time;
                 audioSource.PlayOneShot(jumpSFX);
 
@@ -338,7 +394,8 @@ namespace Game.SweetsWar
             /* fire */
             if (Input.GetButtonDown(GameConstants.BUTTON_FIRE))
             {
-                Debug.Log("BUTTON_FIRE");
+                //Debug.Log("BUTTON_FIRE");
+                Attack();
             }
 
             /* look */
