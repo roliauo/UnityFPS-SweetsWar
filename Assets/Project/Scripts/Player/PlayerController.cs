@@ -270,20 +270,28 @@ namespace Game.SweetsWar
 
         public void TakeDamage(float h)
         {
-            health -= h;
-            Debug.Log("health: " + health);
-            //m_animator.SetTrigger(k_TAKE_DAMAGE);
-
-            if (health <= 0)
+            if (health > h)
+            {
+                health -= h;
+                Debug.Log("health: " + health);
+            }
+            else
             {
                 Die();
             }
+            
+            
+            //m_animator.SetTrigger(k_TAKE_DAMAGE);
+
+           
         }
 
         void Die()
         {
+            Debug.Log("Die... ");
             // play animation
-            GameManager.Instance.showEndPanel();
+            //waitAndSee = true;
+            //GameManager.Instance.showEndPanel();
         }
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
