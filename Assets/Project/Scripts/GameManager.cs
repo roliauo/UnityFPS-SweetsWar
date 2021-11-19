@@ -275,6 +275,13 @@ namespace Game.SweetsWar
                 Item item = obj.GetComponent<ItemBehavior>().item;
                 item.Number = 0;
             }
+
+            foreach (GameObject obj in CraftItemPrefabs)
+            {
+                // ###NEED TO MODIFY
+                Item item = obj.GetComponent<WeaponController>().WeaponData; 
+                item.Number = 0;
+            }
         }
 
         private void GeneratePlayersInReadyStage() // random range

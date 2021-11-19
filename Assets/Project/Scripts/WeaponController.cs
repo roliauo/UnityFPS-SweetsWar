@@ -10,7 +10,7 @@ namespace Game.SweetsWar
     {
         public Weapon WeaponData;
         public float MaxPickUpDistance = 3f;
-        public bool isInUse = false;
+        public bool isInUse { get; set; } //= false 
 
         AudioSource m_audioSource;
         private Animator m_animator;
@@ -20,27 +20,36 @@ namespace Game.SweetsWar
         {
             m_audioSource = GetComponent<AudioSource>();
             m_animator = GetComponent<Animator>();
+            isInUse = false;
         }
         public void Fire()
         {
-            if (WeaponData.AttackSFX)
-            {
-                m_audioSource.PlayOneShot(WeaponData.AttackSFX);
-            }
-
-            if (m_animator && WeaponData.k_AnimationName != null)
-            {
-                m_animator.SetTrigger(WeaponData.k_AnimationName);
-            }
-
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit) && hit.distance <= WeaponData.AttackRange)
             {
                 Debug.Log("hit: " + hit.collider.name);
+                if (hit.collider.tag != GameConstants.TAG_ITEM)
+                {
+                    if (WeaponData.AttackSFX)
+                    {
+                        m_audioSource.PlayOneShot(WeaponData.AttackSFX);
+                    }
+
+                    if (m_animator && WeaponData.k_AnimationName != null)
+                    {
+                        m_animator.SetTrigger(WeaponData.k_AnimationName);
+                    }
+
+                }
+
                 if (hit.collider.tag == GameConstants.TAG_PLAYER)
                 {
-                    hit.transform.GetComponent<PlayerController>().TakeDamage(WeaponData.Damage);
+                    //TODO: hit position
+                    int viewID = hit.collider.gameObject.GetComponent<PhotonView>().ViewID;
+                    Debug.Log("hit.collider viewID: " + viewID);
+                    PlayerController._instance.photonView.RPC("RPC_TakeDamage", RpcTarget.Others, viewID, WeaponData.Damage);
+                    //hit.transform.GetComponent<PlayerController>().TakeDamage(WeaponData.Damage);
 
                 }
             }
@@ -69,10 +78,7 @@ namespace Game.SweetsWar
         [PunRPC] void RPC_ForceMasterDestoryWeapon(int viewID)
         {
             GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
-            //PlayerController._instance.EquipWeapon(weaponPrefab);
             PhotonNetwork.Destroy(weaponPrefab);
-            //PlayerController._instance.EquipWeapon(WeaponData.ID);
-
         }
 
         /*
