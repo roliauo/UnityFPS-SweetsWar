@@ -43,6 +43,7 @@ namespace Game.SweetsWar
         public const string GAME_MODE_TEAM_FIGHT = "團戰";
         public const string PLAYER_NAME_PREFAB_KEY = "PlayerName";
         public const string TAG_PLAYER = "Player";
+        public const string TAG_ITEM = "Item";
 
         // Props
         public const string IS_PLAYER_READY = "IS_PLAYER_READY";
