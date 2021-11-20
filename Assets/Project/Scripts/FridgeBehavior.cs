@@ -10,7 +10,8 @@ namespace Game.SweetsWar
         public int ID;
         public float MaxDistance = 4f;
         public float HP = 100;
-        public bool IsOpened = false;
+
+        public bool IsOpened { get; set; }
 
         //private Animation m_animation;
         private Animator m_animator;
@@ -22,9 +23,10 @@ namespace Game.SweetsWar
             DontDestroyOnLoad(gameObject);
         }
 
-        void Start()
+        private void Start()
         {
             m_animator = GetComponent<Animator>();
+            IsOpened = false;
             ID = photonView.ViewID;
             CraftUIManager._instance.AllPlayerCraftingInventories.Add(ID, new Inventory(9));
             //inventory = new Inventory(9);

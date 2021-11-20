@@ -9,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
-    public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public static PlayerController _instance;
         public static GameObject localPlayerInstance;
@@ -20,7 +20,9 @@ namespace Game.SweetsWar
         public float gravity = -20f;
 
         [Header("Health")]
-        public float health = 100f;
+        public float maxHealth = 100f;
+        //public float health = 100f;
+        public float health { get; set; }
 
         [Header("Ground Check")]
         public Transform groundCheckTransform;
@@ -80,6 +82,7 @@ namespace Game.SweetsWar
         private const string k_ANIMATION_CHROUCH = "Crouch";
         private const string k_ANIMATION_EQUIP = "EquipWeapon";
         private const string k_TAKE_DAMAGE = "TakeDamage";
+        private const string k_health = "health";
 
         public void Awake()
         {
@@ -104,6 +107,8 @@ namespace Game.SweetsWar
             m_cameraPosition = Camera.main.transform.localPosition; 
             m_cameraCrouchingPosition = new Vector3(m_cameraPosition.x, m_cameraPosition.y / 2, m_cameraPosition.z);
             stopMove = false;
+            health = maxHealth;
+            //setPropsFloat(k_health, maxHealth);
 
             playerName.text = photonView.Owner.NickName;
 
@@ -139,7 +144,18 @@ namespace Game.SweetsWar
             Action();
 
         }
-      
+
+        public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+        {
+            if (!photonView.IsMine && targetPlayer == photonView.Owner)
+            {
+                if (changedProps.TryGetValue(k_weaponViewID, out object id)) EquipWeapon((int)changedProps["weaponViewID"]);
+                //EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
+                //if (changedProps.TryGetValue("damage", out object d)) TakeDamage((float)changedProps["damage"]);
+                //if (changedProps.TryGetValue(k_health, out object h)) TakeDamage((float)changedProps[k_health]);
+            }
+        }
+
         public void EquipWeapon(int viewID) //GameObject weaponPrefab
         {
             if (m_heldWeaponPrefabName != null)
@@ -233,60 +249,51 @@ namespace Game.SweetsWar
         }
         */
 
-        public void EquipWeapon_SetActive(string weaponPrefabName)
+        
+        [PunRPC] public void RPC_TakeDamageInPlayer(int viewID, float damage)
         {
-            if (photonView.IsMine && m_heldWeaponPrefabName != null)
+            //photonView.ViewID: sender's id,  _instance.photonView.ViewID: player's id
+            //GameObject player = PhotonView.Find(viewID).gameObject;
+            Debug.Log("RPC_TakeDamageInPlayer - hit.collider viewID: " + viewID + 
+                " photonView.ViewID: " + photonView.ViewID +  // sender
+                " _instance.photonView.ViewID: " + _instance.photonView.ViewID + //
+                " LOCAL: " + localPlayerInstance.GetPhotonView().ViewID+ 
+                " health:" + health);
+            
+            // use _instance to get this local player. (if no _instance, the data are sender's)
+            if (_instance.photonView.ViewID == viewID)
             {
-                // switch weapon (drop previous weapon)
-                Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, m_heldWeaponPrefabName, position.x, position.y + 3f, position.z);
-            }
-            m_heldWeaponPrefabName = weaponPrefabName;
-            //WeaponData data;
-            foreach (GameObject go in weapons)
-            {
-                // switch weapons
-                go.SetActive(go.name == weaponPrefabName);
-                //Debug.Log("go.name: " + go.name + " prefab: " + weaponPrefabName);
-
-                if (photonView.IsMine && go.name == weaponPrefabName)
+                if (_instance.health < damage)
                 {
-                    BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
-                    break;
+                    _instance.health = 0;
+                    Die();
                 }
-                
-            }
+                else
+                {
+                    _instance.health -= damage;
+                    Debug.Log("health: " + _instance.health + " player: " + _instance.playerName.text);
+                }
+            }         
 
-            m_animator.SetBool(k_ANIMATION_EQUIP, true);
-            audioSource.PlayOneShot(equipSFX);
-          
-            if (photonView.IsMine)
+        }
+        
+
+
+        public void setPropsFloat(string key, float value)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(key))
+            {
+                PhotonNetwork.LocalPlayer.CustomProperties[key] = value;
+            }
+            else
             {
                 Hashtable hash = new Hashtable();
-                hash.Add("weaponPrefabName", weaponPrefabName);
+                hash.Add(key, value);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
 
-        public void TakeDamage(float h)
-        {
-            if (health > h)
-            {
-                health -= h;
-                Debug.Log("health: " + health);
-            }
-            else
-            {
-                Die();
-            }
-            
-            
-            //m_animator.SetTrigger(k_TAKE_DAMAGE);
-
-           
-        }
-
-        void Die()
+        public void Die()
         {
             Debug.Log("Die... ");
             // play animation
@@ -294,15 +301,7 @@ namespace Game.SweetsWar
             //GameManager.Instance.showEndPanel();
         }
 
-        public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-        {
-            if(!photonView.IsMine && targetPlayer == photonView.Owner)
-            {
-                if (changedProps.TryGetValue(k_weaponViewID, out object id)) EquipWeapon((int)changedProps["weaponViewID"]);
-                //EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
-            }
-        }
-
+        #region Private functions
         private void Attack()
         {
             if (m_heldWeaponViewID < 0)
@@ -312,22 +311,6 @@ namespace Game.SweetsWar
             }
 
             m_weaponPrefab.GetComponent<WeaponController>().Fire();
-
-            /*
-            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit) && hit.distance <= m_heldWeapon.AttackRange)
-            {
-                Debug.Log("hit: " + hit.collider.name);
-                //audioSource.PlayOneShot(m_heldWeapon.AttackSFX);
-                m_weaponPrefab.GetComponent<WeaponController>().Fire();
-                if (hit.collider.tag == GameConstants.TAG_PLAYER)
-                {
-                    hit.transform.GetComponent<PlayerController>().TakeDamage(m_heldWeapon.Damage);
-                    
-                }
-            }
-            */
         }
 
         private void Action() {
@@ -451,48 +434,12 @@ namespace Game.SweetsWar
             
         }
 
-        
-        private void GroundCheck()
-        {
-            // Make sure that the ground check distance while already in air is very small, to prevent suddenly snapping to ground
-            float chosenGroundCheckDistance = isGrounded ? (m_characterController.skinWidth + k_groundCheckDistance) : k_GroundCheckDistanceInAir;
-
-            // reset values before the ground check
-            isGrounded = false;
-            m_groundNormal = Vector3.up;
-
-            // only try to detect ground if it's been a short amount of time since last jump; otherwise we may snap to the ground instantly after we try jumping
-            if (Time.time >= m_lastTimeJumped + k_JumpGroundingPreventionTime)
-            {
-                // if we're grounded, collect info about the ground normal with a downward capsule cast representing our character capsule
-                if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(m_characterController.height), m_characterController.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
-                {
-                    // storing the upward direction for the surface found
-                    m_groundNormal = hit.normal;
-
-                    // Only consider this a valid ground hit if the ground normal goes in the same direction as the character up
-                    // and if the slope angle is lower than the character controller's limit
-                    if (Vector3.Dot(hit.normal, transform.up) > 0f &&
-                        IsNormalUnderSlopeLimit(m_groundNormal))
-                    {
-                        isGrounded = true;
-
-                        // handle snapping to the ground
-                        if (hit.distance > m_characterController.skinWidth)
-                        {
-                            m_characterController.Move(Vector3.down * hit.distance);
-                        }
-                    }
-                }
-            }
-        }
 
         private Vector3 GetCapsuleBottomHemisphere()
         {
             // Gets the center point of the bottom hemisphere of the character controller capsule    
             return transform.position + (transform.up * m_characterController.radius);
         }
-
         
         private Vector3 GetCapsuleTopHemisphere(float atHeight)
         {
@@ -500,14 +447,9 @@ namespace Game.SweetsWar
             return transform.position + (transform.up * (atHeight - m_characterController.radius));
         }
 
-        
-        bool IsNormalUnderSlopeLimit(Vector3 normal)
-        {
-            // Returns true if the slope angle represented by the given normal is under the slope angle limit of the character controller
-            return Vector3.Angle(transform.up, normal) <= m_characterController.slopeLimit;
-        }
+        #endregion
 
-
+        /*
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
@@ -524,6 +466,72 @@ namespace Game.SweetsWar
                 health = (float)stream.ReceiveNext();
             }
         }
+        #endregion
+        */
+
+        #region will be removed
+
+        public void EquipWeapon_SetActive(string weaponPrefabName)
+        {
+            if (photonView.IsMine && m_heldWeaponPrefabName != null)
+            {
+                // switch weapon (drop previous weapon)
+                Vector3 position = PlayerController.localPlayerInstance.transform.position;
+                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, m_heldWeaponPrefabName, position.x, position.y + 3f, position.z);
+            }
+            m_heldWeaponPrefabName = weaponPrefabName;
+            //WeaponData data;
+            foreach (GameObject go in weapons)
+            {
+                // switch weapons
+                go.SetActive(go.name == weaponPrefabName);
+                //Debug.Log("go.name: " + go.name + " prefab: " + weaponPrefabName);
+
+                if (photonView.IsMine && go.name == weaponPrefabName)
+                {
+                    BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
+                    break;
+                }
+
+            }
+
+            m_animator.SetBool(k_ANIMATION_EQUIP, true);
+            audioSource.PlayOneShot(equipSFX);
+
+            if (photonView.IsMine)
+            {
+                Hashtable hash = new Hashtable();
+                hash.Add("weaponPrefabName", weaponPrefabName);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
+        }
+
+
+        /*
+        public void TakeDamage(float damage)
+        {
+            //PhotonNetwork.LocalPlayer.CustomProperties[k_health]
+            Debug.Log("TakeDamage - Before health: " + health + " player: " + playerName.text);
+            if (health < damage)
+            {
+                health = 0;
+                Die();
+            }
+            else
+            {
+                health -= damage;
+                Debug.Log("health: " + health + " player: " + playerName.text);
+            }
+
+            //m_animator.SetTrigger(k_TAKE_DAMAGE);
+
+            if (photonView.IsMine)
+            {
+                setPropsFloat(k_health, health);
+                setPropsFloat("damage", damage);
+            }
+        }
+        */
         #endregion
     }
 }

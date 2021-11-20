@@ -33,15 +33,8 @@ namespace Game.SweetsWar
 
         private Dictionary<short, short> m_itemCount;
 
-        void Start()
+        private void Start()
         {
-            /*
-            if (!PhotonNetwork.IsConnected)
-            {
-                return;
-            }
-            */
-
             if (_instance != null)
             {
                 Destroy(this);

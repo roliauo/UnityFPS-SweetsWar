@@ -96,7 +96,6 @@ MonoBehaviour:
   ID: 0
   MaxDistance: 4
   HP: 100
-  IsOpened: 0
 --- !u!95 &8240811221696766463
 Animator:
   serializedVersion: 3

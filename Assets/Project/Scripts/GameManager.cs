@@ -25,15 +25,12 @@ namespace Game.SweetsWar
         public int[] ItemNumberRange = { 10, 20 };
 
         [Header("Player")]
-        //public Transform[] PlayerLocations;
         public List<Transform> PlayerLocations;
         [SerializeField] private GameObject PlayerPrefab;
 
         [Header("Fridge")]
-        public List<GameObject> FridgeList;
         public List<Transform> FridgeLocations;
         public GameObject FridgePrefab;
-        //public Dictionary<int, Inventory> AllPlayerCraftingInventories;
 
         // for show/hide backpack
         //public GameObject BackpackUI;
@@ -84,17 +81,15 @@ namespace Game.SweetsWar
 
             SetCursorMode(false);
 
-            //GenerateItems();
-
 
             if (IsPlayerReady()) // Ready then setup
             {
-
+                /*
                 for (short i=0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
                 {
                     //Debug_ShowAllPlayerCraftingInventories();
                     PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
-                }
+                }*/
                 
                 // way1: photon instantiate
                 GenerateItems();
@@ -348,12 +343,15 @@ namespace Game.SweetsWar
             m_gameState = true;
         }
 
-        /*[PunRPC]private void RPC_GenerateItems(float x, float z, short ItemPrefabIndex)
-        {
-            Instantiate(ItemPrefabs[ItemPrefabIndex], new Vector3(x, 10f, z), Quaternion.identity);
-        }*/
         private void GenerateItems()
         {
+            // Fridge
+            for (short i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+            {
+                //Debug_ShowAllPlayerCraftingInventories();
+                PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
+            }
+
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
             float RandomX;
             float RandomZ;

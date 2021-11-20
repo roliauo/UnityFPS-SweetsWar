@@ -3,29 +3,29 @@ using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
-    public float maxHelath = 100f;
+    public float MaxHealth = 100f;
     public float criticalHealthRatio = 0.3f;
     public float currentHelath { get; set; }
-    public float getHealthRatio() => currentHelath / maxHelath;
+    public float getHealthRatio() => currentHelath / MaxHealth;
     public bool isCritical() => getHealthRatio() < criticalHealthRatio;
 
-    public UnityAction onDie;
+    public UnityAction Die;
 
     private void Start()
     {
-        currentHelath = maxHelath;
+        currentHelath = MaxHealth;
     }
 
     public void Heal(float hp)
     {
         currentHelath += hp;
-        currentHelath = Mathf.Clamp(currentHelath, 0f, maxHelath);
+        currentHelath = Mathf.Clamp(currentHelath, 0f, MaxHealth);
     }
 
     public void Damage(float hp)
     {
         currentHelath -= hp;
-        currentHelath = Mathf.Clamp(currentHelath, 0f, maxHelath);
+        currentHelath = Mathf.Clamp(currentHelath, 0f, MaxHealth);
         DetectLife();
     }
 
@@ -37,9 +37,9 @@ public class Health : MonoBehaviour
 
     private void DetectLife()
     {
-        if (currentHelath <= 0f && onDie != null)
+        if (currentHelath <= 0f && Die != null)
         {
-            onDie();
+            Die();
         }
     }
 
