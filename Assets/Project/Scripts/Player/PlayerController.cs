@@ -46,7 +46,7 @@ namespace Game.SweetsWar
         public AudioClip equipSFX;
         public AudioClip pickupSFX;
 
-        public bool isDead { get; private set; }
+        //public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
         public bool isFiring;
@@ -56,7 +56,6 @@ namespace Game.SweetsWar
         private string m_heldWeaponPrefabName = null;
         private int m_heldWeaponViewID = -1;
         private Weapon m_heldWeapon;
-        //private short m_heldWeaponID = -1;
         private CharacterController m_characterController;
         private Animator m_animator;
         private Vector3 m_velocity;  
@@ -75,14 +74,15 @@ namespace Game.SweetsWar
         private const float k_GroundCheckDistanceInAir = 0.07f;
         private const string k_weaponViewID = "weaponViewID";
 
-        // Animation
+        // constants
         private const string k_ANIMATION_SPEED = "SpeedTest"; //"Speed";
         private const string k_ANIMATION_MOVE = "Move";
         private const string k_ANIMATION_JUMP = "Jump";
         private const string k_ANIMATION_CHROUCH = "Crouch";
         private const string k_ANIMATION_EQUIP = "EquipWeapon";
         private const string k_TAKE_DAMAGE = "TakeDamage";
-        private const string k_health = "health";
+        private const string k_prop_health = "health";
+        private const string k_prop_isDead = "isDead";
 
         public void Awake()
         {
@@ -108,10 +108,11 @@ namespace Game.SweetsWar
             m_cameraCrouchingPosition = new Vector3(m_cameraPosition.x, m_cameraPosition.y / 2, m_cameraPosition.z);
             stopMove = false;
             health = maxHealth;
-            //setPropsFloat(k_health, maxHealth);
 
             playerName.text = photonView.Owner.NickName;
 
+            SetPlayerProps();
+            
             /*
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
                 PhotonNetwork.LocalPlayer.NickName, 
@@ -150,9 +151,7 @@ namespace Game.SweetsWar
             if (!photonView.IsMine && targetPlayer == photonView.Owner)
             {
                 if (changedProps.TryGetValue(k_weaponViewID, out object id)) EquipWeapon((int)changedProps["weaponViewID"]);
-                //EquipWeapon_SetActive((string)changedProps["weaponPrefabName"]); //m_heldWeaponID
-                //if (changedProps.TryGetValue("damage", out object d)) TakeDamage((float)changedProps["damage"]);
-                //if (changedProps.TryGetValue(k_health, out object h)) TakeDamage((float)changedProps[k_health]);
+
             }
         }
 
@@ -216,40 +215,7 @@ namespace Game.SweetsWar
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
-
-        /*
-        public void EquipWeapon_SetActive(short weaponID)
-        {
-            if (m_heldWeaponID != -1)
-            {
-                // has weapon -> drop
-                Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                //GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, outputItem.name, position.x, position.y, position.z);
-            }
-            m_heldWeaponID = weaponID;
-            foreach (GameObject go in weapons)
-            {
-                go.SetActive(false); // switch weapons
-                if (go.GetComponent<WeaponController>().WeaponData.ID == weaponID)
-                {
-                    go.SetActive(true);
-                }
-            }
-
-            //m_animator.Play(GameConstants.ANIMATION_EQUIP);
-            m_animator.SetBool(GameConstants.ANIMATION_EQUIP, true);
-            audioSource.PlayOneShot(equipSFX);
-
-            if (photonView.IsMine)
-            {
-                Hashtable hash = new Hashtable();
-                hash.Add("weaponID", m_heldWeaponID);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-        }
-        */
-
-        
+ 
         [PunRPC] public void RPC_TakeDamageInPlayer(int viewID, float damage)
         {
             //photonView.ViewID: sender's id,  _instance.photonView.ViewID: player's id
@@ -278,7 +244,6 @@ namespace Game.SweetsWar
         }
         
 
-
         public void setPropsFloat(string key, float value)
         {
             if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(key))
@@ -295,13 +260,22 @@ namespace Game.SweetsWar
 
         public void Die()
         {
+            // 觀戰, 
             Debug.Log("Die... ");
             // play animation
             //waitAndSee = true;
-            //GameManager.Instance.showEndPanel();
+            GameManager.Instance.showEndPanel();
         }
 
         #region Private functions
+
+        private void SetPlayerProps()
+        {
+            Hashtable hash = new Hashtable();
+            hash.Add(k_prop_isDead, false);
+            hash.Add(k_prop_health, maxHealth);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        }
         private void Attack()
         {
             if (m_heldWeaponViewID < 0)
@@ -434,19 +408,6 @@ namespace Game.SweetsWar
             
         }
 
-
-        private Vector3 GetCapsuleBottomHemisphere()
-        {
-            // Gets the center point of the bottom hemisphere of the character controller capsule    
-            return transform.position + (transform.up * m_characterController.radius);
-        }
-        
-        private Vector3 GetCapsuleTopHemisphere(float atHeight)
-        {
-            // Gets the center point of the top hemisphere of the character controller capsule    
-            return transform.position + (transform.up * (atHeight - m_characterController.radius));
-        }
-
         #endregion
 
         /*
@@ -505,33 +466,7 @@ namespace Game.SweetsWar
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
-
-
-        /*
-        public void TakeDamage(float damage)
-        {
-            //PhotonNetwork.LocalPlayer.CustomProperties[k_health]
-            Debug.Log("TakeDamage - Before health: " + health + " player: " + playerName.text);
-            if (health < damage)
-            {
-                health = 0;
-                Die();
-            }
-            else
-            {
-                health -= damage;
-                Debug.Log("health: " + health + " player: " + playerName.text);
-            }
-
-            //m_animator.SetTrigger(k_TAKE_DAMAGE);
-
-            if (photonView.IsMine)
-            {
-                setPropsFloat(k_health, health);
-                setPropsFloat("damage", damage);
-            }
-        }
-        */
+        
         #endregion
     }
 }

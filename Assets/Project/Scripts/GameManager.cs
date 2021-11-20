@@ -84,13 +84,6 @@ namespace Game.SweetsWar
 
             if (IsPlayerReady()) // Ready then setup
             {
-                /*
-                for (short i=0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
-                {
-                    //Debug_ShowAllPlayerCraftingInventories();
-                    PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
-                }*/
-                
                 // way1: photon instantiate
                 GenerateItems();
 
