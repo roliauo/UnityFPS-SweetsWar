@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: -3071633799570114788}
   - component: {fileID: -1930992519792505389}
   m_Layer: 0
-  m_Name: Fridge
+  m_Name: Fridge 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,6 +285,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1906426456675910754}
     m_Modifications:
+    - target: {fileID: -7026112319768722312, guid: 8b676136dc54f0e40bf3c38ae1e19d64,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a7eb94d360bb874292e8d72d69b0572, type: 2}
+    - target: {fileID: -6804424003329177439, guid: 8b676136dc54f0e40bf3c38ae1e19d64,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a7eb94d360bb874292e8d72d69b0572, type: 2}
+    - target: {fileID: -4639311534179013598, guid: 8b676136dc54f0e40bf3c38ae1e19d64,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a7eb94d360bb874292e8d72d69b0572, type: 2}
     - target: {fileID: -4216859302048453862, guid: 8b676136dc54f0e40bf3c38ae1e19d64,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -350,6 +365,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -767623631581688704, guid: 8b676136dc54f0e40bf3c38ae1e19d64,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a7eb94d360bb874292e8d72d69b0572, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b676136dc54f0e40bf3c38ae1e19d64, type: 3}
 --- !u!4 &5693020660598253192 stripped

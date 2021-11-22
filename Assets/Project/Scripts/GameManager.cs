@@ -7,6 +7,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Photon.Pun.UtilityScripts;
 
 namespace Game.SweetsWar
 {
@@ -90,64 +91,12 @@ namespace Game.SweetsWar
             if (PhotonNetwork.IsMasterClient)
             {
                 //MovePlayersToGameStage_Test();
-                /*
-                int index, playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-                int[] indexList = new int[playerCount];
-                bool[] indexTagList = new bool[playerCount];
-                Hashtable hash = new Hashtable();
-                index = Random.Range(0, indexList.Length);
-
-                for (int i = 0; i < playerCount; i++)
-                {
-                    do
-                    {                      
-                        if (!indexTagList[index])
-                        {
-                            indexTagList[index] = true;
-                            if (PhotonNetwork.PlayerList[i].CustomProperties.TryGetValue(GameConstants.K_PROP_PLAYER_INDEX, out object x))
-                            {
-                                PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX] = index;
-                            }
-                            else
-                            {
-                                hash.Add(GameConstants.K_PROP_PLAYER_INDEX, index);
-                                PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
-                            }
-                            
-                            Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
-                        }
-
-                        index = Random.Range(0, indexList.Length);
-                    } while (indexTagList[index]);
-
-                }
-              */
-                /*
-                 for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-                 {
-                     Hashtable hash = new Hashtable();
-                     hash.Add(GameConstants.K_PROP_PLAYER_INDEX, i);
-                     PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
-                     Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
-                 }
-                 */
-
                 photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
-
-                /*
-                 //FAIL
-                for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-                {
-                    PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[i].position;
-                    Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + i);
-                }
-                */
 
             }
 
             SetCursorMode(false);
             GenerateItems();
-
 
             /*
             // SHOW PLAYERS' NAME
@@ -189,21 +138,6 @@ namespace Game.SweetsWar
             */
         }
 
-        /*
-        void OnGUI()
-        {
-            Vector3 characterPos = Camera.main.WorldToScreenPoint(PlayerPrefab.transform.position);
-           
-            characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (windowWidth / 2), Screen.width - (windowWidth / 2)),
-                                               Mathf.Clamp(characterPos.y, 50, Screen.height),
-                                               characterPos.z);
-            GUILayout.BeginArea(new Rect((characterPos.x + offsetX) - (windowWidth / 2), (Screen.height - characterPos.y) + offsetY, windowWidth, windowHeight));
-            // GUI CODE GOES HERE
-
-            GUILayout.EndArea();
-        }
-        */
-
         void OnDestroy()
         {
             SetCursorMode(true);
@@ -236,7 +170,7 @@ namespace Game.SweetsWar
             // end panel: show score, can close and back to game to see others (transfer camera, and can't move)
         }
 
-        public void End()
+        public void GameOver()
         {
             PhotonNetwork.LoadLevel(GameConstants.SCENE_END);
         }
@@ -246,12 +180,6 @@ namespace Game.SweetsWar
         {
             //PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[Random.Range(0, PlayerLocations.Count - 1)].position;
             PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[(int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]].position;
-
-        }
-
-        [PunRPC] public void RPC_InitializePlayerPositionByIndex(int index)
-        {
-            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
         }
 
         [PunRPC] public void RPC_CraftForMasterClient(string prefabName, float x, float y, float z) //string userID //int actorNum
@@ -396,7 +324,8 @@ namespace Game.SweetsWar
             for (short i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
             {
                 //Debug_ShowAllPlayerCraftingInventories();
-                PhotonNetwork.InstantiateRoomObject(FridgePrefab.name, FridgeLocations[i].position, Quaternion.identity, 0);
+                int colorID = (int)PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_COLOR];
+                PhotonNetwork.InstantiateRoomObject(FridgePrefab.name + colorID, FridgeLocations[i].position, Quaternion.identity, 0);
             }
 
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);
