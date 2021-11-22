@@ -28,7 +28,7 @@ namespace Game.SweetsWar
             });
         }
 
-        public void SetInfo(RoomInfo info)
+        public void SetInfo(RoomInfo info, bool showJoinButton = true)
         {
             Debug.Log("info.ToStringFull(): " + info.ToStringFull());
             roomName = info.Name;
@@ -40,6 +40,31 @@ namespace Game.SweetsWar
 
             image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);
             text_Players.text = info.PlayerCount + " / " + info.MaxPlayers;
+
+            btn_JoinRoom.gameObject.SetActive(showJoinButton);
+
+            if (!info.IsOpen)
+            {
+                btn_JoinRoom.enabled = false;
+                btn_JoinRoom.GetComponentInChildren<Text>().text = "Playing";
+            }
+        }
+
+        public void SetInfo(Room info, bool showJoinButton = true)
+        {
+            Debug.Log("info.ToStringFull(): " + info.ToStringFull());
+            roomName = info.Name;
+            text_RoomName.text = info.Name;
+
+            object gameMode;
+            info.CustomProperties.TryGetValue(GameConstants.GAME_MODE, out gameMode);
+            text_GameMode.text = (string)gameMode;
+
+            image_GameMode.color = GameConstants.GetModeColor((string)info.CustomProperties[GameConstants.GAME_MODE]);
+            text_Players.text = info.PlayerCount + " / " + info.MaxPlayers;
+
+            btn_JoinRoom.gameObject.SetActive(showJoinButton);
+            
         }
     }
 }

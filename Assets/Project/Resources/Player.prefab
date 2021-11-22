@@ -115,7 +115,6 @@ MonoBehaviour:
   lookSensitivity: 200
   gravity: -20
   maxHealth: 100
-  health: 100
   groundCheckTransform: {fileID: 3102768771417276752}
   groundLayerMask:
     serializedVersion: 2

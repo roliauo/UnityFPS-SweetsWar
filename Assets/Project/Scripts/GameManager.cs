@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.Linq;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game.SweetsWar
 {
@@ -40,8 +41,6 @@ namespace Game.SweetsWar
         public GameObject[] CraftItemPrefabs;
 
         private short m_RandomItemNumber;
-        private bool m_gameState;
-        private byte playerIndex;
 
         void Start()
         {
@@ -52,43 +51,103 @@ namespace Game.SweetsWar
             }
 
             Instance = this;
-            //AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
 
-            /* SET PLAYER */
-            if (PlayerPrefab == null) //PlayerManager.LocalPlayerInstance == null
+            if (GameConstants.DebugMode)
             {
-                Debug.LogFormat("Missing PlayerPrefab Reference");
-
-            }
-            else
-            {
-
-                if (PlayerController.localPlayerInstance == null)
+                // SET PLAYER 
+                if (PlayerPrefab == null) //PlayerManager.LocalPlayerInstance == null
                 {
-                    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-                    ////playerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
-                    //GeneratePlayersInReadyStage();
-                    MovePlayersToGameStage_Test();
+                    Debug.LogFormat("Missing PlayerPrefab Reference");
 
                 }
                 else
                 {
-                    //MovePlayersToGameStage_old();
-                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+
+                    if (PlayerController.localPlayerInstance == null)
+                    {
+                        Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+                        ////playerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
+                        //GeneratePlayersInReadyStage();
+                        MovePlayersToGameStage_Test();
+
+                    }
+                    else
+                    {
+                        //MovePlayersToGameStage_old();
+                        Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                    }
+
                 }
+
+                if (IsPlayerReady()) // Ready then setup
+                {
+                    // way1: photon instantiate
+                    GenerateItems();
+
+                }
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //MovePlayersToGameStage_Test();
+                /*
+                int index, playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+                int[] indexList = new int[playerCount];
+                bool[] indexTagList = new bool[playerCount];
+                Hashtable hash = new Hashtable();
+                index = Random.Range(0, indexList.Length);
+
+                for (int i = 0; i < playerCount; i++)
+                {
+                    do
+                    {                      
+                        if (!indexTagList[index])
+                        {
+                            indexTagList[index] = true;
+                            if (PhotonNetwork.PlayerList[i].CustomProperties.TryGetValue(GameConstants.K_PROP_PLAYER_INDEX, out object x))
+                            {
+                                PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX] = index;
+                            }
+                            else
+                            {
+                                hash.Add(GameConstants.K_PROP_PLAYER_INDEX, index);
+                                PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
+                            }
+                            
+                            Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
+                        }
+
+                        index = Random.Range(0, indexList.Length);
+                    } while (indexTagList[index]);
+
+                }
+              */
+                /*
+                 for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+                 {
+                     Hashtable hash = new Hashtable();
+                     hash.Add(GameConstants.K_PROP_PLAYER_INDEX, i);
+                     PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
+                     Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
+                 }
+                 */
+
+                photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
+
+                /*
+                 //FAIL
+                for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+                {
+                    PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[i].position;
+                    Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + i);
+                }
+                */
 
             }
 
             SetCursorMode(false);
+            GenerateItems();
 
-
-            if (IsPlayerReady()) // Ready then setup
-            {
-                // way1: photon instantiate
-                GenerateItems();
-
-            }
-            
 
             /*
             // SHOW PLAYERS' NAME
@@ -183,6 +242,18 @@ namespace Game.SweetsWar
         }
 
         #region RPC
+        [PunRPC] public void RPC_InitializePlayerPosition()
+        {
+            //PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[Random.Range(0, PlayerLocations.Count - 1)].position;
+            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[(int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]].position;
+
+        }
+
+        [PunRPC] public void RPC_InitializePlayerPositionByIndex(int index)
+        {
+            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+        }
+
         [PunRPC] public void RPC_CraftForMasterClient(string prefabName, float x, float y, float z) //string userID //int actorNum
         {
             foreach (GameObject obj in CraftItemPrefabs)
@@ -272,34 +343,18 @@ namespace Game.SweetsWar
             }
         }
 
-        private void GeneratePlayersInReadyStage() // random range
-        {
-            // generate the player : it gets synced by using PhotonNetwork.Instantiate
-            PhotonNetwork.Instantiate(PlayerPrefab.name, new Vector3(Random.Range(-80, -10), -80f, Random.Range(-80, -5)), Quaternion.identity, 0);
-        }
-
         private bool IsPlayerReady()
         {
             // use MasterClient to update the scene
             // TODO: need to modify number of player (2~4)
             // 時間: 1分鐘內, 
             // 個人戰: 人數>1, 團體: 人數==MAX_PLAYERS_PER_ROOM
-
+            //SceneManagerHelper.ActiveSceneName
             return (
                 PhotonNetwork.IsMasterClient && 
                 //m_gameState == false &&
                 PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM
                 );
-        }
-
-        private void MovePlayersToGameStage() // Personal
-        {
-            int index = Random.Range(0, PlayerLocations.Count);
-            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
-            Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
-            //FridgeLocations[index].GetComponentInChildren<GameObject>().SetActive();
-            m_gameState = true;
-            Debug.Log("=========MovePlayersToGameStage Personal");
         }
 
         private void MovePlayersToGameStage_Test() //PhotonNetwork.Instantiate
@@ -309,7 +364,6 @@ namespace Game.SweetsWar
             // generate the player : it gets synced by using PhotonNetwork.Instantiate
             PhotonNetwork.Instantiate(PlayerPrefab.name, PlayerLocations[index].position, Quaternion.identity, 0);
 
-            m_gameState = true;
             Debug.Log("=========MovePlayersToGameStage TEST=====");
         }
 
@@ -331,13 +385,13 @@ namespace Game.SweetsWar
                 indexList.RemoveAt(index);
             }            
 
-
             Debug.Log("=========MovePlayersToGameStage _OLD");
-            m_gameState = true;
         }
 
         private void GenerateItems()
         {
+            if (!PhotonNetwork.IsMasterClient) return;
+
             // Fridge
             for (short i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
             {
@@ -379,7 +433,9 @@ namespace Game.SweetsWar
             }
             */
   
-            PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
+            //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
+            PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE]));
+            //PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
 
             /*
             if (IsPlayerReady())
@@ -393,7 +449,7 @@ namespace Game.SweetsWar
             {
                 PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
             }*/
-            
+
         }
 
         private bool CheckAllPlayerLoadedLevel()

@@ -353,9 +353,15 @@ namespace Game.SweetsWar
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
                 Debug.Log("First Player -> Load Level");
-
-                //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME + CustomRoomProperties[GameConstants.GAME_MODE]);
-                PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)CustomRoomProperties[GameConstants.GAME_MODE]));
+                if (GameConstants.DebugMode)
+                {
+                    PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)CustomRoomProperties[GameConstants.GAME_MODE]));
+                }
+                else
+                {
+                    PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
+                }
+                
             }
 
             /*

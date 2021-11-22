@@ -54,6 +54,9 @@ MonoBehaviour:
   - RPC_ForceMasterDestoryWeapon
   - RPC_TakeDamage
   - RPC_TakeDamageInPlayer
+  - RPC_InitializePlayerPosition
+  - RPC_InitializePlayerPositionByIndex
+  - StartCountDown
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

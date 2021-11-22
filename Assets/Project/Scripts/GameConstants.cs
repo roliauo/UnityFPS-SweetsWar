@@ -4,8 +4,10 @@ namespace Game.SweetsWar
 {
     public class GameConstants
     {
+        public const bool DebugMode = false;
+
         // Game Settings
-        public const byte MAX_PLAYERS_PER_ROOM = 2;
+        public const byte MAX_PLAYERS_PER_ROOM = 4;
         public const string FIXED_REGION_ASIA = "asia";
 
         // From InputManager (Edit > ProjectSettings > InputManager)
@@ -37,7 +39,7 @@ namespace Game.SweetsWar
         public const string SCENE_GAME_TEAM = "GameSceneTeam";
         public const string SCENE_END = "EndScene";
 
-        // 
+        // KEY
         public const string GAME_MODE = "GAME_MODE";
         public const string GAME_MODE_PERSONAL_BATTLE = "個人戰";
         public const string GAME_MODE_TEAM_FIGHT = "團戰";
@@ -48,6 +50,7 @@ namespace Game.SweetsWar
         // Props
         public const string IS_PLAYER_READY = "IS_PLAYER_READY";
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
+        public const string K_PROP_PLAYER_INDEX = "K_PROP_PLAYER_INDEX";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";
