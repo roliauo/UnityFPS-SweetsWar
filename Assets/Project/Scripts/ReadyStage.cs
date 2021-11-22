@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -121,16 +122,7 @@ namespace Game.SweetsWar
             }
 
             if (TimeLeft == 0)
-            {
-                /*
-                for(int i=0; i< PhotonNetwork.PlayerList.Length; i++)
-                {
-                    Hashtable hash = new Hashtable();
-                    hash.Add(GameConstants.K_PROP_PLAYER_INDEX, i);
-                    PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
-                }
-                */
-                
+            {                
                 // only MasterClient 
                 if (PhotonNetwork.IsMasterClient)
                 {
@@ -141,11 +133,18 @@ namespace Game.SweetsWar
 
         private void GeneratePlayersInReadyStage() // random range
         {
+            //Debug.Log(PhotonNetwork.LocalPlayer.NickName + " GetPlayerNumber:" + PhotonNetwork.LocalPlayer.GetPlayerNumber());
             // generate the player : it gets synced by using PhotonNetwork.Instantiate
-            PhotonNetwork.Instantiate("Player", new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 0, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
+            // (PhotonNetwork.LocalPlayer.GetPlayerNumber()+1)
+            int colorID = Random.Range(0, 4);
+            PhotonNetwork.Instantiate("Player"+ colorID, new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 0, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
+            
+            Hashtable hash = new Hashtable();
+            hash.Add(GameConstants.K_PROP_PLAYER_COLOR, colorID);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
 
-    private bool IsPlayerReady()
+        private bool IsPlayerReady()
         {
             // use MasterClient to update the scene
             // TODO: need to modify number of player (2~4)
