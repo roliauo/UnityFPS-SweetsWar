@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 100
   DisplayName: "\u68D2\u68D2\u7CD6\u65A7\u982D"
   Icon: {fileID: 21300000, guid: d38bc28883d481344b019fefb02aebe5, type: 3}
-  Number: 2
+  Number: 0
   MaxNumber: 1
   Ingredients:
   - ItemID: 0
@@ -26,5 +26,5 @@ MonoBehaviour:
   Damage: 20
   AttackRange: 2
   FireLoadingTime: 2
-  AttackSFX: {fileID: 0}
+  AttackSFX: {fileID: 8300000, guid: db63e88a789a9f842805f0ec9adfce00, type: 3}
   k_AnimationName: 
