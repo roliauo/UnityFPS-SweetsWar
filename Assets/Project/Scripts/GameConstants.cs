@@ -51,6 +51,7 @@ namespace Game.SweetsWar
         public const string IS_PLAYER_READY = "IS_PLAYER_READY";
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
         public const string K_PROP_PLAYER_INDEX = "K_PROP_PLAYER_INDEX";
+        public const string K_PROP_PLAYER_COLOR = "K_PROP_PLAYER_COLOR";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";

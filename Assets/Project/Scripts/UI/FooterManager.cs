@@ -1,15 +1,17 @@
 ﻿using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Game.SweetsWar
 {
     public class FooterManager : MonoBehaviour
     {
-        public TMP_Text PlayerName;
+       public Text PlayerName;
 
         void Start()
         {
@@ -20,6 +22,7 @@ namespace Game.SweetsWar
             }
             
             PlayerName.text = PhotonNetwork.LocalPlayer.NickName;  //PlayerController._instance.photonView.Owner.NickName;
+            //PlayerName.color = GameConstants.GetColor(PhotonNetwork.LocalPlayer.GetPlayerNumber()); //PhotonNetwork.LocalPlayer.CustomProperties()
         }
 
 

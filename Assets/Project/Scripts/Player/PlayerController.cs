@@ -127,6 +127,10 @@ namespace Game.SweetsWar
             // the player's name always faces the main camera : use Camera.main to get the main
             playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // #photon version: Before photon.IsMine
 
+            float playerDistance = Vector3.Distance(Camera.main.transform.position, playerName.gameObject.transform.position);
+            playerName.gameObject.SetActive(playerDistance < 4);
+            
+
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
                 return;
@@ -134,6 +138,7 @@ namespace Game.SweetsWar
 
             //playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // #local version
 
+            
 
             /*
             if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape))
