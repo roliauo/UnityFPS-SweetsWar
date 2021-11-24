@@ -52,6 +52,15 @@ namespace Game.SweetsWar
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
         public const string K_PROP_PLAYER_INDEX = "K_PROP_PLAYER_INDEX";
         public const string K_PROP_PLAYER_COLOR = "K_PROP_PLAYER_COLOR";
+        public const string K_PROP_WEAPON_VIEW_ID = "weaponViewID";
+
+        public const string K_PROP_HEALTH = "health";
+        public const string K_PROP_MAX_HEALTH = "maxHealth";
+        public const string K_PROP_IS_DEAD = "isDead";
+        public const string K_PROP_KILLS = "kills";
+        public const string K_PROP_DAMAGE_POINTS = "damagePoints";
+        public const string K_PROP_CRAFT_NUMBER = "craftNumber";
+        public const string K_PROP_SCORE = "score";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";
@@ -83,16 +92,12 @@ namespace Game.SweetsWar
             switch (number)
             {
                 case 0: return Color.red;
-                case 1: return Color.green;
-                case 2: return Color.blue;
-                case 3: return Color.yellow;
-                case 4: return Color.cyan;
-                case 5: return Color.grey;
-                case 6: return Color.magenta;
-                case 7: return Color.white;
+                case 1: return Color.blue;
+                case 2: return Color.yellow;
+                case 3: return Color.green;       
             }
 
-            return Color.black;
+            return Color.white;
         }
 
     }

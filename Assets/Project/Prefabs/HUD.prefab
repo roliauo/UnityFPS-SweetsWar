@@ -3757,6 +3757,7 @@ GameObject:
   - component: {fileID: 3955573102774837815}
   - component: {fileID: 6521214037656225624}
   - component: {fileID: 7033458286925432849}
+  - component: {fileID: 7298416683336041288}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -3856,6 +3857,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerName: {fileID: 4436178011077598530}
+--- !u!114 &7298416683336041288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5861579970346736024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bed1f02deae0bb41b067983a67dcd96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Content: {fileID: 4696700460868013675}
+  PlayerScorePrefab: {fileID: 8752788890051491873, guid: 01f3f93d7249d3247abfab51695d10a6,
+    type: 3}
+  Button_LeaveRoom: {fileID: 9178041247477440837}
 --- !u!1 &5926332797370293271
 GameObject:
   m_ObjectHideFlags: 0
@@ -5969,6 +5986,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 408488269372598827}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9178041247477440837 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8860214382372096878, guid: b71901b0b48c54348b08a864966d8804,
+    type: 3}
+  m_PrefabInstance: {fileID: 408488269372598827}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2039728814807196715
 PrefabInstance:
   m_ObjectHideFlags: 0

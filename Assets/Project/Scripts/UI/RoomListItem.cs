@@ -45,7 +45,9 @@ namespace Game.SweetsWar
 
             if (!info.IsOpen)
             {
-                btn_JoinRoom.enabled = false;
+                //btn_JoinRoom.enabled = false;
+                //btn_JoinRoom.image.color = new Color(113f, 183f, 133f);
+                btn_JoinRoom.interactable = false;
                 btn_JoinRoom.GetComponentInChildren<Text>().text = "Playing";
             }
         }

@@ -14,25 +14,24 @@ namespace Game.SweetsWar
         public static PlayerController _instance;
         public static GameObject localPlayerInstance;
         public Camera playerCamera;
-        public TextMesh playerName;       
+        public TextMesh playerName;
+        public string playerID;
 
         public float lookSensitivity = 200f;
         public float gravity = -20f;
 
         [Header("Health")]
         public float maxHealth = 100f;
-        //public float health = 100f;
-        public float health { get; set; }
 
         [Header("Ground Check")]
         public Transform groundCheckTransform;
         public LayerMask groundLayerMask;
 
         [Header("Movement")]
-        public float speedNormal = 1f;
+        public float speedNormal = 2.5f;
         public float speedMax = 4f;
-        public float speedCrouching = 0.5f;
-        public float speedSprinting = 3f;
+        public float speedCrouching = 1f;
+        public float speedSprinting = 4f;
         public float jumpHeight = 1f;
 
         [Header("Weapon")]
@@ -46,16 +45,18 @@ namespace Game.SweetsWar
         public AudioClip equipSFX;
         public AudioClip pickupSFX;
 
-        //public bool isDead { get; private set; }
+        public float health { get; set; }
+        public bool isDead { get; private set; }
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
         public bool isFiring;
         public bool stopMove { get; set; }
 
         // private
-        private string m_heldWeaponPrefabName = null;
+        private string m_heldWeaponPrefabName = null; //
         private int m_heldWeaponViewID = -1;
         private Weapon m_heldWeapon;
+
         private CharacterController m_characterController;
         private Animator m_animator;
         private Vector3 m_velocity;  
@@ -72,7 +73,7 @@ namespace Game.SweetsWar
         private const float k_groundCheckDistance = 0.05f;
         private const float k_JumpGroundingPreventionTime = 0.2f;
         private const float k_GroundCheckDistanceInAir = 0.07f;
-        private const string k_weaponViewID = "weaponViewID";
+
 
         // constants
         private const string k_ANIMATION_SPEED = "SpeedTest"; //"Speed";
@@ -80,9 +81,9 @@ namespace Game.SweetsWar
         private const string k_ANIMATION_JUMP = "Jump";
         private const string k_ANIMATION_CHROUCH = "Crouch";
         private const string k_ANIMATION_EQUIP = "EquipWeapon";
+        private const string k_ANIMATION_DEATH = "Death";
+        private const string k_ANIMATION_DAMAGE = "Damage";
         private const string k_TAKE_DAMAGE = "TakeDamage";
-        private const string k_prop_health = "health";
-        private const string k_prop_isDead = "isDead";
 
         public void Awake()
         {
@@ -110,8 +111,9 @@ namespace Game.SweetsWar
             health = maxHealth;
 
             playerName.text = photonView.Owner.NickName;
+            playerID = photonView.Owner.UserId;
 
-            SetPlayerProps();
+            InitializePlayerProps();
             
             /*
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
@@ -136,16 +138,7 @@ namespace Game.SweetsWar
                 return;
             }
 
-            //playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // #local version
-
-            
-
-            /*
-            if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape))
-            {
-                stop = !stop;
-            }
-            */
+            //playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // #local version          
 
             Action();
 
@@ -155,14 +148,25 @@ namespace Game.SweetsWar
         {
             if (!photonView.IsMine && targetPlayer == photonView.Owner)
             {
-                if (changedProps.TryGetValue(k_weaponViewID, out object id)) EquipWeapon((int)changedProps["weaponViewID"]);
-
+                if (changedProps.TryGetValue(GameConstants.K_PROP_WEAPON_VIEW_ID, out object id) && (int)id > -1)
+                {
+                    EquipWeapon((int)changedProps[GameConstants.K_PROP_WEAPON_VIEW_ID]);
+                }
+                /*
+                if (changedProps.TryGetValue(GameConstants.K_PROP_IS_DEAD, out object dead))
+                {
+                    GameManager.Instance.AllPlayersDataCache.Find(targetPlayer);
+                }
+                */
+                
             }
         }
 
         public void EquipWeapon(int viewID) //GameObject weaponPrefab
         {
-            if (m_heldWeaponPrefabName != null)
+
+            //if (m_heldWeaponPrefabName != null)
+            if ((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WEAPON_VIEW_ID] > 0)
             {
                 // Switch weapon (Drop)
                 // BackpackManerger - remove previous weapon 
@@ -188,7 +192,7 @@ namespace Game.SweetsWar
             weaponPrefab.GetComponent<WeaponController>().isInUse = true;
             m_weaponPrefab = weaponPrefab;
             m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
-            m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("("));           
+            m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("(")); // substring : (clone)          
             m_heldWeaponViewID = viewID;
             weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
             weaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll; //RigidbodyConstraints.FreezePosition;
@@ -215,9 +219,16 @@ namespace Game.SweetsWar
             
             if (photonView.IsMine)
             {
-                Hashtable hash = new Hashtable();
-                hash.Add("weaponViewID", viewID);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(GameConstants.K_PROP_WEAPON_VIEW_ID, out object id))
+                {
+                    PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WEAPON_VIEW_ID] = viewID;
+                } else
+                {
+                    Hashtable hash = new Hashtable();
+                    hash.Add(GameConstants.K_PROP_WEAPON_VIEW_ID, viewID);
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+                }
+               
             }
         }
  
@@ -231,18 +242,33 @@ namespace Game.SweetsWar
                 " LOCAL: " + localPlayerInstance.GetPhotonView().ViewID+ 
                 " health:" + health);
             
-            // use _instance to get this local player. (if no _instance, the data are sender's)
+            // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
             if (_instance.photonView.ViewID == viewID)
             {
-                if (_instance.health < damage)
+                _instance.m_animator.SetTrigger(k_ANIMATION_DAMAGE); //
+
+                // sender add damage points
+                //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
+                GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
+
+
+                if (_instance.health <= damage)
                 {
                     _instance.health = 0;
-                    Die();
+
+                    // sender add kills
+                    //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
+                    GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
+                    
+                    // update player state
+                    GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
+
+                    Die();                  
                 }
                 else
                 {
                     _instance.health -= damage;
-                    Debug.Log("health: " + _instance.health + " player: " + _instance.playerName.text);
+                    //Debug.Log("health: " + _instance.health + " player: " + _instance.playerName.text);
                 }
             }         
 
@@ -265,20 +291,32 @@ namespace Game.SweetsWar
 
         public void Die()
         {
-            // 觀戰, 
             Debug.Log("Die... ");
-            // play animation
+            m_animator.SetBool(k_ANIMATION_DEATH, true);
+
+            _instance.isDead = true;
+            PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
+
+            //_instance.stopMove = true;
             //waitAndSee = true;
-            GameManager.Instance.showEndPanel();
+            // call Score panel or detect by GameManager
+            GameManager.Instance.ShowScorePanel();
         }
 
         #region Private functions
 
-        private void SetPlayerProps()
+        private void InitializePlayerProps()
         {
             Hashtable hash = new Hashtable();
-            hash.Add(k_prop_isDead, false);
-            hash.Add(k_prop_health, maxHealth);
+            hash.Add(GameConstants.K_PROP_IS_DEAD, false);
+            hash.Add(GameConstants.K_PROP_HEALTH, maxHealth);
+            hash.Add(GameConstants.K_PROP_MAX_HEALTH, maxHealth);
+            hash.Add(GameConstants.K_PROP_WEAPON_VIEW_ID, -1); // no weapon: -1
+            hash.Add(GameConstants.K_PROP_KILLS, 0f);
+            hash.Add(GameConstants.K_PROP_DAMAGE_POINTS, 0f);
+            hash.Add(GameConstants.K_PROP_CRAFT_NUMBER, 0f);
+            hash.Add(GameConstants.K_PROP_SCORE, 0);
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
         private void Attack()

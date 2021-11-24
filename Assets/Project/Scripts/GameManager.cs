@@ -18,7 +18,7 @@ namespace Game.SweetsWar
         public GameObject Menu;
         public GameObject CraftPanel;
         public GameObject AimTarget;
-        public GameObject EndPanel;
+        public GameObject ScorePanel;
 
         [Header("Items")]
         public List<GameObject> ItemPrefabs;
@@ -29,6 +29,8 @@ namespace Game.SweetsWar
         [Header("Player")]
         public List<Transform> PlayerLocations;
         [SerializeField] private GameObject PlayerPrefab;
+        public List<Player> AllPlayersDataCache; // for score(PLAYER LEAVE)
+        public float PlayerMaxHealthSum { get; private set; }
 
         [Header("Fridge")]
         public List<Transform> FridgeLocations;
@@ -39,7 +41,7 @@ namespace Game.SweetsWar
         //public bool StopAction;
 
         [Header("Craft")]
-        public GameObject[] CraftItemPrefabs;
+        public GameObject[] CraftItemPrefabs;    
 
         private short m_RandomItemNumber;
 
@@ -97,6 +99,7 @@ namespace Game.SweetsWar
 
             SetCursorMode(false);
             GenerateItems();
+            CachePlayersData();
 
             /*
             // SHOW PLAYERS' NAME
@@ -126,10 +129,12 @@ namespace Game.SweetsWar
                 PhotonNetwork.LeaveRoom();
             }
 
+            checkPlayerWin();
+
             /*
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                
+                // show backpack
                 BackpackUI.SetActive(!BackpackUI.activeInHierarchy);
                 Cursor.lockState = BackpackUI.activeInHierarchy ? CursorLockMode.None : CursorLockMode.Locked;
                 //需設定人物不會旋轉
@@ -142,6 +147,27 @@ namespace Game.SweetsWar
         {
             SetCursorMode(true);
             ClearGameData();
+        }
+
+        public void checkPlayerWin()
+        {
+            int alivePlayer = 0;
+            foreach(Player p in PhotonNetwork.PlayerList)
+            {
+                if ((bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
+                {
+                    alivePlayer++;
+                }
+            }
+            if (alivePlayer == 1 && (bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
+            {
+                ShowScorePanel();
+            }
+        }
+
+        public void Win()
+        {
+
         }
 
         public void SetCursorMode(bool show)
@@ -163,11 +189,51 @@ namespace Game.SweetsWar
             SetCursorMode(state);
         }
 
-        public void showEndPanel()
+        public void ShowScorePanel()
         {
-            EndPanel.SetActive(true);
-            SetCursorMode(true);
             // end panel: show score, can close and back to game to see others (transfer camera, and can't move)
+            SetCursorMode(true);
+            ScorePanelManager._instance.UpdateScoreView();
+            ScorePanel.SetActive(true);          
+            
+        }
+
+        public void CachePlayersData()
+        {
+            PlayerMaxHealthSum = 0;
+            AllPlayersDataCache = new List<Player>();
+            foreach (Player p in PhotonNetwork.PlayerList)
+            {
+                AllPlayersDataCache.Add(p);
+                PlayerMaxHealthSum += (float)p.CustomProperties[GameConstants.K_PROP_MAX_HEALTH];
+            }
+
+        }
+
+        [PunRPC] public void AddScore(string userID, string key, float value)
+        {
+
+            foreach (Player p in Instance.AllPlayersDataCache)
+            {
+                if (p.UserId == userID && p.CustomProperties.TryGetValue(key, out object v))
+                {
+                    p.CustomProperties[key] = value + (float)v;
+                }
+            }
+            
+        }
+
+        [PunRPC] public void UpdatePlayerCacheState(string userID, string key, bool value)
+        {
+
+            foreach (Player p in Instance.AllPlayersDataCache)
+            {
+                if (p.UserId == userID && p.CustomProperties.TryGetValue(key, out object v))
+                {
+                    p.CustomProperties[key] = value;
+                }
+            }
+
         }
 
         public void GameOver()
@@ -280,7 +346,6 @@ namespace Game.SweetsWar
             //SceneManagerHelper.ActiveSceneName
             return (
                 PhotonNetwork.IsMasterClient && 
-                //m_gameState == false &&
                 PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM
                 );
         }
@@ -293,27 +358,6 @@ namespace Game.SweetsWar
             PhotonNetwork.Instantiate(PlayerPrefab.name, PlayerLocations[index].position, Quaternion.identity, 0);
 
             Debug.Log("=========MovePlayersToGameStage TEST=====");
-        }
-
-        private void MovePlayersToGameStage_old() // player locations
-        {
-            int index, playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            //IEnumerable<int> tmpList = Enumerable.Range(1, max); //PlayerLocations.Count
-            List<int> indexList = Enumerable.Range(0, playerCount).ToList();
-
-            for (int i = 0; i < playerCount; i++)
-            {
-                index = Random.Range(0, indexList.Count);
-                Debug.Log(index);
-                //PlayerPrefab.transform.position = PlayerLocations[index].position;
-                //FridgePrefab.transform.position = FridgeLocations[index].position;
-                //PhotonNetwork.PlayerList[i]
-                PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
-                Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
-                indexList.RemoveAt(index);
-            }            
-
-            Debug.Log("=========MovePlayersToGameStage _OLD");
         }
 
         private void GenerateItems()
@@ -381,26 +425,6 @@ namespace Game.SweetsWar
 
         }
 
-        private bool CheckAllPlayerLoadedLevel()
-        {
-            foreach (Player p in PhotonNetwork.PlayerList)
-            {
-                object playerLoadedLevel;
-
-                if (p.CustomProperties.TryGetValue(GameConstants.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
-                {
-                    if ((bool)playerLoadedLevel)
-                    {
-                        continue;
-                    }
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
         #endregion
 
         #region PUN callback
@@ -425,6 +449,29 @@ namespace Game.SweetsWar
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
 
+        }
+        #endregion
+
+        #region will be removed
+        private void MovePlayersToGameStage_old() // player locations
+        {
+            int index, playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            //IEnumerable<int> tmpList = Enumerable.Range(1, max); //PlayerLocations.Count
+            List<int> indexList = Enumerable.Range(0, playerCount).ToList();
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                index = Random.Range(0, indexList.Count);
+                Debug.Log(index);
+                //PlayerPrefab.transform.position = PlayerLocations[index].position;
+                //FridgePrefab.transform.position = FridgeLocations[index].position;
+                //PhotonNetwork.PlayerList[i]
+                PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[index].position;
+                Instantiate(FridgePrefab, FridgeLocations[index].position, Quaternion.identity);
+                indexList.RemoveAt(index);
+            }
+
+            Debug.Log("=========MovePlayersToGameStage _OLD");
         }
         #endregion
     }

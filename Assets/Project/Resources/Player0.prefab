@@ -112,6 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 5257342333929850697}
   playerName: {fileID: 1930037817262694879}
+  playerID: 
   lookSensitivity: 200
   gravity: -20
   maxHealth: 100
@@ -119,10 +120,10 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  speedNormal: 1
+  speedNormal: 2
   speedMax: 4
-  speedCrouching: 0.5
-  speedSprinting: 3
+  speedCrouching: 1
+  speedSprinting: 4
   jumpHeight: 1
   weaponSlot: {fileID: 4117934948262228047}
   weapons:

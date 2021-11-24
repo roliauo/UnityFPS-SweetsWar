@@ -48,9 +48,8 @@ namespace Game.SweetsWar
                     //TODO: hit position
                     int viewID = hit.collider.gameObject.GetComponent<PhotonView>().ViewID;
                     Debug.Log("hit.collider viewID: " + viewID);
-
-                    PlayerController._instance.photonView.RPC("RPC_TakeDamageInPlayer", RpcTarget.Others, viewID, WeaponData.Damage);
-                    //hit.transform.GetComponent<PlayerController>().TakeDamage(WeaponData.Damage);
+                    
+                    PlayerController._instance.photonView.RPC("RPC_TakeDamageInPlayer", RpcTarget.All, viewID, WeaponData.Damage);
 
                 }
             }

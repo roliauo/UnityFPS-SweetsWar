@@ -9,11 +9,11 @@ using UnityEngine.UI;
 
 namespace Game.SweetsWar
 {
-    public class FooterManager : MonoBehaviour
+    public class InfoManager : MonoBehaviour
     {
        public Text PlayerName;
 
-        void Start()
+        private void Start()
         {
             if (!PhotonNetwork.IsConnected)
             {

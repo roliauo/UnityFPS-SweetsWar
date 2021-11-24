@@ -86,7 +86,7 @@ namespace Game.SweetsWar
                 }
 
                 // Open Craft System. 不監聽。由冰箱發送控制。
-                Invoke("SetCraftPanel", IsOpened ? 2f : 0);
+                Invoke("SetCraftPanel", IsOpened ? 1f : 0);
             }
         }
 

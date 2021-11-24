@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 3037458567717785691}
   - component: {fileID: 8096479422707112279}
   m_Layer: 5
-  m_Name: Text_Title_rank
+  m_Name: Text_Rank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 5504902377458047773}
   - component: {fileID: 4743771268278361416}
   m_Layer: 5
-  m_Name: Text_Total
+  m_Name: Text_Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +467,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Total
+  m_Text: Score
 --- !u!1 &8752788890051491873
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 6966132852407045782}
   - component: {fileID: 5649547567227024326}
   - component: {fileID: 5456539009156673271}
+  - component: {fileID: 4386616489568532850}
   m_Layer: 5
   m_Name: PlayerScoreBar
   m_TagString: Untagged
@@ -574,3 +575,21 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!114 &4386616489568532850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752788890051491873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2fc3eacb0fb9e3489e0655d0dfeed2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rank: {fileID: 8096479422707112279}
+  Player: {fileID: 6872777896951601769}
+  Kills: {fileID: 6616995288480577118}
+  DamagePoint: {fileID: 7263140744310389882}
+  CraftNumber: {fileID: 8017692754817302550}
+  Score: {fileID: 4743771268278361416}
