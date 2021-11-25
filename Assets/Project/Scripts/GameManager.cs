@@ -162,7 +162,7 @@ namespace Game.SweetsWar
 
         public void SetTreasureGoal()
         {
-            TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX);
+            TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX + 1);
             InfoManager._instance.SetTreasureGoal(TreasureGoalID);
         }
 

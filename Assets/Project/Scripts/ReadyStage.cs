@@ -137,7 +137,7 @@ namespace Game.SweetsWar
             // generate the player : it gets synced by using PhotonNetwork.Instantiate
             // (PhotonNetwork.LocalPlayer.GetPlayerNumber()+1)
             int colorID = Random.Range(0, 4); //+ colorID
-            PhotonNetwork.Instantiate("Player" + colorID, new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 0, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
+            PhotonNetwork.Instantiate("Player" + colorID, new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 2f, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
             
             Hashtable hash = new Hashtable();
             hash.Add(GameConstants.K_PROP_PLAYER_COLOR, colorID);

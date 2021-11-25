@@ -24,4 +24,5 @@ MonoBehaviour:
     Number: 1
   - ItemID: 5
     Number: 4
+  TreasureTip: {fileID: 21300000, guid: 186cb6a75a5962b48a418b16092fda25, type: 3}
   Description: 

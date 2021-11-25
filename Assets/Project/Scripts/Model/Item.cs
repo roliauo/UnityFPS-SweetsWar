@@ -11,6 +11,7 @@ namespace Game.SweetsWar
         public byte Number = 0;
         public byte MaxNumber = 5;
         public Ingredient[] Ingredients;
+        public Sprite TreasureTip; // only for Treasure
 
         [TextArea]
         public string Description;

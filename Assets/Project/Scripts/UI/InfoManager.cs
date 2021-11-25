@@ -12,7 +12,7 @@ namespace Game.SweetsWar
     public class InfoManager : MonoBehaviour
     {
         public static InfoManager _instance;
-        public Image TreasureAnnouncement;
+        public GameObject TreasureAnnouncement;
         public Image TreasureTip;
         public Text PlayerName;
 
@@ -26,14 +26,14 @@ namespace Game.SweetsWar
 
             _instance = this;
             PlayerName.text = PhotonNetwork.LocalPlayer.NickName;  //PlayerController._instance.photonView.Owner.NickName;
-            //PlayerName.color = GameConstants.GetColor(PhotonNetwork.LocalPlayer.GetPlayerNumber()); //PhotonNetwork.LocalPlayer.CustomProperties()
+            //PlayerName.color = GameConstants.GetColor((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
         }
 
         private void Update()
         {
-            if (TreasureAnnouncement.gameObject.activeInHierarchy && Input.anyKeyDown)
+            if (TreasureAnnouncement.activeInHierarchy && Input.GetKeyDown(KeyCode.Space))
             {
-                TreasureAnnouncement.gameObject.SetActive(false);
+                TreasureAnnouncement.SetActive(false);
             }
         }
 
@@ -44,15 +44,13 @@ namespace Game.SweetsWar
             {
                 if (item.ID == id)
                 {
-                    TreasureAnnouncement.sprite = item.Icon;
-                    //Sprite tip = Resources.Load("CraftTip_" + id, typeof(Sprite)) as Sprite;
-                    //TreasureTip.sprite = tip; //Resources.Load("CraftTip_" + id, typeof(Sprite)) as Sprite;
-                    TreasureTip.sprite.name = "CraftTip_" + id;
+                    TreasureAnnouncement.GetComponentInChildren<Image>().sprite = item.Icon;
+                    TreasureTip.sprite = item.TreasureTip; 
                     break;
                 }
 
             }
-            TreasureAnnouncement.gameObject.SetActive(true);
+            TreasureAnnouncement.SetActive(true);
             TreasureTip.gameObject.SetActive(true);
         }
     }
