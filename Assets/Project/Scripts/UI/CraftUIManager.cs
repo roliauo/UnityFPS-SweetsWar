@@ -217,12 +217,21 @@ namespace Game.SweetsWar
                 Vector3 position = PlayerController.localPlayerInstance.transform.position;
                 GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_CRAFT_NUMBER, 1f);
                 GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, outputItem.name, position.x, position.y + 10f, position.z);
+            }         
+            
+            if (outputItem.ID == GameManager.Instance.TreasureGoalID)
+            {
+                // win
+                GameManager.Instance.Win();
             }
-
-            // result panel
-            ResultPanel.SetActive(true);
-            ResultSuccess.SetActive(outputItem != null);
-            ResultFail.SetActive(outputItem == null);
+            else
+            {
+                // result panel
+                ResultPanel.SetActive(true);
+                ResultSuccess.SetActive(outputItem != null);
+                ResultFail.SetActive(outputItem == null);
+            }
+           
             
             Clear();
 

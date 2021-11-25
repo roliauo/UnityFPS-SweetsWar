@@ -65,6 +65,10 @@ namespace Game.SweetsWar
         // UI
         public const string COLOR_YELLOW = "FDBB08";
 
+        // ID Range
+        public const int TREASURE_ID_MIN = 1000;
+        public const int TREASURE_ID_MAX = 1002;
+
         // Method
         public static string GetSceneByGameMode(string gameMode)
         {

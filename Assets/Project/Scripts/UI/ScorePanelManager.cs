@@ -55,7 +55,7 @@ namespace Game.SweetsWar
                 float craftNumberScore = (float)p.CustomProperties[GameConstants.K_PROP_CRAFT_NUMBER] / craftFullCreditNumber * 100; 
                 float totalScore = (float)(killScore * killScoreRate + damagePointScore * damageScoreRate + craftNumberScore * craftScoreRate);
 
-                p.CustomProperties[GameConstants.K_PROP_SCORE] = Math.Round(totalScore, 0, MidpointRounding.AwayFromZero);
+                p.CustomProperties[GameConstants.K_PROP_SCORE] = Math.Round(totalScore, 2, MidpointRounding.AwayFromZero);
 
             }
             //var list2 = PhotonNetwork.PlayerList.OrderByDescending(x => x.CustomProperties[]).ToList();

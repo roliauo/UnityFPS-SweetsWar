@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Pun.UtilityScripts;
+//using System;
 
 namespace Game.SweetsWar
 {
@@ -19,6 +20,7 @@ namespace Game.SweetsWar
         public GameObject CraftPanel;
         public GameObject AimTarget;
         public GameObject ScorePanel;
+        //public GameObject TreasureGoalPanel;
 
         [Header("Items")]
         public List<GameObject> ItemPrefabs;
@@ -41,9 +43,11 @@ namespace Game.SweetsWar
         //public bool StopAction;
 
         [Header("Craft")]
-        public GameObject[] CraftItemPrefabs;    
+        public List<GameObject> CraftItemPrefabs;
+        public int TreasureGoalID { get; private set; }
 
         private short m_RandomItemNumber;
+        private List<GameObject> m_TreasureList;
 
         void Start()
         {
@@ -96,7 +100,7 @@ namespace Game.SweetsWar
                 photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
 
             }
-
+            SetTreasureGoal();
             SetCursorMode(false);
             GenerateItems();
             CachePlayersData();
@@ -120,7 +124,9 @@ namespace Game.SweetsWar
             {
                 SceneManager.LoadScene(GameConstants.SCENE_TITLE);
                 return;
-            }          
+            }
+
+            checkPlayerWin();
 
             // show the menu
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -128,8 +134,13 @@ namespace Game.SweetsWar
                 //Cursor.lockState = CursorLockMode.None;
                 PhotonNetwork.LeaveRoom();
             }
-
-            checkPlayerWin();
+            /*
+            if (TreasureGoalPanel.activeInHierarchy && Input.anyKeyDown)
+            {
+                TreasureGoalPanel.SetActive(false);
+            }
+            */
+            
 
             /*
             if (Input.GetKeyDown(KeyCode.Tab))
@@ -147,6 +158,12 @@ namespace Game.SweetsWar
         {
             SetCursorMode(true);
             ClearGameData();
+        }
+
+        public void SetTreasureGoal()
+        {
+            TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX);
+            InfoManager._instance.SetTreasureGoal(TreasureGoalID);
         }
 
         public void checkPlayerWin()
@@ -331,8 +348,17 @@ namespace Game.SweetsWar
 
             foreach (GameObject obj in CraftItemPrefabs)
             {
+                Item item;
                 // ###NEED TO MODIFY
-                Item item = obj.GetComponent<WeaponController>().WeaponData; 
+                if (obj.TryGetComponent<WeaponController>(out WeaponController w))
+                {
+                    item = obj.GetComponent<WeaponController>().WeaponData;
+                }
+                else
+                {
+                    item = obj.GetComponent<ItemBehavior>().item;
+                }
+                
                 item.Number = 0;
             }
         }
