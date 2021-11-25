@@ -20,17 +20,20 @@ namespace Game.SweetsWar
         public GameObject RoomListItemPrefab;
         public InputField Input_RoomName;  // for creating or searching the room
 
-        [Header("Player List Panel")]
-        public GameObject PlayerListPanel;
-        public GameObject PlayerListItemPrefab;
-
-        [Header("Player Information Panel")]
-        public GameObject PlayerInfoPanel;
-
         [Header("Setting Panel")]
         public GameObject SettingPanel;
 
-        
+        [Header("Info Panel")]
+        public GameObject InfoPanel;
+        public Button Button_Info;
+
+        [Header("Help Panel")]
+        public GameObject HelpPanel;
+        public Button Button_Help;
+        public Button Button_Next;
+        public Image[] PagesImage;
+
+        private byte m_pageNumber = 1;
         private Dictionary<string, RoomInfo> m_cachedRoomList;
         private Dictionary<string, GameObject> m_roomListItems;
         private Dictionary<int, GameObject> m_playerListItems;
@@ -45,6 +48,35 @@ namespace Game.SweetsWar
                 SceneManager.LoadScene(GameConstants.SCENE_TITLE);
                 return;
             }
+            /*
+            Button_Info.onClick.AddListener(() =>
+            {
+                SetActivePanel(InfoPanel.name);
+            });*/
+
+            Button_Help.onClick.AddListener(() =>
+            {
+                SetActivePanel(HelpPanel.name);
+            });
+
+            Button_Next.onClick.AddListener(() =>
+            {
+                if (m_pageNumber >= PagesImage.Length)
+                {
+                    PagesImage[m_pageNumber - 1].gameObject.SetActive(false);
+                    m_pageNumber = 1;
+                    PagesImage[m_pageNumber - 1].gameObject.SetActive(true);
+                    SetActivePanel(MainPanel.name);
+                }
+                else
+                {
+                    if (m_pageNumber>0) PagesImage[m_pageNumber - 1].gameObject.SetActive(false);
+                    PagesImage[m_pageNumber].gameObject.SetActive(true);
+                    m_pageNumber++;
+                }
+                
+                
+            });
 
             m_cachedRoomList = new Dictionary<string, RoomInfo>();
             m_roomListItems = new Dictionary<string, GameObject>();
@@ -65,11 +97,6 @@ namespace Game.SweetsWar
         public void QuickMatchTeamFight()
         {
             QuickMatch(GameConstants.GAME_MODE_TEAM_FIGHT);
-        }
-
-        public void ShowPlayerInfoPanel()
-        {
-            SetActivePanel(PlayerInfoPanel.name);
         }
 
         public void ShowSettingPanel()
@@ -285,9 +312,9 @@ namespace Game.SweetsWar
         private void SetActivePanel(string activePanel)
         {
             MainPanel.SetActive(activePanel.Equals(MainPanel.name));
-            RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));    
-            PlayerListPanel.SetActive(activePanel.Equals(PlayerListPanel.name));
-            PlayerInfoPanel.SetActive(activePanel.Equals(PlayerInfoPanel.name));
+            RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));
+            //InfoPanel.SetActive(activePanel.Equals(InfoPanel.name));
+            HelpPanel.SetActive(activePanel.Equals(HelpPanel.name));
             SettingPanel.SetActive(activePanel.Equals(SettingPanel.name));
         }
 
