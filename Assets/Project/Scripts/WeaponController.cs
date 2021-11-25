@@ -33,6 +33,7 @@ namespace Game.SweetsWar
                 {
                     if (WeaponData.AttackSFX)
                     {
+                        m_audioSource.volume = 0.5f;
                         m_audioSource.PlayOneShot(WeaponData.AttackSFX);
                     }
 

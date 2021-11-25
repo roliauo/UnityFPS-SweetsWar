@@ -22,6 +22,7 @@ MonoBehaviour:
     Number: 3
   - ItemID: 2
     Number: 3
+  TreasureTip: {fileID: 0}
   Description: 
   Damage: 30
   AttackRange: 10

@@ -36,7 +36,7 @@ namespace Game.SweetsWar
 
         [Header("Weapon")]
         public Transform weaponSlot;
-        public GameObject[] weapons;
+        public GameObject[] weaponPosition;
 
         [Header("Audio")]
         public AudioSource audioSource;
@@ -50,7 +50,7 @@ namespace Game.SweetsWar
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
         public bool isFiring;
-        public bool stopMove { get; set; }
+        public bool stopMove; // { get; set; }
 
         // private
         private string m_heldWeaponPrefabName = null; //
@@ -165,11 +165,19 @@ namespace Game.SweetsWar
         public void EquipWeapon(int viewID) //GameObject weaponPrefab
         {
 
-            //if (m_heldWeaponPrefabName != null)
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WEAPON_VIEW_ID] > 0)
             {
                 // Switch weapon (Drop)
                 // BackpackManerger - remove previous weapon 
+                GameObject prevWeaponPrefab = PhotonView.Find(m_heldWeaponViewID).gameObject;
+
+                if (photonView.IsMine)
+                {
+                    BackpackManerger._instance.Subtract(prevWeaponPrefab.GetComponent<WeaponController>().WeaponData);
+                    
+                }
+
+                /*
                 foreach (GameObject go in weapons)
                 {
                     if (photonView.IsMine && go.name == m_heldWeaponPrefabName)
@@ -178,9 +186,11 @@ namespace Game.SweetsWar
                         break;
                     }
                 }
+                */
+
                 // Scene - drop previous weapon
                 //Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                GameObject prevWeaponPrefab = PhotonView.Find(m_heldWeaponViewID).gameObject;
+                //GameObject prevWeaponPrefab = PhotonView.Find(m_heldWeaponViewID).gameObject;
                 prevWeaponPrefab.GetComponent<Rigidbody>().useGravity = true;
                 prevWeaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 prevWeaponPrefab.transform.parent = null;
@@ -199,7 +209,7 @@ namespace Game.SweetsWar
 
             // position
             //Transform weaponTransform;
-            foreach (GameObject go in weapons)
+            foreach (GameObject go in weaponPosition)
             {
                 if (go.name == m_heldWeaponPrefabName)
                 {
@@ -308,6 +318,7 @@ namespace Game.SweetsWar
         private void InitializePlayerProps()
         {
             Hashtable hash = new Hashtable();
+            hash.Add(GameConstants.K_PROP_WINNER, false);
             hash.Add(GameConstants.K_PROP_IS_DEAD, false);
             hash.Add(GameConstants.K_PROP_HEALTH, maxHealth);
             hash.Add(GameConstants.K_PROP_MAX_HEALTH, maxHealth);
@@ -475,41 +486,6 @@ namespace Game.SweetsWar
 
         #region will be removed
 
-        public void EquipWeapon_SetActive(string weaponPrefabName)
-        {
-            if (photonView.IsMine && m_heldWeaponPrefabName != null)
-            {
-                // switch weapon (drop previous weapon)
-                Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, m_heldWeaponPrefabName, position.x, position.y + 3f, position.z);
-            }
-            m_heldWeaponPrefabName = weaponPrefabName;
-            //WeaponData data;
-            foreach (GameObject go in weapons)
-            {
-                // switch weapons
-                go.SetActive(go.name == weaponPrefabName);
-                //Debug.Log("go.name: " + go.name + " prefab: " + weaponPrefabName);
-
-                if (photonView.IsMine && go.name == weaponPrefabName)
-                {
-                    BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
-                    break;
-                }
-
-            }
-
-            m_animator.SetBool(k_ANIMATION_EQUIP, true);
-            audioSource.PlayOneShot(equipSFX);
-
-            if (photonView.IsMine)
-            {
-                Hashtable hash = new Hashtable();
-                hash.Add("weaponPrefabName", weaponPrefabName);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-        }
-        
         #endregion
     }
 }

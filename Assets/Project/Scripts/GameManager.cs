@@ -20,7 +20,7 @@ namespace Game.SweetsWar
         public GameObject CraftPanel;
         public GameObject AimTarget;
         public GameObject ScorePanel;
-        //public GameObject TreasureGoalPanel;
+        public Image Image_Win;
 
         [Header("Items")]
         public List<GameObject> ItemPrefabs;
@@ -97,9 +97,10 @@ namespace Game.SweetsWar
             if (PhotonNetwork.IsMasterClient)
             {
                 //MovePlayersToGameStage_Test();
-                photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
+                //photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
 
             }
+            RPC_InitializePlayerPosition();
             SetTreasureGoal();
             SetCursorMode(false);
             GenerateItems();
@@ -126,7 +127,11 @@ namespace Game.SweetsWar
                 return;
             }
 
-            checkPlayerWin();
+            if (!ScorePanel.activeInHierarchy)
+            {
+                checkPlayerWin();
+            }
+            
 
             // show the menu
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -134,13 +139,12 @@ namespace Game.SweetsWar
                 //Cursor.lockState = CursorLockMode.None;
                 PhotonNetwork.LeaveRoom();
             }
-            /*
-            if (TreasureGoalPanel.activeInHierarchy && Input.anyKeyDown)
+
+            if (Image_Win.gameObject.activeInHierarchy && Input.anyKeyDown)
             {
-                TreasureGoalPanel.SetActive(false);
+                Image_Win.gameObject.SetActive(false);
             }
-            */
-            
+
 
             /*
             if (Input.GetKeyDown(KeyCode.Tab))
@@ -169,22 +173,36 @@ namespace Game.SweetsWar
         public void checkPlayerWin()
         {
             int alivePlayer = 0;
-            foreach(Player p in PhotonNetwork.PlayerList)
+            foreach(Player p in AllPlayersDataCache)
             {
                 if ((bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
                 {
                     alivePlayer++;
                 }
+
+                if ((bool)p.CustomProperties[GameConstants.K_PROP_WINNER] == true && p.UserId != PhotonNetwork.LocalPlayer.UserId)
+                {
+                    ShowScorePanel();
+                    break;
+                }
+                
             }
             if (alivePlayer == 1 && (bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
             {
-                ShowScorePanel();
+                Debug.Log("AllPlayersDataCache.count" + AllPlayersDataCache.Count());
+                Win();
             }
+            /*else if (otherPlayerWin)
+            {
+                ShowScorePanel();
+            }*/
         }
 
         public void Win()
         {
-
+            ShowScorePanel();
+            Image_Win.gameObject.SetActive(true);
+            Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_WINNER, true);
         }
 
         public void SetCursorMode(bool show)
@@ -212,7 +230,6 @@ namespace Game.SweetsWar
             SetCursorMode(true);
             ScorePanelManager._instance.UpdateScoreView();
             ScorePanel.SetActive(true);          
-            
         }
 
         public void CachePlayersData()
@@ -427,27 +444,11 @@ namespace Game.SweetsWar
             /*
             if (!PhotonNetwork.IsMasterClient)
             {
-                Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
                 return;
             }
             */
   
-            //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
             PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE]));
-            //PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
-
-            /*
-            if (IsPlayerReady())
-            {
-                //PhotonNetwork.LoadLevel(GameConstants.SCENE_GAME); //TODO: game mode
-                MovePlayersToGameStage_old();
-                //PhotonView photonView = PhotonView.Get(this);
-                //photonView.RPC("MovePlayersToGameStage", RpcTarget.All);
-            }
-            /*else
-            {
-                PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
-            }*/
 
         }
 

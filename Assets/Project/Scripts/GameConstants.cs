@@ -61,6 +61,7 @@ namespace Game.SweetsWar
         public const string K_PROP_DAMAGE_POINTS = "damagePoints";
         public const string K_PROP_CRAFT_NUMBER = "craftNumber";
         public const string K_PROP_SCORE = "score";
+        public const string K_PROP_WINNER = "winner";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";

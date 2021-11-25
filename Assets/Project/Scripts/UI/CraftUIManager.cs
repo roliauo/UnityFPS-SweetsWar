@@ -217,10 +217,16 @@ namespace Game.SweetsWar
                 Vector3 position = PlayerController.localPlayerInstance.transform.position;
                 GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_CRAFT_NUMBER, 1f);
                 GameManager.Instance.photonView.RPC("RPC_CraftForMasterClient", RpcTarget.MasterClient, outputItem.name, position.x, position.y + 10f, position.z);
-            }         
+
+                //Debug.Log("outputItem.ID == GameManager.Instance.TreasureGoalID: " + outputItem.ID + " goal: " + GameManager.Instance.TreasureGoalID);
+            }
+
             
-            if (outputItem.ID == GameManager.Instance.TreasureGoalID)
+
+            if (outputItem != null && outputItem.ID == GameManager.Instance.TreasureGoalID)
             {
+                GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_CRAFT_NUMBER, 100f);
+                //GameManager.Instance.photonView.RPC("")
                 // win
                 GameManager.Instance.Win();
             }

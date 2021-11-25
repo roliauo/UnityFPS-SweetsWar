@@ -125,6 +125,7 @@ MonoBehaviour:
   CraftPanel: {fileID: 5585198012180280209}
   AimTarget: {fileID: 6320040993962393844}
   ScorePanel: {fileID: 6364514568334208705}
+  Image_Win: {fileID: 595215331233349834}
   ItemPrefabs:
   - {fileID: 3708234880747616235, guid: 7e02c8111499370458bb9dcc7e08d974, type: 3}
   - {fileID: 3708234880747616235, guid: c7bed4038ae4b0443a421f24a15c599b, type: 3}
@@ -605,6 +606,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7978791172421268580, guid: f6db3427b88bf644aa7f700fe9c36b66,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8480464280933502690, guid: f6db3427b88bf644aa7f700fe9c36b66,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -721,3 +727,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8070959559974334943}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &595215331233349834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8665893003914113301, guid: f6db3427b88bf644aa7f700fe9c36b66,
+    type: 3}
+  m_PrefabInstance: {fileID: 8070959559974334943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -18,7 +18,7 @@ MonoBehaviour:
   Number: 0
   MaxNumber: 1
   Ingredients:
-  - ItemID: 300
+  - ItemID: 301
     Number: 1
   - ItemID: 1
     Number: 5
