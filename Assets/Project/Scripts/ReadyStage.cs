@@ -48,13 +48,7 @@ namespace Game.SweetsWar
 
             Btn_LeaveRoom.onClick.AddListener(LeaveRoom);
             Btn_Start.onClick.AddListener(OnClickStart);
-           
-            if (PhotonNetwork.IsMasterClient && IsPlayerReady())
-            {
-                SetCursorMode(true);
-                Btn_Start.gameObject.SetActive(true);
-            }         
-
+            showHideStartButton();
         }
 
         void Update()
@@ -69,6 +63,17 @@ namespace Game.SweetsWar
                 SetCursorMode(!Btn_LeaveRoom.gameObject.activeInHierarchy);
                 Btn_LeaveRoom.gameObject.SetActive(!Btn_LeaveRoom.gameObject.activeInHierarchy);  
             }
+
+            
+
+        }
+
+        private void showHideStartButton()
+        {
+            bool state = (PhotonNetwork.IsMasterClient && IsPlayerReady());
+            SetCursorMode(state);
+            Btn_Start.gameObject.SetActive(state);
+            
         }
 
         private void OnClickStart()
@@ -181,7 +186,7 @@ namespace Game.SweetsWar
         {
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
-
+            showHideStartButton();
         }
         #endregion
     }
