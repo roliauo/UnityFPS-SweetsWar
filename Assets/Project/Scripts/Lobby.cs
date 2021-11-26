@@ -60,12 +60,12 @@ namespace Game.SweetsWar
             });
 
             Button_Next.onClick.AddListener(() =>
-            {
+            {               
                 if (m_pageNumber >= PagesImage.Length)
                 {
                     PagesImage[m_pageNumber - 1].gameObject.SetActive(false);
                     m_pageNumber = 1;
-                    PagesImage[m_pageNumber - 1].gameObject.SetActive(true);
+                    PagesImage[0].gameObject.SetActive(true);
                     SetActivePanel(MainPanel.name);
                 }
                 else
@@ -73,9 +73,8 @@ namespace Game.SweetsWar
                     if (m_pageNumber>0) PagesImage[m_pageNumber - 1].gameObject.SetActive(false);
                     PagesImage[m_pageNumber].gameObject.SetActive(true);
                     m_pageNumber++;
-                }
-                
-                
+                }               
+
             });
 
             m_cachedRoomList = new Dictionary<string, RoomInfo>();

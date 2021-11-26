@@ -129,7 +129,7 @@ namespace Game.SweetsWar
 
             if (!ScorePanel.activeInHierarchy)
             {
-                checkPlayerWin();
+                checkGameOver();
             }
             
 
@@ -137,7 +137,8 @@ namespace Game.SweetsWar
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //Cursor.lockState = CursorLockMode.None;
-                PhotonNetwork.LeaveRoom();
+                //PhotonNetwork.LeaveRoom();
+                Menu.SetActive(!Menu.activeInHierarchy);
             }
 
             if (Image_Win.gameObject.activeInHierarchy && Input.anyKeyDown)
@@ -170,8 +171,27 @@ namespace Game.SweetsWar
             InfoManager._instance.SetTreasureGoal(TreasureGoalID);
         }
 
-        public void checkPlayerWin()
+        public void checkGameOver()
         {
+            foreach (Player p in AllPlayersDataCache)
+            {
+                if ((bool)p.CustomProperties[GameConstants.K_PROP_WINNER] == true && 
+                    p.UserId != PhotonNetwork.LocalPlayer.UserId)
+                {
+                    ShowScorePanel();
+                    break;
+                }
+
+            }
+
+            if (PlayerController._instance.isDead)
+            {
+                ShowScorePanel();
+            }
+            else if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WINNER]) {
+                Win();
+            }
+            /*
             int alivePlayer = 0;
             foreach(Player p in AllPlayersDataCache)
             {
@@ -192,10 +212,8 @@ namespace Game.SweetsWar
                 Debug.Log("AllPlayersDataCache.count" + AllPlayersDataCache.Count());
                 Win();
             }
-            /*else if (otherPlayerWin)
-            {
-                ShowScorePanel();
-            }*/
+            */
+            
         }
 
         public void Win()
@@ -268,11 +286,6 @@ namespace Game.SweetsWar
                 }
             }
 
-        }
-
-        public void GameOver()
-        {
-            PhotonNetwork.LoadLevel(GameConstants.SCENE_END);
         }
 
         #region RPC
