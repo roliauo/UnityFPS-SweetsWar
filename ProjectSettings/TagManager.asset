@@ -6,6 +6,7 @@ TagManager:
   tags:
   - FxTemporaire
   - Item
+  - Ground
   layers:
   - Default
   - TransparentFX

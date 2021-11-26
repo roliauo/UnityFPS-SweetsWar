@@ -82,7 +82,7 @@ namespace Game.SweetsWar
         private const string k_ANIMATION_CHROUCH = "Crouch";
         private const string k_ANIMATION_EQUIP = "EquipWeapon";
         private const string k_ANIMATION_DEATH = "Death";
-        private const string k_ANIMATION_DAMAGE = "Damage";
+        private const string k_ANIMATION_BEATEN = "Beaten";
         private const string k_TAKE_DAMAGE = "TakeDamage";
 
         public void Awake()
@@ -255,7 +255,7 @@ namespace Game.SweetsWar
             // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
             if (_instance.photonView.ViewID == viewID)
             {
-                _instance.m_animator.SetTrigger(k_ANIMATION_DAMAGE); //
+                _instance.m_animator.SetTrigger(k_ANIMATION_BEATEN); //
 
                 // sender add damage points
                 //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
