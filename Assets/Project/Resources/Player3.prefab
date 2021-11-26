@@ -138,7 +138,6 @@ MonoBehaviour:
   equipSFX: {fileID: 8300000, guid: de482e1e99c362d4788ae3c4f4624bcf, type: 3}
   pickupSFX: {fileID: 8300000, guid: b5e53e3ffa0d261499d3737eb62ca637, type: 3}
   isFiring: 0
-  stopMove: 0
 --- !u!95 &5218969826787995188
 Animator:
   serializedVersion: 3

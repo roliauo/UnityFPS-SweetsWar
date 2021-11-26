@@ -301,7 +301,8 @@ namespace Game.SweetsWar
         public void Die()
         {
             Debug.Log("Die... ");
-            m_animator.SetBool(k_ANIMATION_DEATH, true);
+            //m_animator.SetTrigger(k_ANIMATION_DEATH);  // can not move
+            //m_animator.Play(k_ANIMATION_DEATH);
 
             _instance.isDead = true;
             PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
