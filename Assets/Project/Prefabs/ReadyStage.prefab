@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3167419663855451209}
   m_Layer: 8
   m_Name: Terrain (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295

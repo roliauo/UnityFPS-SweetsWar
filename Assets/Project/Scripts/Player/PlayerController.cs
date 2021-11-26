@@ -50,7 +50,7 @@ namespace Game.SweetsWar
         public bool isGrounded { get; private set; }
         public bool isCrouching { get; private set; }
         public bool isFiring;
-        public bool stopMove; // { get; set; }
+        public bool stopMove { get; set; }
 
         // private
         private string m_heldWeaponPrefabName = null; //
@@ -269,11 +269,8 @@ namespace Game.SweetsWar
                     // sender add kills
                     //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
                     GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
-                    
-                    // update player state
-                    GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
 
-                    Die();                  
+                    Die();
                 }
                 else
                 {
@@ -302,15 +299,18 @@ namespace Game.SweetsWar
         public void Die()
         {
             Debug.Log("Die... ");
-            m_animator.SetBool(k_ANIMATION_DEATH, true);
 
-            _instance.isDead = true;
+            // update player state
+            GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
             PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
+            _instance.isDead = true;
+            
+            m_animator.SetBool(k_ANIMATION_DEATH, true);
 
             //_instance.stopMove = true;
             //waitAndSee = true;
             // call Score panel or detect by GameManager
-            GameManager.Instance.ShowScorePanel();
+            //GameManager.Instance.ShowScorePanel();
         }
 
         #region Private functions
@@ -459,12 +459,13 @@ namespace Game.SweetsWar
                 m_characterController.Move(m_velocity * Time.deltaTime);
             }
             */
-            
+
         }
 
         #endregion
 
         /*
+        // TODO: need to refactor: customProps -> OnPhotonSerializeView
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
