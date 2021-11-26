@@ -103,6 +103,7 @@ namespace Game.SweetsWar
         [PunRPC] private void StartCountDown()
         {
             clickedStart = true;
+            Btn_LeaveRoom.gameObject.SetActive(false);
             InvokeRepeating("TimeCountDown", 1, 1);
         }
 
@@ -187,6 +188,7 @@ namespace Game.SweetsWar
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
             showHideStartButton();
+            RoomListItemPrefab.GetComponent<RoomListItem>().SetInfo(PhotonNetwork.CurrentRoom, false);
         }
         #endregion
     }
