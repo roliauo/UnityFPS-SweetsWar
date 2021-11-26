@@ -66,7 +66,6 @@ namespace Game.SweetsWar
         private float m_speedPlayer;
         private float m_cameraHeightRatio = 0.9f;
         private float m_rotationX = 0f;           
-        private float m_lastTimeJumped = 0f;
         private float m_footstepDistance;
         private GameObject m_weaponPrefab;
 
@@ -269,8 +268,11 @@ namespace Game.SweetsWar
                     // sender add kills
                     //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
                     GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
+                    
+                    // update player state
+                    GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
 
-                    Die();
+                    Die();                  
                 }
                 else
                 {
@@ -299,18 +301,15 @@ namespace Game.SweetsWar
         public void Die()
         {
             Debug.Log("Die... ");
-
-            // update player state
-            GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
-            PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
-            _instance.isDead = true;
-            
             m_animator.SetBool(k_ANIMATION_DEATH, true);
+
+            _instance.isDead = true;
+            PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
 
             //_instance.stopMove = true;
             //waitAndSee = true;
             // call Score panel or detect by GameManager
-            //GameManager.Instance.ShowScorePanel();
+            GameManager.Instance.ShowScorePanel();
         }
 
         #region Private functions
@@ -345,13 +344,15 @@ namespace Game.SweetsWar
 
             CheckGrounded();
             //GroundCheck();
-
+            
             if (stopMove) return;
-
+            
             /* move */
             m_animator.SetFloat(k_ANIMATION_SPEED, m_speedPlayer);
             float x = Input.GetAxis(GameConstants.HORIZONTAL);
             float y = Input.GetAxis(GameConstants.VERTICAL);
+            Debug.Log("isGrounded: " + isGrounded +" " + x + ", "+y);
+
             if (x == 0 && y == 0)
             {
                 m_animator.SetBool(k_ANIMATION_MOVE, false);
@@ -400,7 +401,7 @@ namespace Game.SweetsWar
             {
                 m_velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 m_animator.SetTrigger(k_ANIMATION_JUMP);
-                m_lastTimeJumped = Time.time;
+                //m_lastTimeJumped = Time.time;
                 audioSource.PlayOneShot(jumpSFX);
 
                 /*
@@ -432,7 +433,7 @@ namespace Game.SweetsWar
         private void CheckGrounded()
         {
             isGrounded = Physics.CheckSphere(groundCheckTransform.position, k_groundCheckDistance, groundLayerMask);
-
+            //isGrounded = GetComponent<CharacterController>().isGrounded;
             /*
             if (!isGrounded)
             {
