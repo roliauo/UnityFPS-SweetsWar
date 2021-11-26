@@ -237,7 +237,7 @@ namespace Game.SweetsWar
                
             }
         }
- 
+
         [PunRPC] public void RPC_TakeDamageInPlayer(int viewID, float damage)
         {
             //photonView.ViewID: sender's id,  _instance.photonView.ViewID: player's id
@@ -252,6 +252,7 @@ namespace Game.SweetsWar
             if (_instance.photonView.ViewID == viewID)
             {
                 _instance.m_animator.SetTrigger(k_ANIMATION_BEATEN); //
+                GameManager.Instance.DamageFlash();
 
                 // sender add damage points
                 //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);

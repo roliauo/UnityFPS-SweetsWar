@@ -50,6 +50,7 @@ MonoBehaviour:
   CraftPanel: {fileID: 5585198012180280209}
   AimTarget: {fileID: 6320040993962393844}
   ScorePanel: {fileID: 6364514568334208705}
+  damageFlash: {fileID: 8378756468214853566}
   Image_Win: {fileID: 595215331233349834}
   ItemPrefabs:
   - {fileID: 3708234880747616235, guid: 7e02c8111499370458bb9dcc7e08d974, type: 3}
@@ -671,6 +672,12 @@ PrefabInstance:
 --- !u!4 &3644345909309139916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4797072193707366931, guid: f6db3427b88bf644aa7f700fe9c36b66,
+    type: 3}
+  m_PrefabInstance: {fileID: 8070959559974334943}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8378756468214853566 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 308105598294285921, guid: f6db3427b88bf644aa7f700fe9c36b66,
     type: 3}
   m_PrefabInstance: {fileID: 8070959559974334943}
   m_PrefabAsset: {fileID: 0}

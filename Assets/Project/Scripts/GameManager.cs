@@ -20,6 +20,7 @@ namespace Game.SweetsWar
         public GameObject CraftPanel;
         public GameObject AimTarget;
         public GameObject ScorePanel;
+        public GameObject damageFlash;
         public Image Image_Win;
 
         [Header("Items")]
@@ -164,6 +165,17 @@ namespace Game.SweetsWar
         {
             SetCursorMode(true);
             ClearGameData();
+        }
+
+        private void FlashRedEnd()
+        {
+            damageFlash.SetActive(false);
+        }
+
+        public void DamageFlash()
+        {
+            damageFlash.SetActive(true);
+            Invoke("FlashRedEnd", 0.2f);
         }
 
         public void SetTreasureGoal()
