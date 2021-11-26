@@ -139,6 +139,7 @@ namespace Game.SweetsWar
                 //Cursor.lockState = CursorLockMode.None;
                 //PhotonNetwork.LeaveRoom();
                 Menu.SetActive(!Menu.activeInHierarchy);
+                SetCursorMode(Menu.activeInHierarchy);
             }
 
             if (Image_Win.gameObject.activeInHierarchy && Input.anyKeyDown)
