@@ -710,7 +710,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1202,9 +1202,9 @@ RectTransform:
   m_Father: {fileID: 2586861883994392087}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15.01, y: 0}
+  m_AnchorMin: {x: 0.794, y: 0}
+  m_AnchorMax: {x: 0.794, y: 1}
+  m_AnchoredPosition: {x: 15.009979, y: 0}
   m_SizeDelta: {x: 80, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4069708474829781540
@@ -1970,7 +1970,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -19.570923, y: -25.184143}
+  m_AnchoredPosition: {x: -19.5708, y: -25.184082}
   m_SizeDelta: {x: -1820, y: -980}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1047888092510070995
@@ -2667,7 +2667,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3239,7 +3239,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.800293, y: -4.799988}
+  m_AnchoredPosition: {x: 1.800293, y: -4.800049}
   m_SizeDelta: {x: 1874.6357, y: 941.77344}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9124854552097800109
@@ -3619,7 +3619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9433962, g: 0.60495526, b: 0.28034887, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3629,8 +3629,8 @@ MonoBehaviour:
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 0
+  m_FillMethod: 0
+  m_FillAmount: 0.794
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -4783,7 +4783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.8706118, b: 0.11792451, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4793,8 +4793,8 @@ MonoBehaviour:
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 0
+  m_FillMethod: 0
+  m_FillAmount: 0.649
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -5438,6 +5438,11 @@ MonoBehaviour:
   Version: {fileID: 3316558393233701630}
   Region: {fileID: 9162273889941510048}
   Button_Help: {fileID: 3564821621908942265}
+  audioSource_Music: {fileID: 0}
+  audioSource_Sound: {fileID: 0}
+  audioSource_Sound_Weapon: {fileID: 0}
+  MusicVolumn: {fileID: 9129990320181970440}
+  SoundVolumn: {fileID: 7098964186801192700}
   HelpPanel: {fileID: 3838374878915900151}
 --- !u!114 &7298416683336041288
 MonoBehaviour:
@@ -6577,9 +6582,9 @@ RectTransform:
   m_Father: {fileID: 905157887378913780}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15.01, y: 0}
+  m_AnchorMin: {x: 0.649, y: 0}
+  m_AnchorMax: {x: 0.649, y: 1}
+  m_AnchoredPosition: {x: 15.009979, y: 0}
   m_SizeDelta: {x: 80, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6149019624398309422
@@ -7300,7 +7305,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Let's play 8888 999999 \u54C8\u54C8\u54C8"
+  m_text: "Let's play 9999 8888888 \u54C8\u54C8\u54C8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4daf351afcea4c04e98ff8effa0b57bb, type: 2}
   m_sharedMaterial: {fileID: -7208764771059180100, guid: 4daf351afcea4c04e98ff8effa0b57bb,
@@ -8559,6 +8564,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: btn_help
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891262040530355609, guid: 2a9c313f949d36d4686672f1c69861ee,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a9c313f949d36d4686672f1c69861ee, type: 3}

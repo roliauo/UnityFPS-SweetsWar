@@ -70,9 +70,6 @@ namespace Game.SweetsWar
         private GameObject m_weaponPrefab;
 
         private const float k_groundCheckDistance = 0.05f;
-        private const float k_JumpGroundingPreventionTime = 0.2f;
-        private const float k_GroundCheckDistanceInAir = 0.07f;
-
 
         // constants
         private const string k_ANIMATION_SPEED = "SpeedTest"; //"Speed";
@@ -352,7 +349,7 @@ namespace Game.SweetsWar
             m_animator.SetFloat(k_ANIMATION_SPEED, m_speedPlayer);
             float x = Input.GetAxis(GameConstants.HORIZONTAL);
             float y = Input.GetAxis(GameConstants.VERTICAL);
-            Debug.Log("isGrounded: " + isGrounded +" " + x + ", "+y);
+            //Debug.Log("isGrounded: " + isGrounded +" " + x + ", "+y);
 
             if (x == 0 && y == 0)
             {

@@ -45976,6 +45976,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462150961}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!82 &1464824226 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7169361726103414428, guid: 45a36a8544007254e897e499259a3c16,
+    type: 3}
+  m_PrefabInstance: {fileID: 1681376671}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1465787606
 GameObject:
   m_ObjectHideFlags: 0
@@ -48282,6 +48288,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1268348206541437390, guid: bae5f999cf3f2ec4e83050e064aafe76,
+        type: 3}
+      propertyPath: audioSource_Music
+      value: 
+      objectReference: {fileID: 1464824226}
     - target: {fileID: 1457736589916884405, guid: bae5f999cf3f2ec4e83050e064aafe76,
         type: 3}
       propertyPath: m_AnchorMin.y

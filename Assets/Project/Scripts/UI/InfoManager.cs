@@ -28,9 +28,16 @@ namespace Game.SweetsWar
         public TMP_Text Version;
         public TMP_Text Region;
         public Button Button_Help;
+        public AudioSource audioSource_Music;
+        public AudioSource audioSource_Sound;
+        public AudioSource audioSource_Sound_Weapon;
+        public Slider MusicVolumn;
+        public Slider SoundVolumn;
 
         [Header("Help")]
         public GameObject HelpPanel;
+
+        private bool m_helpFlag = false;
 
         private void Start()
         {
@@ -49,8 +56,37 @@ namespace Game.SweetsWar
             Version.text = "ver. " + PhotonNetwork.GameVersion;
             Region.text = "region: " + PhotonNetwork.CloudRegion;
 
+            if (PlayerController.localPlayerInstance != null)
+            {
+                Debug.Log("AudioSource Ready");
+                audioSource_Sound = PlayerController.localPlayerInstance.GetComponent<AudioSource>();
+            }
+            /*
+            MusicVolumn.onValueChanged.AddListener(delegate { 
+                changeVolume(audioSource_Music, MusicVolumn.value); 
+            });
+
+            SoundVolumn.onValueChanged.AddListener(delegate {
+                if (audioSource_Sound) changeVolume(audioSource_Sound, SoundVolumn.value);
+                if (audioSource_Sound_Weapon) changeVolume(audioSource_Sound_Weapon, SoundVolumn.value);
+            });
+            */
+            
+            MusicVolumn.onValueChanged.AddListener((value) =>
+            {
+                audioSource_Music.volume = value;
+            });
+
+            SoundVolumn.onValueChanged.AddListener((value) =>
+            {
+                if (audioSource_Sound) audioSource_Sound.volume = value;
+                if (audioSource_Sound_Weapon) audioSource_Sound_Weapon.volume = value;
+            });
+            
+
             Button_Help.onClick.AddListener(() =>
             {
+                m_helpFlag = true;
                 HelpPanel.SetActive(true);
                 Menu.SetActive(false);
             });
@@ -62,6 +98,30 @@ namespace Game.SweetsWar
             {
                 TreasureAnnouncement.SetActive(false);
             }
+
+            if (m_helpFlag && !Menu.activeInHierarchy && !HelpPanel.activeInHierarchy)
+            {
+                m_helpFlag = false;
+                // back to Game Menu
+                Menu.SetActive(true);
+            }
+
+            if (audioSource_Sound_Weapon == null &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(GameConstants.K_PROP_WEAPON_VIEW_ID, out object id) && (int)id > -1)
+            {
+                if (PhotonView.Find((int)id)) audioSource_Sound_Weapon = PhotonView.Find((int)id).gameObject.GetComponent<AudioSource>();
+                
+                SoundVolumn.onValueChanged.AddListener((value) =>
+                {
+                    if (audioSource_Sound) audioSource_Sound.volume = value;
+                    if (audioSource_Sound_Weapon) audioSource_Sound_Weapon.volume = value;
+                });
+            }
+        }
+
+        void changeVolume(AudioSource audioSource, float value)
+        {
+            audioSource.volume = value;
         }
 
         public void SetTreasureGoal(int id)

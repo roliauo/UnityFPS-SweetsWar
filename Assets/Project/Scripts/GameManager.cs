@@ -174,6 +174,7 @@ namespace Game.SweetsWar
 
         public void checkGameOver()
         {
+            /*
             foreach (Player p in AllPlayersDataCache)
             {
                 if ((bool)p.CustomProperties[GameConstants.K_PROP_WINNER] == true && 
@@ -192,7 +193,8 @@ namespace Game.SweetsWar
             else if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WINNER]) {
                 Win();
             }
-            /*
+            */
+            
             int alivePlayer = 0;
             foreach(Player p in AllPlayersDataCache)
             {
@@ -213,7 +215,6 @@ namespace Game.SweetsWar
                 Debug.Log("AllPlayersDataCache.count" + AllPlayersDataCache.Count());
                 Win();
             }
-            */
             
         }
 
