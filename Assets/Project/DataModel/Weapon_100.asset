@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
   m_Name: Weapon_100
   m_EditorClassIdentifier: 
+  Type: weapon
   ID: 100
   DisplayName: "\u68D2\u68D2\u7CD6\u65A7\u982D"
   Icon: {fileID: 21300000, guid: d38bc28883d481344b019fefb02aebe5, type: 3}
   Number: 0
-  MaxNumber: 3
+  MaxNumber: 1
   Ingredients:
   - ItemID: 0
     Number: 3
   - ItemID: 2
     Number: 1
+  TreasureTip: {fileID: 0}
   Description: 
   Damage: 20
   AttackRange: 2

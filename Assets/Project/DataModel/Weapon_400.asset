@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd85b9b2119998f46822697c79dd33dc, type: 3}
   m_Name: Weapon_400
   m_EditorClassIdentifier: 
+  Type: weapon
   ID: 400
   DisplayName: "\u51B0\u6DC7\u6DCB\u69CD"
   Icon: {fileID: 21300000, guid: 55d13cb207cde1b4f84fd1f9daa8e97d, type: 3}
   Number: 0
-  MaxNumber: 3
+  MaxNumber: 1
   Ingredients:
   - ItemID: 0
     Number: 1
@@ -24,6 +25,7 @@ MonoBehaviour:
     Number: 2
   - ItemID: 2
     Number: 2
+  TreasureTip: {fileID: 0}
   Description: 
   Damage: 25
   AttackRange: 10
