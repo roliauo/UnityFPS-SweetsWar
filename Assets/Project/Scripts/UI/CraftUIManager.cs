@@ -9,7 +9,7 @@ namespace Game.SweetsWar
     public class CraftUIManager : MonoBehaviour
     {
         public static CraftUIManager _instance;
-        public int CraftID; // photonView.viewID
+        public int CraftID = -1; // use photonView.viewID
         public Inventory inventory; 
         public GameObject SlotContainer;
         public GameObject InfoPanel;
@@ -117,7 +117,7 @@ namespace Game.SweetsWar
                 slot.transform.localScale = new Vector3(1, 1, 1);
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
                 ValidMix();
-                Debug.Log("count: " + box.ItemList.Count + " InventoryCapacity: " + box.InventoryCapacity);
+                //Debug.Log("count: " + box.ItemList.Count + " InventoryCapacity: " + box.InventoryCapacity);
                 //Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
                 // use FridgeBehavior._instance.ID to get the data
                 GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, true);
@@ -134,6 +134,16 @@ namespace Game.SweetsWar
             GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, false);
             Destroy(obj);
             ValidMix();
+
+            //equip
+            if (item.Type == GameConstants.ITEM_TYPE_WEAPON)
+            {
+                GameObject fridgePrefab = PhotonView.Find(_instance.CraftID).gameObject;
+                GameObject weapon = fridgePrefab.transform.Find("Weapon_"+item.ID+"(Clone)").gameObject;
+                int viewID = weapon.GetComponentInChildren<PhotonView>().ViewID;
+                Debug.Log("RemoveFromCraftSlots: " + viewID);
+                PlayerController._instance.EquipWeapon(viewID);
+            }
         }
 
         public void UpdateView()

@@ -5,6 +5,7 @@ namespace Game.SweetsWar
     [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/New Item")]
     public class Item: ScriptableObject
     {
+        public string Type = GameConstants.ITEM_TYPE_ITEM;
         public short ID;
         public string DisplayName;
         public Sprite Icon;

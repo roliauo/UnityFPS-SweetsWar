@@ -99,34 +99,6 @@ namespace Game.SweetsWar
 
             return msg == null; 
             
-            /*
-            if (_instance.inventory.ItemList.Contains(item))
-            {
-                if (item.Number < item.MaxNumber)
-                {
-                    item.Number += num;
-                    UpdateView();
-                }
-                else
-                {
-                    alert.Show("道具數量已達上限!");
-                }
-            }
-            else
-            {
-                if (_instance.inventory.ItemList.Count < _instance.inventory.InventoryCapacity)
-                {
-                    _instance.inventory.ItemList.Add(item);
-                    item.Number += num;
-                    UpdateView();
-                }
-                else
-                {
-                    //Debug.Log("沒有空間了!" + _instance.inventory.ItemList.Count + "/" + _instance.inventory.ItemList.Capacity);
-                    alert.Show("背包沒有空間了!");
-                }
-            }
-            */
         }
 
         public void Subtract(Item item, byte num = 1)
@@ -137,7 +109,6 @@ namespace Game.SweetsWar
             {
                 _instance.inventory.ItemList.Remove(item);
             }
-            //Invoke("UpdateView", 0.5f);
             UpdateView();
         }
 
@@ -153,6 +124,12 @@ namespace Game.SweetsWar
             if (CraftUIManager._instance.AddToCraftSlots(m_item))
             {
                 _instance.Subtract(m_item);
+
+                if(m_item.Type == GameConstants.ITEM_TYPE_WEAPON)
+                {
+                    Debug.Log("OnClickSlot-weapon: " + m_item.Type);
+                    PlayerController._instance.storeWeaponToFridge();
+                }
             }
             else
             {

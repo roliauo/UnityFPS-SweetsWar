@@ -70,6 +70,11 @@ namespace Game.SweetsWar
         public const int TREASURE_ID_MIN = 1000;
         public const int TREASURE_ID_MAX = 1002;
 
+        // Item Type
+        public const string ITEM_TYPE_ITEM = "item";
+        public const string ITEM_TYPE_WEAPON = "weapon";
+        public const string ITEM_TYPE_TREASURE = "treasure";
+
         // Method
         public static string GetSceneByGameMode(string gameMode)
         {
