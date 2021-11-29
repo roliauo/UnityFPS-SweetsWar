@@ -227,9 +227,17 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: EquipWeapon
+  - Type: 9
+    SynchronizeType: 0
+    Name: Beaten
+  - Type: 4
+    SynchronizeType: 0
+    Name: Death
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!82 &644581889617222434
 AudioSource:
   m_ObjectHideFlags: 0

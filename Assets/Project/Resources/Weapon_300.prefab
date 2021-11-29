@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2918413168044524915}
   - component: {fileID: -2833629621189001441}
   - component: {fileID: 5926013415897781900}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Weapon_300
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: d6e0fdbc157538144bd27890c955709a, type: 2}
-  MaxPickUpDistance: 3.5
+  MaxPickUpDistance: 3
 --- !u!65 &464132157517740197
 BoxCollider:
   m_ObjectHideFlags: 0

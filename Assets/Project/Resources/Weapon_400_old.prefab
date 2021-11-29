@@ -474,99 +474,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1 &3401612789806573431
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6474323911346615821}
-  - component: {fileID: 629369640573863205}
-  - component: {fileID: 1207990577222461580}
-  - component: {fileID: 5256661830010057987}
-  m_Layer: 0
-  m_Name: chocoball (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6474323911346615821
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3401612789806573431}
-  m_LocalRotation: {x: -0.001375614, y: -0.02745742, z: -0.021806289, w: 0.9993842}
-  m_LocalPosition: {x: 0.094, y: 1.053, z: -0.057000004}
-  m_LocalScale: {x: 0.37977636, y: 0.3797763, z: 0.37977633}
-  m_Children: []
-  m_Father: {fileID: 4032592214375226803}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: -0.22600001, y: -3.1430001, z: -2.4940002}
---- !u!33 &629369640573863205
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3401612789806573431}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1207990577222461580
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3401612789806573431}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a69c3d6d7b998b9419290099062e9f82, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!135 &5256661830010057987
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3401612789806573431}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4376784070544656137
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,13 +486,11 @@ GameObject:
   - component: {fileID: -7234180392330141665}
   - component: {fileID: 6640986517371580519}
   - component: {fileID: 7911748667188922233}
-  - component: {fileID: -6868706152280111247}
-  - component: {fileID: 8150553516856778553}
-  - component: {fileID: -749429946687454727}
-  - component: {fileID: 3859209999883353876}
-  - component: {fileID: 3107821765215199856}
+  - component: {fileID: 282672903586020383}
+  - component: {fileID: -5989387086885682013}
+  - component: {fileID: 2882592855746973153}
   m_Layer: 0
-  m_Name: Weapon_400
+  m_Name: Weapon_400_old
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -609,7 +514,6 @@ Transform:
   - {fileID: 2549069938197830259}
   - {fileID: 7295286296080180403}
   - {fileID: 6742286089394142190}
-  - {fileID: 6474323911346615821}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -626,7 +530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: 067458ac4de96dc429deb6e2e08bdd71, type: 2}
-  MaxPickUpDistance: 3
+  MaxPickUpDistance: 3.5
 --- !u!65 &6640986517371580519
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -656,26 +560,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!95 &-6868706152280111247
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4376784070544656137}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2e78d13004d2dd84ba2a67c978394b2c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8150553516856778553
+--- !u!114 &282672903586020383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -691,15 +576,14 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -749429946687454727}
-  - {fileID: 3859209999883353876}
+  - {fileID: -5989387086885682013}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-749429946687454727
+--- !u!114 &-5989387086885682013
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -715,28 +599,7 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &3859209999883353876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4376784070544656137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Fire
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
---- !u!82 &3107821765215199856
+--- !u!82 &2882592855746973153
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

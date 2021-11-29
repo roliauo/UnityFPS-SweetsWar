@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5520003530905440255}
   - component: {fileID: 2247474950128695660}
   - component: {fileID: 7207606790666427422}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Rectangle001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 9098615564826079808}
   - component: {fileID: 6487772845465525979}
   - component: {fileID: 3817045735601737625}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 7220341699047401180}
   - component: {fileID: 1082549906189631359}
   - component: {fileID: 1014016296366065762}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 4857259050503272439}
   - component: {fileID: 610930360099718242}
   - component: {fileID: 4906852262534130642}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 5966209565524445315}
   - component: {fileID: 7650259750879658767}
   - component: {fileID: 4089720185158109608}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 1975609537369318868}
   - component: {fileID: 3070059454876054150}
   - component: {fileID: 2981338472501840099}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -489,7 +489,7 @@ GameObject:
   - component: {fileID: 2918413168044524915}
   - component: {fileID: -2833629621189001441}
   - component: {fileID: 5926013415897781900}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Weapon_301
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -533,7 +533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: db4a8e2842c613f4bb23ec26a8bf3103, type: 2}
-  MaxPickUpDistance: 3.5
+  MaxPickUpDistance: 3
 --- !u!65 &464132157517740197
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: 3887989434524322701}
   - component: {fileID: 5821958563789627695}
   - component: {fileID: 2913278980748014875}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -788,7 +788,7 @@ GameObject:
   - component: {fileID: 4042766849799523456}
   - component: {fileID: 8662416405898414529}
   - component: {fileID: 8658066757311390925}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 5378683065394759299}
   - component: {fileID: 2651727948889713215}
   - component: {fileID: 6724242434809853272}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -946,7 +946,7 @@ GameObject:
   - component: {fileID: 5879230137723687296}
   - component: {fileID: 9046304881323389385}
   - component: {fileID: 6252279857941042442}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sphere005
   m_TagString: Untagged
   m_Icon: {fileID: 0}

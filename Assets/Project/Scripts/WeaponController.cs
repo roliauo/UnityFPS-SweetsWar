@@ -14,7 +14,7 @@ namespace Game.SweetsWar
 
         AudioSource m_audioSource;
         private Animator m_animator;
-        
+
 
         void Awake()
         {
@@ -37,9 +37,10 @@ namespace Game.SweetsWar
                         m_audioSource.PlayOneShot(WeaponData.AttackSFX);
                     }
 
-                    if (m_animator && WeaponData.k_AnimationName != null)
+                    if (m_animator && WeaponData.hasFireAnimation)
                     {
-                        m_animator.SetTrigger(WeaponData.k_AnimationName);
+                        m_animator.SetTrigger("Fire");
+                        //m_animator.Play("Fire");
                     }
 
                 }
@@ -49,7 +50,7 @@ namespace Game.SweetsWar
                     //TODO: hit position
                     int viewID = hit.collider.gameObject.GetComponent<PhotonView>().ViewID;
                     Debug.Log("hit.collider viewID: " + viewID);
-                    
+                    hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Beaten");
                     PlayerController._instance.photonView.RPC("RPC_TakeDamageInPlayer", RpcTarget.All, viewID, WeaponData.Damage);
 
                 }

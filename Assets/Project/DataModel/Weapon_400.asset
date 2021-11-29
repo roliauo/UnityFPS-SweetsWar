@@ -31,4 +31,4 @@ MonoBehaviour:
   AttackRange: 10
   FireLoadingTime: 2
   AttackSFX: {fileID: 8300000, guid: afb563c0af19a404da700051897b2b7b, type: 3}
-  k_AnimationName: 
+  hasFireAnimation: 1

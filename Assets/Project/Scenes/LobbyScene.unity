@@ -226,7 +226,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PLAY
+  m_Text: "\u500B\u4EBA\u6230"
 --- !u!222 &55990044
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1628,10 +1628,10 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.35686275, g: 0.2, b: 0.5411765, a: 1}
-    m_HighlightedColor: {r: 0.35686275, g: 0.2, b: 0.5411765, a: 0.6666667}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_HighlightedColor: {r: 0.25570163, g: 0.14413494, b: 0.38679248, a: 0.6666667}
+    m_PressedColor: {r: 0.26550284, g: 0.13016199, b: 0.4245283, a: 1}
+    m_SelectedColor: {r: 0.26697952, g: 0.12486649, b: 0.4339623, a: 1}
+    m_DisabledColor: {r: 0.35686275, g: 0.2, b: 0.5411765, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
