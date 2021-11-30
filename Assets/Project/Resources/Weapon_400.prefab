@@ -566,9 +566,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: 067458ac4de96dc429deb6e2e08bdd71, type: 2}
   MaxPickUpDistance: 3
-  ps: {fileID: 0}
-  BulletPrefab: {fileID: 3708234880747616235, guid: 1215f6e053534894cbf9c05c8cd1b90f,
-    type: 3}
+  ps: {fileID: 4611647585864039622}
+  BulletPrefab: {fileID: 0}
   FirePoint: {fileID: 1126991816807523761}
   BulletSpeed: 200
 --- !u!65 &6640986517371580519
@@ -992,6 +991,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d002c64955ae542b111966e0ecab87, type: 3}
+--- !u!198 &4611647585864039622 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198572881580852744, guid: a0d002c64955ae542b111966e0ecab87,
+    type: 3}
+  m_PrefabInstance: {fileID: 4413147136893500110}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4409021120433942840 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4882558394911734, guid: a0d002c64955ae542b111966e0ecab87,
