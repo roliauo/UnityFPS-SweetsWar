@@ -387,6 +387,7 @@ namespace Game.SweetsWar
 
             _instance.isDead = true;
             PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
+            gameObject.SetActive(false);
 
             //_instance.stopMove = true;
             //waitAndSee = true;

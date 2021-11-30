@@ -51,6 +51,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: d6e0fdbc157538144bd27890c955709a, type: 2}
   MaxPickUpDistance: 3
+  ps: {fileID: 0}
+  BulletPrefab: {fileID: 0}
+  FirePoint: {fileID: 0}
+  BulletSpeed: 0
 --- !u!65 &464132157517740197
 BoxCollider:
   m_ObjectHideFlags: 0
