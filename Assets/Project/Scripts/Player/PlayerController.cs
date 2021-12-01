@@ -332,9 +332,9 @@ namespace Game.SweetsWar
                 " health:" + health);
             
             // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
-            if (_instance.photonView.ViewID == viewID)
+            if (_instance.photonView.ViewID == viewID && _instance.isDead == false)
             {
-                _instance.m_animator.SetTrigger(k_ANIMATION_BEATEN);
+                //_instance.m_animator.SetTrigger(k_ANIMATION_BEATEN);
                 GameManager.Instance.DamageFlash();
 
                 // sender add damage points
@@ -382,7 +382,7 @@ namespace Game.SweetsWar
         public void Die()
         {
             Debug.Log("Die... ");
-            m_animator.SetBool(k_ANIMATION_DEATH, true);  // can not move
+            _instance.m_animator.SetBool(k_ANIMATION_DEATH, true);  // can not move
             //m_animator.Play(k_ANIMATION_DEATH);
 
             _instance.isDead = true;
