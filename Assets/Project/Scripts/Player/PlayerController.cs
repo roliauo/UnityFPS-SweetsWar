@@ -329,8 +329,9 @@ namespace Game.SweetsWar
                 " photonView.ViewID: " + photonView.ViewID +  // sender
                 " _instance.photonView.ViewID: " + _instance.photonView.ViewID + //
                 " LOCAL: " + localPlayerInstance.GetPhotonView().ViewID+ 
-                " health:" + health);
-            
+                " health:" + health+
+                " _instance.health:" + _instance.health);
+
             // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
             if (_instance.photonView.ViewID == viewID && _instance.isDead == false)
             {

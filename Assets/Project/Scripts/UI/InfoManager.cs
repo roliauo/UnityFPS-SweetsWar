@@ -99,6 +99,11 @@ namespace Game.SweetsWar
                 TreasureAnnouncement.SetActive(false);
             }
 
+            if (GameManager.Instance && !TreasureTip.gameObject.activeInHierarchy && GameManager.Instance.TreasureGoalID > -1)
+            {
+                SetTreasureGoal(GameManager.Instance.TreasureGoalID);
+            }
+
             if (m_helpFlag && !Menu.activeInHierarchy && !HelpPanel.activeInHierarchy)
             {
                 m_helpFlag = false;

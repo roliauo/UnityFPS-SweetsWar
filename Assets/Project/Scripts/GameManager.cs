@@ -45,7 +45,7 @@ namespace Game.SweetsWar
 
         [Header("Craft")]
         public List<GameObject> CraftItemPrefabs;
-        public int TreasureGoalID { get; private set; }
+        public int TreasureGoalID { get; private set; } = -1;
 
         private short m_RandomItemNumber;
         private List<GameObject> m_TreasureList;
@@ -101,8 +101,10 @@ namespace Game.SweetsWar
                 //photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
 
             }
-            RPC_InitializePlayerPosition();
-            SetTreasureGoal();
+
+            TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX + 1);
+
+            RPC_InitializePlayerPosition();            
             SetCursorMode(false);
             GenerateItems();
             CachePlayersData();
@@ -128,7 +130,7 @@ namespace Game.SweetsWar
                 return;
             }
 
-            if (!ScorePanel.activeInHierarchy)
+            if (!ScorePanel.activeInHierarchy && AllPlayersDataCache != null)
             {
                 checkGameOver();
             }
@@ -176,12 +178,6 @@ namespace Game.SweetsWar
         {
             damageFlash.SetActive(true);
             Invoke("FlashRedEnd", 0.2f);
-        }
-
-        public void SetTreasureGoal()
-        {
-            TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX + 1);
-            InfoManager._instance.SetTreasureGoal(TreasureGoalID);
         }
 
         public void checkGameOver()
