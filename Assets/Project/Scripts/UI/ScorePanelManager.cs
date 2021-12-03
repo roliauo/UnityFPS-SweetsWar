@@ -47,10 +47,10 @@ namespace Game.SweetsWar
         {
             Debug.Log("UpdateScoreView");
             ClearView();
-
-            foreach (Player p in GameManager.Instance.AllPlayersDataCache)
+            List<Player> players = GameManager.Instance.AllPlayersDataCache; //PhotonNetwork.PlayerList; //
+            foreach (Player p in players)
             {
-                float killScore = (float)p.CustomProperties[GameConstants.K_PROP_KILLS] / (GameManager.Instance.AllPlayersDataCache.Count - 1) * 100;
+                float killScore = (float)p.CustomProperties[GameConstants.K_PROP_KILLS] / (players.Count - 1) * 100;
                 float damagePointScore = (float)p.CustomProperties[GameConstants.K_PROP_DAMAGE_POINTS] / (GameManager.Instance.PlayerMaxHealthSum - (float)p.CustomProperties[GameConstants.K_PROP_MAX_HEALTH]) * 100;
                 float craftNumberScore = (float)p.CustomProperties[GameConstants.K_PROP_CRAFT_NUMBER] / craftFullCreditNumber * 100; 
                 float totalScore = (float)(killScore * killScoreRate + damagePointScore * damageScoreRate + craftNumberScore * craftScoreRate);
@@ -58,20 +58,27 @@ namespace Game.SweetsWar
                 p.CustomProperties[GameConstants.K_PROP_SCORE] = Math.Round(totalScore, 2, MidpointRounding.AwayFromZero);
 
             }
-            //var list2 = PhotonNetwork.PlayerList.OrderByDescending(x => x.CustomProperties[]).ToList();
 
-            var list = GameManager.Instance.AllPlayersDataCache.OrderByDescending(p => p.CustomProperties[GameConstants.K_PROP_SCORE]).ToList();
+            // score rank
+            //var listScoreDesc = players.OrderByDescending(p => p.CustomProperties[GameConstants.K_PROP_SCORE]).ToList();
 
-            for(int i = 0; i < list.Count; i++)
-            {
-                GameObject item = Instantiate(PlayerScorePrefab);
-                item.transform.SetParent(Content.transform);
-                item.transform.localScale = Vector3.one;
-                item.GetComponent<PlayerScoreBar>().SetInfo(list[i], i+1);
-            }
+            // live > score
+            var query = from p in players
+                       orderby p.CustomProperties[GameConstants.K_PROP_IS_DEAD], p.CustomProperties[GameConstants.K_PROP_SCORE] descending
+                       select p;
+
+            List<Player> list = query.ToList();
+          
+            for (int i = 0; i < list.Count; i++)
+                {
+                    GameObject item = Instantiate(PlayerScorePrefab);
+                    item.transform.SetParent(Content.transform);
+                    item.transform.localScale = Vector3.one;
+                    item.GetComponent<PlayerScoreBar>().SetInfo(list[i], i+1);
+                }
 
             // debug
-            foreach (Player p in GameManager.Instance.AllPlayersDataCache)
+            foreach (Player p in players)
             {
                 Debug.LogFormat("{0} :  kills: {1}, damage: {2}, crafts: {3}, total: {4}, isDead: {5}  ",
                     p.NickName,

@@ -20,10 +20,15 @@ namespace Game.SweetsWar
 
         public void SetInfo(Player player, int rank)
         {
-            //if self #FF5B76 RGB:(255,90,118)
+            Color color = gameObject.GetComponent<Image>().color;
+            //if self #FF5B76 RGB:(255,90,118), if dead
             if (PhotonNetwork.LocalPlayer.UserId == player.UserId)
             {
-                gameObject.GetComponent<Image>().color = highlightColor;
+                color = highlightColor;
+            }
+            if ((bool)player.CustomProperties[GameConstants.K_PROP_IS_DEAD])
+            {
+                color.a = 0.6f;
             }
             Rank.text = rank.ToString();
             Player.text = player.NickName;
