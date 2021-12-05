@@ -30,6 +30,7 @@ namespace Game.SweetsWar
             {
                 color.a = 0.6f;
             }
+            gameObject.GetComponent<Image>().color = color;
             Rank.text = rank.ToString();
             Player.text = player.NickName;
             Kills.text = player.CustomProperties[GameConstants.K_PROP_KILLS].ToString();

@@ -115,7 +115,6 @@ namespace Game.SweetsWar
         private void TimeCountDown()
         {
             //TimeLeft -= Time.deltaTime;
-            TimeLeft--;
             CountDownText.text = TimeLeft.ToString();
             if (TimeLeft <= TimeLeftAlert)
             {
@@ -123,7 +122,7 @@ namespace Game.SweetsWar
                 CountDownText.gameObject.SetActive(true);
             }
 
-            if (TimeLeft == 0)
+            if (TimeLeft == 1)
             {                
                 // only MasterClient 
                 if (PhotonNetwork.IsMasterClient)
@@ -131,6 +130,8 @@ namespace Game.SweetsWar
                     PhotonNetwork.LoadLevel(GameConstants.GetSceneByGameMode((string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE]));
                 }
             }
+
+            TimeLeft--;
         }
 
         private void GeneratePlayersInReadyStage() // random range
