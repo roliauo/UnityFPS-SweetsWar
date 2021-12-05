@@ -11,6 +11,7 @@ namespace Game.SweetsWar
         public Weapon WeaponData;
         public float MaxPickUpDistance = 3f;
         public ParticleSystem ps;
+        public bool hasFireAnimation;
 
         [Header("Bullet")]
         public GameObject BulletPrefab;
@@ -60,7 +61,7 @@ namespace Game.SweetsWar
                             m_audioSource.PlayOneShot(WeaponData.AttackSFX);
                         }
 
-                        if (m_animator && WeaponData.hasFireAnimation)
+                        if (m_animator && hasFireAnimation)
                         {
                             m_animator.SetTrigger("Fire");
                             //m_animator.Play("Fire");

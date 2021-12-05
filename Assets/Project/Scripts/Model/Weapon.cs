@@ -10,7 +10,7 @@ namespace Game.SweetsWar
         public float FireLoadingTime;
         public AudioClip AttackSFX;
         //public string k_AnimationName = null;
-        public bool hasFireAnimation;
+        //public bool hasFireAnimation;
 
     }
 }

@@ -567,6 +567,7 @@ MonoBehaviour:
   WeaponData: {fileID: 11400000, guid: 067458ac4de96dc429deb6e2e08bdd71, type: 2}
   MaxPickUpDistance: 3
   ps: {fileID: 4611647585864039622}
+  hasFireAnimation: 1
   BulletPrefab: {fileID: 0}
   FirePoint: {fileID: 1126991816807523761}
   BulletSpeed: 200

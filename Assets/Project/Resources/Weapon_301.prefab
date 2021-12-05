@@ -489,6 +489,8 @@ GameObject:
   - component: {fileID: 2918413168044524915}
   - component: {fileID: -2833629621189001441}
   - component: {fileID: 5926013415897781900}
+  - component: {fileID: -812542281198566688}
+  - component: {fileID: -1275975455867518046}
   m_Layer: 0
   m_Name: Weapon_301
   m_TagString: Item
@@ -535,6 +537,7 @@ MonoBehaviour:
   WeaponData: {fileID: 11400000, guid: db4a8e2842c613f4bb23ec26a8bf3103, type: 2}
   MaxPickUpDistance: 3
   ps: {fileID: 0}
+  hasFireAnimation: 0
   BulletPrefab: {fileID: 0}
   FirePoint: {fileID: 0}
   BulletSpeed: 0
@@ -702,6 +705,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-812542281198566688
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2866439397371875834}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6e9b81e6b7514e74f9dc4850ba79de22, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1275975455867518046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2866439397371875834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []
 --- !u!1 &3523008820974636678
 GameObject:
   m_ObjectHideFlags: 0

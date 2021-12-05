@@ -79,7 +79,8 @@ namespace Game.SweetsWar
         private const string k_ANIMATION_EQUIP = "EquipWeapon";
         private const string k_ANIMATION_DEATH = "Death";
         private const string k_ANIMATION_BEATEN = "Beaten";
-        private const string k_TAKE_DAMAGE = "TakeDamage";
+        //private const string k_ANIMATION_HIT = "Hit";
+        //private const string k_ANIMATION_HIT400 = "Hit_400";
 
         public void Awake()
         {
@@ -431,6 +432,7 @@ namespace Game.SweetsWar
                 return;
             }
 
+            m_animator.SetTrigger("Hit" + (m_heldWeaponViewID == 400 ? m_heldWeaponViewID.ToString() : ""));
             m_weaponPrefab.GetComponent<WeaponController>().Fire();
             //m_weaponPrefab.GetComponent<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, );
             //weaponSlot.GetComponentInChildren<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, Camera.main.transform.position, Camera.main.transform.forward);
