@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
-  MaxDistance: 4
+  MaxDistance: 3
   HP: 100
 --- !u!95 &8240811221696766463
 Animator:

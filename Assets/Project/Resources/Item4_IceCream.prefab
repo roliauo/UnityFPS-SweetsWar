@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 95a81ab270a225f42bead4fd906614ad, type: 2}
-  MaxPickUpDistance: 3.5
+  MaxPickUpDistance: 3
 --- !u!114 &7927279799641037412
 MonoBehaviour:
   m_ObjectHideFlags: 0
