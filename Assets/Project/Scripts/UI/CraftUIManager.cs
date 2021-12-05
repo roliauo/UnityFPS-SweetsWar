@@ -238,7 +238,8 @@ namespace Game.SweetsWar
                 GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_CRAFT_NUMBER, 100f);
                 //GameManager.Instance.photonView.RPC("")
                 // win
-                GameManager.Instance.Win();
+                //GameManager.Instance.Win();
+                GameManager.Instance.photonView.RPC("GameOver", RpcTarget.All);
             }
             else
             {

@@ -68,7 +68,8 @@ namespace Game.SweetsWar
                        select p;
 
             List<Player> list = query.ToList();
-          
+            GameManager.Instance.AllPlayersDataCache = query.ToList();
+
             for (int i = 0; i < list.Count; i++)
                 {
                     GameObject item = Instantiate(PlayerScorePrefab);

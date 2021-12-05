@@ -29,7 +29,7 @@ namespace Game.SweetsWar
             isInUse = false;
         }
 
-        [PunRPC] public void Fire()
+        public void Fire()//Vector3 position, Vector3 forward
         {
             /*if (BulletPrefab)
             {
@@ -46,7 +46,8 @@ namespace Game.SweetsWar
 
             } else
             {*/
-                Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+                Transform aim = Camera.main.transform;
+                Ray ray = new Ray(aim.position, aim.forward);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, WeaponData.AttackRange))
                 {
@@ -56,7 +57,6 @@ namespace Game.SweetsWar
                     {
                         if (WeaponData.AttackSFX)
                         {
-                            //m_audioSource.volume = 0.5f;
                             m_audioSource.PlayOneShot(WeaponData.AttackSFX);
                         }
 
@@ -73,22 +73,22 @@ namespace Game.SweetsWar
                     {
                         //TODO: hit position
                         int viewID = hit.collider.gameObject.GetComponent<PhotonView>().ViewID;
-                        Debug.Log("hit.collider health: " + hit.collider.gameObject.GetComponent<PlayerController>().health);
+                        Debug.Log("hit.collider viewID: " + viewID);
+                        //hit.collider.gameObject.GetComponent<PhotonView>().Owner.UserId
 
-                        
                          // play animation
-                        hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Beaten");
+                         //hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Beaten");
 
-                        /*
-                         //FAIL
-                        if (WeaponData.Damage >= hit.collider.gameObject.GetComponent<PhotonView>().v)
-                        {
-                            hit.collider.gameObject.GetComponent<Animator>().SetBool("Death", true);
-                        }
-                        */
+
+                    /* 
+                    if (WeaponData.Damage >= hit.collider.gameObject.GetComponent<PlayerController>().health)
+                    {
+                        hit.collider.gameObject.GetComponent<Animator>().SetBool("Death", true);
+                    }
+                    */
 
                         PlayerController._instance.photonView.RPC("RPC_TakeDamageInPlayer", RpcTarget.AllViaServer, viewID, WeaponData.Damage);
-
+                        
                     }
                 }
             //}

@@ -28,7 +28,7 @@ MonoBehaviour:
   TreasureTip: {fileID: 0}
   Description: 
   Damage: 25
-  AttackRange: 10
+  AttackRange: 15
   FireLoadingTime: 2
   AttackSFX: {fileID: 8300000, guid: afb563c0af19a404da700051897b2b7b, type: 3}
   hasFireAnimation: 1

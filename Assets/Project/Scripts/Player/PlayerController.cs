@@ -9,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
-    public class PlayerController : MonoBehaviourPunCallbacks//, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         public static PlayerController _instance;
         public static GameObject localPlayerInstance;
@@ -53,20 +53,20 @@ namespace Game.SweetsWar
         public bool stopMove { get; set; }
 
         // private
-        private string m_heldWeaponPrefabName = null; 
+        private string m_heldWeaponPrefabName = null;
         private int m_heldWeaponViewID = -1;
         private Weapon m_heldWeapon;
         private GameObject m_weaponPrefab;
 
         private CharacterController m_characterController;
         private Animator m_animator;
-        private Vector3 m_velocity;  
+        private Vector3 m_velocity;
         private Vector3 m_cameraPosition;
         private Vector3 m_cameraCrouchingPosition;
         private Vector3 m_groundNormal;
         private float m_speedPlayer;
         private float m_cameraHeightRatio = 0.9f;
-        private float m_rotationX = 0f;           
+        private float m_rotationX = 0f;
         private float m_footstepDistance;
 
         private const float k_groundCheckDistance = 0.05f;
@@ -97,11 +97,11 @@ namespace Game.SweetsWar
             DontDestroyOnLoad(gameObject);
         }
         void Start()
-        {         
+        {
             m_animator = GetComponent<Animator>();
             m_characterController = GetComponent<CharacterController>();
             m_speedPlayer = speedNormal;
-            m_cameraPosition = Camera.main.transform.localPosition; 
+            m_cameraPosition = Camera.main.transform.localPosition;
             m_cameraCrouchingPosition = new Vector3(m_cameraPosition.x, m_cameraPosition.y / 2, m_cameraPosition.z);
             stopMove = false;
             health = maxHealth;
@@ -110,7 +110,7 @@ namespace Game.SweetsWar
             playerID = photonView.Owner.UserId;
 
             InitializePlayerProps();
-            
+
             /*
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
                 PhotonNetwork.LocalPlayer.NickName, 
@@ -127,7 +127,7 @@ namespace Game.SweetsWar
 
             float playerDistance = Vector3.Distance(Camera.main.transform.position, playerName.gameObject.transform.position);
             playerName.gameObject.SetActive(playerDistance < 4);
-            
+
 
             if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             {
@@ -135,7 +135,7 @@ namespace Game.SweetsWar
             }
 
             //playerName.gameObject.transform.rotation = Camera.main.transform.rotation; // #local version          
-
+            playerName.gameObject.SetActive(false);
             Action();
 
         }
@@ -148,11 +148,6 @@ namespace Game.SweetsWar
                 {
                     EquipWeapon((int)changedProps[GameConstants.K_PROP_WEAPON_VIEW_ID]);
                 }
-
-                /*if (changedProps.TryGetValue(GameConstants.K_PROP_WEAPON_VIEW_ID, out object id) && (int)id > -1)
-                {
-                    EquipWeapon((int)changedProps[GameConstants.K_PROP_WEAPON_VIEW_ID]);
-                }*/
 
                 /*
                 if (changedProps.TryGetValue(GameConstants.K_PROP_IS_DEAD, out object dead))
@@ -176,6 +171,20 @@ namespace Game.SweetsWar
             weaponPrefab.transform.parent = fridgePrefab.transform;
             weaponPrefab.GetComponent<WeaponController>().isInUse = false;
             EquipWeapon(-1);
+        }
+
+        public void setPropsFloat(string key, float value)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(key))
+            {
+                PhotonNetwork.LocalPlayer.CustomProperties[key] = value;
+            }
+            else
+            {
+                Hashtable hash = new Hashtable();
+                hash.Add(key, value);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
         }
 
         /*
@@ -275,7 +284,7 @@ namespace Game.SweetsWar
                 m_heldWeapon = null;
                 m_heldWeaponPrefabName = null;
                 m_heldWeaponViewID = -1;
-            } 
+            }
             else
             {
                 // equip weapon
@@ -310,98 +319,99 @@ namespace Game.SweetsWar
                     }
                 }
             }
-        
+
             if (photonView.IsMine)
             {
                 Hashtable hash = new Hashtable();
                 hash.Add(GameConstants.K_PROP_WEAPON_VIEW_ID, viewID);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-               
+
             }
         }
-        
+
 
         [PunRPC] public void RPC_TakeDamageInPlayer(int viewID, float damage)
         {
+            // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
             //photonView.ViewID: sender's id,  _instance.photonView.ViewID: player's id
             //GameObject player = PhotonView.Find(viewID).gameObject;
-            Debug.Log("RPC_TakeDamageInPlayer - hit.collider viewID: " + viewID + 
-                " photonView.ViewID: " + photonView.ViewID +  // sender
+            Debug.Log("RPC_TakeDamageInPlayer - hit.collider viewID: " + viewID +
+                 " photonView.IsMine: " + photonView.IsMine +
+                " photonView.ViewID: " + photonView.ViewID +  // sender            
                 " _instance.photonView.ViewID: " + _instance.photonView.ViewID + //
-                " LOCAL: " + localPlayerInstance.GetPhotonView().ViewID+ 
-                " health:" + health+
-                " _instance.health:" + _instance.health);
+                " LOCAL: " + localPlayerInstance.GetPhotonView().ViewID +
+                " health:" + health +
+                " _instance.health:" + _instance.health+
+                " _instance.isDead: " + _instance.isDead);
 
-            // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)
-            if (_instance.photonView.ViewID == viewID && _instance.isDead == false)
+            //ver2
+            PlayerController targetPlayer = PhotonView.Find(viewID).gameObject.GetComponent<PlayerController>();
+            targetPlayer.m_animator.SetTrigger(k_ANIMATION_BEATEN); // everyone can see
+
+            //ver1
+            //m_animator.SetTrigger(k_ANIMATION_BEATEN); // everyone can see
+
+            bool addKills = false;
+            float addDamage = 0f;
+
+            //if (_instance.photonView.ViewID == viewID && _instance.isDead == false)
+            if(!photonView.IsMine && targetPlayer.photonView.AmOwner && targetPlayer.isDead == false)
             {
-                //_instance.m_animator.SetTrigger(k_ANIMATION_BEATEN);
+                
                 GameManager.Instance.DamageFlash();
-
-                // sender add damage points
-                //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
-                GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
-
 
                 if (_instance.health <= damage)
                 {
+                    addKills = true;
+                    addDamage = _instance.health;
+
                     _instance.health = 0;
+                    _instance.photonView.RPC("Die", RpcTarget.AllViaServer, _instance.photonView.ViewID);
 
-                    // sender add kills
-                    //GameManager.Instance.AddScore(photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
-                    GameManager.Instance.photonView.RPC("AddScore", RpcTarget.All, photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
-                    
-                    // update player state
-                    GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, _instance.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
-
-                    Die();                  
                 }
                 else
                 {
+                    addDamage = damage;
                     _instance.health -= damage;
-                    //Debug.Log("health: " + _instance.health + " player: " + _instance.playerName.text);
+                    //GameManager.Instance.photonView.RPC("AddScore", RpcTarget.AllBufferedViaServer, photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, damage);
                 }
-            }         
+            }
+
+            // sender add score: kills, damage
+            if (addKills) GameManager.Instance.photonView.RPC("AddScore", RpcTarget.AllBufferedViaServer, photonView.Owner.UserId, GameConstants.K_PROP_KILLS, 1f);
+            if (addDamage>0) GameManager.Instance.photonView.RPC("AddScore", RpcTarget.AllBufferedViaServer, photonView.Owner.UserId, GameConstants.K_PROP_DAMAGE_POINTS, addDamage);
+
 
         }
-        
 
-        public void setPropsFloat(string key, float value)
-        {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(key))
-            {
-                PhotonNetwork.LocalPlayer.CustomProperties[key] = value;
-            }
-            else
-            {
-                Hashtable hash = new Hashtable();
-                hash.Add(key, value);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-        }
-
-        public void Die()
+        [PunRPC] public void Die(int viewID)
         {
             Debug.Log("Die... ");
+            /*
             _instance.m_animator.SetBool(k_ANIMATION_DEATH, true);  // can not move
-            //m_animator.Play(k_ANIMATION_DEATH);
-
             _instance.isDead = true;
             PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] = true;
-            gameObject.SetActive(false);
-
-            //_instance.stopMove = true;
-            //waitAndSee = true;
-            // call Score panel or detect by GameManager
-            GameManager.Instance.ShowScorePanel();
+            //Invoke("Hide", 2f);
+            */
+            GameObject target = PhotonView.Find(viewID).gameObject;
+            PlayerController targetPlayer = target.GetComponent<PlayerController>();
+            targetPlayer.m_animator.SetBool(k_ANIMATION_DEATH, true); // everyone can see
+            targetPlayer.isDead = true;
+            GameManager.Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.AllViaServer, targetPlayer.photonView.Owner.UserId, GameConstants.K_PROP_IS_DEAD, true);
+            Invoke("Hide", 2f);
         }
 
         #region Private functions
 
+        private void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         private void InitializePlayerProps()
         {
             Hashtable hash = new Hashtable();
-            hash.Add(GameConstants.K_PROP_WINNER, false);
+            //hash.Add(GameConstants.K_PROP_WINNER, false);
             hash.Add(GameConstants.K_PROP_IS_DEAD, false);
             hash.Add(GameConstants.K_PROP_HEALTH, maxHealth);
             hash.Add(GameConstants.K_PROP_MAX_HEALTH, maxHealth);
@@ -422,6 +432,9 @@ namespace Game.SweetsWar
             }
 
             m_weaponPrefab.GetComponent<WeaponController>().Fire();
+            //m_weaponPrefab.GetComponent<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, );
+            //weaponSlot.GetComponentInChildren<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, Camera.main.transform.position, Camera.main.transform.forward);
+
         }
 
         private void Action() {
@@ -549,7 +562,7 @@ namespace Game.SweetsWar
 
         #endregion
 
-        /*
+        
         // TODO: need to refactor: customProps -> OnPhotonSerializeView
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -557,18 +570,25 @@ namespace Game.SweetsWar
             if (stream.IsWriting)
             {
                 // We own this player: send the others our data
+                //stream.SendNext(transform.position);
+                //stream.SendNext(transform.rotation);
+                //stream.SendNext(isDead);
                 stream.SendNext(isFiring);
                 stream.SendNext(health);
+                
             }
             else
             {
                 // Network player, receive data
+                //transform.position = (Vector3)stream.ReceiveNext();
+                //transform.rotation = (Quaternion)stream.ReceiveNext();
+                //isDead = (bool)stream.ReceiveNext();
                 isFiring = (bool)stream.ReceiveNext();
                 health = (float)stream.ReceiveNext();
             }
         }
         #endregion
-        */
+        
 
         #region will be removed
 

@@ -32,7 +32,7 @@ namespace Game.SweetsWar
         [Header("Player")]
         public List<Transform> PlayerLocations;
         [SerializeField] private GameObject PlayerPrefab;
-        public List<Player> AllPlayersDataCache; // for score(PLAYER LEAVE)
+        public List<Player> AllPlayersDataCache; // for score(PLAYER LEAVE), updated before player leave
         public float PlayerMaxHealthSum { get; private set; }
 
         [Header("Fridge")]
@@ -95,30 +95,13 @@ namespace Game.SweetsWar
                 }
             }
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                //MovePlayersToGameStage_Test();
-                //photonView.RPC("RPC_InitializePlayerPosition", RpcTarget.All);
-
-            }
-
             TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX + 1);
 
+            InitPlayerData();
             RPC_InitializePlayerPosition();            
             SetCursorMode(false);
             GenerateItems();
-            CachePlayersData();
 
-            /*
-            // SHOW PLAYERS' NAME
-            playerName.text = photonView.Owner.NickName;
-
-            Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
-                PhotonNetwork.NickName,
-                PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY),
-                photonView.Owner.NickName
-              );
-            */
         }
 
         void Update()
@@ -130,7 +113,7 @@ namespace Game.SweetsWar
                 return;
             }
 
-            if (!ScorePanel.activeInHierarchy && AllPlayersDataCache != null)
+            if (!ScorePanel.activeInHierarchy)// && AllPlayersDataCache != null
             {
                 checkGameOver();
             }
@@ -180,57 +163,23 @@ namespace Game.SweetsWar
             Invoke("FlashRedEnd", 0.2f);
         }
 
-        public void checkGameOver()
+        
+         public void checkGameOver()
         {
-            /*
-            foreach (Player p in AllPlayersDataCache)
+            // if craft a treasure, rpc to all to end game
+            List<Player> playerAlive = AllPlayersDataCache.Where(p => (bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false).ToList();
+            if (playerAlive.Count == 1 || PlayerController._instance.isDead == true)
             {
-                if ((bool)p.CustomProperties[GameConstants.K_PROP_WINNER] == true && 
-                    p.UserId != PhotonNetwork.LocalPlayer.UserId)
-                {
-                    ShowScorePanel();
-                    break;
-                }
-
+                //Debug.Log("playerAlive.Count: "+ playerAlive.Count+ " isDead: "+ PlayerController._instance.isDead);
+                GameOver();                
             }
 
-            if (PlayerController._instance.isDead)
-            {
-                ShowScorePanel();
-            }
-            else if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_WINNER]) {
-                Win();
-            }
-            */
-            
-            int alivePlayer = 0;
-            foreach(Player p in AllPlayersDataCache)
-            {
-                if ((bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
-                {
-                    alivePlayer++;
-                }
-
-                if ((bool)p.CustomProperties[GameConstants.K_PROP_WINNER] == true && p.UserId != PhotonNetwork.LocalPlayer.UserId)
-                {
-                    ShowScorePanel();
-                    break;
-                }
-                
-            }
-            if (alivePlayer == 1 && (bool)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false)
-            {
-                Debug.Log("AllPlayersDataCache.count" + AllPlayersDataCache.Count());
-                Win();
-            }
-            
         }
 
         public void Win()
         {
-            ShowScorePanel();
+            //GameOver();
             Image_Win.gameObject.SetActive(true);
-            Instance.photonView.RPC("UpdatePlayerCacheState", RpcTarget.All, PhotonNetwork.LocalPlayer.UserId, GameConstants.K_PROP_WINNER, true);
         }
 
         public void SetCursorMode(bool show)
@@ -252,37 +201,43 @@ namespace Game.SweetsWar
             SetCursorMode(state);
         }
 
-        public void ShowScorePanel()
-        {
-            // end panel: show score, can close and back to game to see others (transfer camera, and can't move)
-            SetCursorMode(true);
-            ScorePanelManager._instance.UpdateScoreView();
-            ScorePanel.SetActive(true);          
-        }
-
-        public void CachePlayersData()
+        public void InitPlayerData()
         {
             PlayerMaxHealthSum = 0;
             AllPlayersDataCache = new List<Player>();
+            //new Player[PhotonNetwork.PlayerList.Length];
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 AllPlayersDataCache.Add(p);
                 PlayerMaxHealthSum += (float)p.CustomProperties[GameConstants.K_PROP_MAX_HEALTH];
             }
-
         }
 
+        #region RPC
+        [PunRPC] public void GameOver()
+        {
+            // end panel: show score, can close and back to game to see others (transfer camera, and can't move) 
+            ScorePanelManager._instance.UpdateScoreView();
+            SetCursorMode(true);
+            ScorePanel.SetActive(true);
+
+            if (AllPlayersDataCache.First().UserId == PhotonNetwork.LocalPlayer.UserId) 
+                //(float)AllPlayersDataCache.First().CustomProperties[GameConstants.K_PROP_SCORE] > 0) // Invalid cast exception
+            {
+                Win();
+            }
+        }
         [PunRPC] public void AddScore(string userID, string key, float value)
         {
 
-            foreach (Player p in Instance.AllPlayersDataCache)
+            foreach (Player p in PhotonNetwork.PlayerList)//Instance.AllPlayersDataCache
             {
                 if (p.UserId == userID && p.CustomProperties.TryGetValue(key, out object v))
                 {
                     p.CustomProperties[key] = value + (float)v;
                 }
             }
-            
+
         }
 
         [PunRPC] public void UpdatePlayerCacheState(string userID, string key, bool value)
@@ -298,7 +253,6 @@ namespace Game.SweetsWar
 
         }
 
-        #region RPC
         [PunRPC] public void RPC_InitializePlayerPosition()
         {
             //PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[Random.Range(0, PlayerLocations.Count - 1)].position;
@@ -498,6 +452,9 @@ namespace Game.SweetsWar
         {
             Debug.Log(other.NickName + " left this room!"); // seen when other disconnects
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
+
+            // set the player IsDead == true
+            UpdatePlayerCacheState(other.UserId, GameConstants.K_PROP_IS_DEAD, true);
 
         }
         #endregion
