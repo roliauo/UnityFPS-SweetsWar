@@ -38,7 +38,11 @@ namespace Game.SweetsWar
         public Button Btn_PlaySolo;
         public Button Btn_PlayTeam;
         public Button Btn_Rooms;
+        public Button Btn_Setting;
+        public Button Btn_CloseSetting;
         public Button Btn_Back;
+
+        public Slider MusicVolumn;
 
         private byte m_pageNumber = 1;
         private Dictionary<string, RoomInfo> m_cachedRoomList;
@@ -76,6 +80,18 @@ namespace Game.SweetsWar
 
             Btn_Rooms.onClick.AddListener(ShowRoomListPanel);
 
+            Btn_Setting.onClick.AddListener(() =>
+            {
+                SetActivePanel(SettingPanel.name);
+                //SettingPanel.SetActive(true);
+            });
+
+            Btn_CloseSetting.onClick.AddListener(() =>
+            {
+                SetActivePanel(MainPanel.name);
+                //SettingPanel.SetActive(false);
+            });
+
             Button_Help.onClick.AddListener(() =>
             {
                 SetActivePanel(HelpPanel.name);
@@ -101,10 +117,14 @@ namespace Game.SweetsWar
 
             m_cachedRoomList = new Dictionary<string, RoomInfo>();
             m_roomListItems = new Dictionary<string, GameObject>();
+            MusicVolumn.value = GameObject.FindGameObjectWithTag("BGM").GetComponent<AudioSource>().volume;
+            MusicVolumn.onValueChanged.AddListener((value) =>
+            {
+                FindObjectOfType<BackgroundMusic>().SetVolumn(value);
+            });
 
             Debug.Log("InLobby: " + PhotonNetwork.InLobby);
         }
-
 
         #region UI
 

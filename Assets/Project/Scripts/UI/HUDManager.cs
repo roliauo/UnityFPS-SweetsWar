@@ -9,9 +9,9 @@ using UnityEngine.UI;
 
 namespace Game.SweetsWar
 {
-    public class InfoManager : MonoBehaviour
+    public class HUDManager : MonoBehaviour
     {
-        public static InfoManager _instance;
+        public static HUDManager _instance;
 
         [Header("Treasure")]
         public GameObject TreasureAnnouncement;
@@ -28,7 +28,7 @@ namespace Game.SweetsWar
         public TMP_Text Version;
         public TMP_Text Region;
         public Button Button_Help;
-        public AudioSource audioSource_Music;
+        //public AudioSource audioSource_Music;
         public AudioSource audioSource_Sound;
         public AudioSource audioSource_Sound_Weapon;
         public Slider MusicVolumn;
@@ -38,6 +38,7 @@ namespace Game.SweetsWar
         public GameObject HelpPanel;
 
         private bool m_helpFlag = false;
+        private AudioSource m_audioSource_Music;
 
         private void Start()
         {
@@ -48,6 +49,7 @@ namespace Game.SweetsWar
             }
 
             _instance = this;
+
             PlayerName.text = PhotonNetwork.LocalPlayer.NickName;  //PlayerController._instance.photonView.Owner.NickName;
             PlayerName.color = GameConstants.GetColor((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_COLOR]);
             GameMode.text = (string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE];
@@ -61,26 +63,21 @@ namespace Game.SweetsWar
                 Debug.Log("AudioSource Ready");
                 audioSource_Sound = PlayerController.localPlayerInstance.GetComponent<AudioSource>();
             }
-            /*
-            MusicVolumn.onValueChanged.AddListener(delegate { 
-                changeVolume(audioSource_Music, MusicVolumn.value); 
-            });
-
-            SoundVolumn.onValueChanged.AddListener(delegate {
-                if (audioSource_Sound) changeVolume(audioSource_Sound, SoundVolumn.value);
-                if (audioSource_Sound_Weapon) changeVolume(audioSource_Sound_Weapon, SoundVolumn.value);
-            });
-            */
-            
+            m_audioSource_Music = GameObject.FindGameObjectWithTag("BGM").GetComponent<AudioSource>();
+            MusicVolumn.value = m_audioSource_Music.volume;
             MusicVolumn.onValueChanged.AddListener((value) =>
             {
-                audioSource_Music.volume = value;
+                //GameObject.FindGameObjectWithTag("");
+                //FindObjectOfType<BackgroundMusic>().SetVolumn(value);
+                //GameObject.FindGameObjectWithTag("BGM").GetComponent<BackgroundMusic>().SetVolumn(value);
+                m_audioSource_Music.volume = value;
             });
 
             SoundVolumn.onValueChanged.AddListener((value) =>
             {
                 if (audioSource_Sound) audioSource_Sound.volume = value;
                 if (audioSource_Sound_Weapon) audioSource_Sound_Weapon.volume = value;
+                //AudioListener.volume = value;
             });
             
 
@@ -111,6 +108,7 @@ namespace Game.SweetsWar
                 Menu.SetActive(true);
             }
 
+            
             if (audioSource_Sound_Weapon == null &&
                 PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(GameConstants.K_PROP_WEAPON_VIEW_ID, out object id) && (int)id > -1)
             {
@@ -122,6 +120,7 @@ namespace Game.SweetsWar
                     if (audioSource_Sound_Weapon) audioSource_Sound_Weapon.volume = value;
                 });
             }
+            
         }
 
         void changeVolume(AudioSource audioSource, float value)

@@ -58,6 +58,11 @@ namespace Game.SweetsWar
                 return;
             }
 
+            if (Instance != null)
+            {
+                Destroy(this);
+            }
+
             Instance = this;
 
             if (GameConstants.DebugMode)
@@ -97,6 +102,7 @@ namespace Game.SweetsWar
 
             TreasureGoalID = Random.Range(GameConstants.TREASURE_ID_MIN, GameConstants.TREASURE_ID_MAX + 1);
 
+            FindObjectOfType<BackgroundMusic>().ChangeMusic(1);
             InitPlayerData();
             RPC_InitializePlayerPosition();            
             SetCursorMode(false);
@@ -434,6 +440,7 @@ namespace Game.SweetsWar
         #region PUN callback
         public override void OnLeftRoom()
         {
+            FindObjectOfType<BackgroundMusic>().ChangeMusic(0);
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 

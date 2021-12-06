@@ -9,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
-    public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks//, IPunObservable
     {
         public static PlayerController _instance;
         public static GameObject localPlayerInstance;
@@ -432,7 +432,7 @@ namespace Game.SweetsWar
                 return;
             }
 
-            m_animator.SetTrigger("Hit" + (m_heldWeaponViewID == 400 ? m_heldWeaponViewID.ToString() : ""));
+            m_animator.SetTrigger("Hit" + (m_heldWeaponViewID == 400 ? m_heldWeapon.ID.ToString() : ""));
             m_weaponPrefab.GetComponent<WeaponController>().Fire();
             //m_weaponPrefab.GetComponent<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, );
             //weaponSlot.GetComponentInChildren<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, Camera.main.transform.position, Camera.main.transform.forward);
@@ -564,7 +564,7 @@ namespace Game.SweetsWar
 
         #endregion
 
-        
+        /*
         // TODO: need to refactor: customProps -> OnPhotonSerializeView
         #region IPunObservable implementation
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -590,7 +590,7 @@ namespace Game.SweetsWar
             }
         }
         #endregion
-        
+        */
 
         #region will be removed
 

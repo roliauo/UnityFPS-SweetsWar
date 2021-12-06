@@ -590,6 +590,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Music_Lobby
       objectReference: {fileID: 0}
+    - target: {fileID: 460673291331917279, guid: f5b6fe9c118672f4ea17efc4e6429ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8894793976652374156, guid: f5b6fe9c118672f4ea17efc4e6429ce1,
         type: 3}
       propertyPath: m_LocalPosition.x
