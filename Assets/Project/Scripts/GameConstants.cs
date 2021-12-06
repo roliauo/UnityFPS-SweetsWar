@@ -9,6 +9,7 @@ namespace Game.SweetsWar
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
         public const string FIXED_REGION_ASIA = "asia";
+        public const byte INPUT_TEXT_LIMIT = 20;
 
         // From InputManager (Edit > ProjectSettings > InputManager)
         public const string VERTICAL = "Vertical";
@@ -41,8 +42,8 @@ namespace Game.SweetsWar
 
         // KEY
         public const string GAME_MODE = "GAME_MODE";
-        public const string GAME_MODE_PERSONAL_BATTLE = "個人戰";
-        public const string GAME_MODE_TEAM_FIGHT = "團戰";
+        public const string GAME_MODE_SOLO = "個人戰";
+        public const string GAME_MODE_TEAM = "團戰";
         public const string PLAYER_NAME_PREFAB_KEY = "PlayerName";
         public const string TAG_PLAYER = "Player";
         public const string TAG_ITEM = "Item";
@@ -80,7 +81,7 @@ namespace Game.SweetsWar
         {
             switch (gameMode)
             {
-                case GAME_MODE_TEAM_FIGHT:
+                case GAME_MODE_TEAM:
                     return SCENE_GAME_TEAM;
             }
             return SCENE_GAME;
@@ -90,7 +91,7 @@ namespace Game.SweetsWar
         {
             switch (mode)
             {
-                case GAME_MODE_TEAM_FIGHT:
+                case GAME_MODE_TEAM:
                     return Color.red;
             }
 

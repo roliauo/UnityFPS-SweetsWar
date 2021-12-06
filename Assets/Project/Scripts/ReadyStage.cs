@@ -160,8 +160,8 @@ namespace Game.SweetsWar
             return (
                 //PhotonNetwork.IsMasterClient &&
                 (
-                    (mode == GameConstants.GAME_MODE_PERSONAL_BATTLE && PhotonNetwork.CurrentRoom.PlayerCount > 1) ||
-                    (mode == GameConstants.GAME_MODE_TEAM_FIGHT && PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM)
+                    (mode == GameConstants.GAME_MODE_SOLO && PhotonNetwork.CurrentRoom.PlayerCount > 1) ||
+                    (mode == GameConstants.GAME_MODE_TEAM && PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM)
                  )
                 //PhotonNetwork.CurrentRoom.PlayerCount == GameConstants.MAX_PLAYERS_PER_ROOM
                 );

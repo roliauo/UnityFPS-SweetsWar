@@ -37,6 +37,7 @@ namespace Game.SweetsWar
             string defaultName = string.Empty;
             if (Input_playerName != null)
             {
+                Input_playerName.characterLimit = GameConstants.INPUT_TEXT_LIMIT;
                 if (PlayerPrefs.HasKey(GameConstants.PLAYER_NAME_PREFAB_KEY))
                 {
                     defaultName = PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY);
@@ -106,7 +107,6 @@ namespace Game.SweetsWar
                 );
         }
 
-      
         private void ShowLoader(bool show)
         {
             MainMenu.SetActive(!show);

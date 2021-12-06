@@ -13,6 +13,7 @@ namespace Game.SweetsWar
     public class Lobby : MonoBehaviourPunCallbacks
     {
         public GameObject MainPanel;
+        public GameObject Loader;
 
         [Header("Room List Panel")]
         public GameObject RoomListPanel;
@@ -33,13 +34,19 @@ namespace Game.SweetsWar
         public Button Button_Next;
         public Image[] PagesImage;
 
+        [Header("Buttons")]
+        public Button Btn_PlaySolo;
+        public Button Btn_PlayTeam;
+        public Button Btn_Rooms;
+        public Button Btn_Back;
+
         private byte m_pageNumber = 1;
         private Dictionary<string, RoomInfo> m_cachedRoomList;
         private Dictionary<string, GameObject> m_roomListItems;
         private Dictionary<int, GameObject> m_playerListItems;
 
         private Hashtable CustomRoomProperties = new Hashtable() {
-                { GameConstants.GAME_MODE, GameConstants.GAME_MODE_PERSONAL_BATTLE }
+                { GameConstants.GAME_MODE, GameConstants.GAME_MODE_SOLO }
             };
         void Start()
         {
@@ -53,6 +60,21 @@ namespace Game.SweetsWar
             {
                 SetActivePanel(InfoPanel.name);
             });*/
+            Input_RoomName.characterLimit = GameConstants.INPUT_TEXT_LIMIT;
+
+            Btn_Back.onClick.AddListener(LeaveLobby);
+
+            Btn_PlaySolo.onClick.AddListener(() =>
+            {
+                QuickMatch(GameConstants.GAME_MODE_SOLO);
+            });
+
+            Btn_PlayTeam.onClick.AddListener(() =>
+            {
+                QuickMatch(GameConstants.GAME_MODE_TEAM);
+            });
+
+            Btn_Rooms.onClick.AddListener(ShowRoomListPanel);
 
             Button_Help.onClick.AddListener(() =>
             {
@@ -85,23 +107,6 @@ namespace Game.SweetsWar
 
 
         #region UI
-
-        public void QuickMatchPersonalBattle()
-        {
-            // btn_play.SetActive(false);
-            // btn_cancel.SetActive(true);
-            QuickMatch(GameConstants.GAME_MODE_PERSONAL_BATTLE);
-        }
-
-        public void QuickMatchTeamFight()
-        {
-            QuickMatch(GameConstants.GAME_MODE_TEAM_FIGHT);
-        }
-
-        public void ShowSettingPanel()
-        {
-            SetActivePanel(SettingPanel.name);
-        }
 
         public void ShowRoomListPanel() 
         {
@@ -180,9 +185,14 @@ namespace Game.SweetsWar
         #endregion
 
         #region Private function
-
+        private void ShowLoader(bool show)
+        {
+            MainPanel.SetActive(!show);
+            Loader.SetActive(show);
+        }
         private void QuickMatch(string gameMode)
         {
+            ShowLoader(true);
             Debug.Log("IsConnectedAndReady: " + PhotonNetwork.IsConnectedAndReady);
 
             // to update the room list
@@ -248,29 +258,6 @@ namespace Game.SweetsWar
 
         private void UpdateCachedRoomList(List<RoomInfo> roomList)
         {
-            /*foreach (RoomInfo info in roomList)
-            {
-                if (info.RemovedFromList) //!info.IsOpen || !info.IsVisible || 
-                {
-                    if (m_cachedRoomList.ContainsKey(info.Name))
-                    {
-                        m_cachedRoomList.Remove(info.Name);
-                    }
-
-                    continue;
-                }
-
-
-                if (m_cachedRoomList.ContainsKey(info.Name))
-                {
-                    m_cachedRoomList[info.Name] = info;
-                }
-                else
-                {
-                    m_cachedRoomList.Add(info.Name, info);
-                }
-            }*/
-
             for (int i = 0; i < roomList.Count; i++)
             {
                 RoomInfo targetInfo = roomList[i];
@@ -312,7 +299,6 @@ namespace Game.SweetsWar
         {
             MainPanel.SetActive(activePanel.Equals(MainPanel.name));
             RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));
-            //InfoPanel.SetActive(activePanel.Equals(InfoPanel.name));
             HelpPanel.SetActive(activePanel.Equals(HelpPanel.name));
             SettingPanel.SetActive(activePanel.Equals(SettingPanel.name));
         }
