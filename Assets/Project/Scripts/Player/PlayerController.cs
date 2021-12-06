@@ -432,7 +432,7 @@ namespace Game.SweetsWar
                 return;
             }
 
-            m_animator.SetTrigger("Hit" + (m_heldWeaponViewID == 400 ? m_heldWeapon.ID.ToString() : ""));
+            m_animator.SetTrigger("Hit" + (m_heldWeapon.ID == 400 ? m_heldWeapon.ID.ToString() : ""));
             m_weaponPrefab.GetComponent<WeaponController>().Fire();
             //m_weaponPrefab.GetComponent<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, );
             //weaponSlot.GetComponentInChildren<PhotonView>().RPC("Fire", RpcTarget.AllViaServer, Camera.main.transform.position, Camera.main.transform.forward);
