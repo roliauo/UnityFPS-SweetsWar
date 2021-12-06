@@ -15,8 +15,8 @@ namespace Game.SweetsWar
     {
         public int[] PositionRangeX = {20, 80};
         public int[] PositionRangeZ = {30, 70};
-        public float TimeLeft = 10f;
-        public float TimeLeftAlert = 10f;
+        public float TimeLeft = 5f;
+        public float TimeLeftAlert = 5f;
         public TMP_Text CountDownText;
         public TMP_Text ReadyText;
         public Text RoomNameText;
@@ -178,7 +178,7 @@ namespace Game.SweetsWar
         {
             Debug.Log(other.NickName + " entered this room!"); // not seen if you're the player connecting
             Debug.Log("MasterClient.NickName: " + PhotonNetwork.MasterClient.NickName);
-
+            RoomListItemPrefab.GetComponent<RoomListItem>().SetInfo(PhotonNetwork.CurrentRoom, false);
             if (PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.LoadLevel(GameConstants.SCENE_READY);
