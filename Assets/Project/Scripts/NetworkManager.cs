@@ -10,14 +10,19 @@ namespace Game.SweetsWar
 {
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
-        [SerializeField]
-        private InputField input_playerName;
+        
+        public GameObject Title;       
+        public GameObject Loader;
+        public GameObject MainMenu;
+        public InputField Input_playerName;
+        public GameObject DevInfoPanel;
+        public Text Text_Version;
+        public Button Btn_Login;
+        public Button Btn_DevInfo;
+        public Button Btn_Quit;
 
-        [SerializeField]
-        private GameObject controlPanel;
-
-        [SerializeField]
-        private GameObject loader;
+        //public GameObject OptionsMenu;
+        //public Button Btn_Option;
 
         void Awake()
         {
@@ -27,22 +32,40 @@ namespace Game.SweetsWar
         }
         void Start()
         {
+            //Connect(); // for version: solution: use Application.version
+
             string defaultName = string.Empty;
-            if (input_playerName != null)
+            if (Input_playerName != null)
             {
                 if (PlayerPrefs.HasKey(GameConstants.PLAYER_NAME_PREFAB_KEY))
                 {
                     defaultName = PlayerPrefs.GetString(GameConstants.PLAYER_NAME_PREFAB_KEY);
-                    input_playerName.text = defaultName;
+                    Input_playerName.text = defaultName;
                 }
             }
 
             PhotonNetwork.NickName = defaultName;
+
+            Text_Version.text = "version " + Application.version; 
+            Btn_Login.onClick.AddListener(Login);
+            Btn_DevInfo.onClick.AddListener(() =>
+            {
+                SwitchMenu(DevInfoPanel.name);
+            });
+            Btn_Quit.onClick.AddListener(QuitGame);
+        }
+
+        private void Update()
+        {
+            if (DevInfoPanel.activeInHierarchy && Input.anyKeyDown)
+            {
+                SwitchMenu(MainMenu.name);
+            }
         }
 
         public void Connect()
         {
-            Debug.Log("connectting....");
+            //Debug.Log("connectting....");
             ShowLoader(true);
 
             if (PhotonNetwork.IsConnected)
@@ -63,11 +86,12 @@ namespace Game.SweetsWar
         {
             SetPlayerName();
             Connect();
+            //SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
         }
 
         private void SetPlayerName()
         {
-            string name = input_playerName.text;
+            string name = Input_playerName.text;
 
             if (string.IsNullOrEmpty(name))
             {
@@ -83,16 +107,32 @@ namespace Game.SweetsWar
         }
 
       
-
         private void ShowLoader(bool show)
         {
-            controlPanel.SetActive(!show);
-            loader.SetActive(show);
+            MainMenu.SetActive(!show);
+            Loader.SetActive(show);
+        }
+
+        public void SwitchMenu(string activePanel)
+        {
+            MainMenu.SetActive(activePanel.Equals(MainMenu.name));
+            DevInfoPanel.SetActive(activePanel.Equals(DevInfoPanel.name));
+
+            //Title.SetActive(false);
+            //OptionsMenu.SetActive(activePanel.Equals(OptionsMenu.name));
+        }
+
+        public void QuitGame()
+        {
+            //Debug.Log("quit");
+            // PhotonNetwork.LeaveLobby();
+            PhotonNetwork.Disconnect();
+            Application.Quit();
         }
 
         public override void OnDisconnected(DisconnectCause cause)
         {
-            Debug.LogWarningFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
+            Debug.LogWarningFormat("PUN: OnDisconnected()", cause);
             ShowLoader(false);
         }
 
@@ -102,12 +142,16 @@ namespace Game.SweetsWar
             Debug.Log("rooms: " + PhotonNetwork.CountOfRooms);
             Debug.Log("version: " + PhotonNetwork.GameVersion);
             Debug.Log("region: " + PhotonNetwork.CloudRegion);
-
-            //PhotonNetwork.JoinLobby(TypedLobby.Default);
-            SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
+            ////PhotonNetwork.JoinLobby(TypedLobby.Default);
+            SceneManager.LoadScene(GameConstants.SCENE_LOBBY); // press login: load scene
         }
 
         /*
+        public override void OnCustomAuthenticationFailed(string debugMessage)
+        {
+            base.OnCustomAuthenticationFailed(debugMessage);
+        }
+
         public override void OnJoinedLobby()
         {
             SceneManager.LoadScene(GameConstants.SCENE_LOBBY);
@@ -117,7 +161,7 @@ namespace Game.SweetsWar
         {
             base.OnLeftLobby();
         }
-        */      
+        */
 
     }
 }

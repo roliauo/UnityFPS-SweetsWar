@@ -18,7 +18,7 @@ namespace Game.SweetsWar
         public Image TreasureTip;
 
         [Header("player")]
-        public Text PlayerName;
+        public TMP_Text PlayerName;
 
         [Header("Menu")]
         public GameObject Menu;      
