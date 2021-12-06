@@ -58,7 +58,7 @@ MonoBehaviour:
   WeaponData: {fileID: 11400000, guid: 8c3ccd0281048a14e82492d68c76c1bd, type: 2}
   MaxPickUpDistance: 3
   ps: {fileID: 0}
-  hasFireAnimation: 1
+  hasFireAnimation: 0
   BulletPrefab: {fileID: 0}
   FirePoint: {fileID: 0}
   BulletSpeed: 0
@@ -139,7 +139,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335284091252845575}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: a25072c15afb6e244b9594ab22d2cf11, type: 2}
   m_CullingMode: 0
