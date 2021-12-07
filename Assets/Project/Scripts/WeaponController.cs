@@ -108,7 +108,7 @@ namespace Game.SweetsWar
             float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
             //Debug.Log("itemDistance: " + itemDistance);
 
-            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData)) 
+            if ( itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(WeaponData, photonView.ViewID)) 
             {
                 // TODO: (GUI) set Weapon Slot
                 PlayerController._instance.EquipWeapon(photonView.ViewID);

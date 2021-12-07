@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,15 +12,17 @@ namespace Game.SweetsWar
         public TMP_Text ItemName;
         public TMP_Text ItemNumber;
 
-        private Item m_item;
+        //private List<int> m_ItemViewIDList;
+        private Item m_Item;
         void Start()
         {
+            //m_ItemViewIDList = new List<int>();
             btn_Slot.onClick.AddListener(() =>
             {
-                Debug.Log("slot click(remove): " + m_item.DisplayName);
+                //if (m_ItemViewIDList.Count>0) Debug.Log("slot click(remove): " + m_Item.DisplayName + " m_ItemViewID: "+ m_ItemViewIDList[m_ItemViewIDList.Count-1]);
 
-                BackpackManerger._instance.OnClickSlot(m_item);
-
+                BackpackManerger._instance.OnClickSlot(m_Item);
+                //m_ItemViewIDList.RemoveAt(m_ItemViewIDList.Count - 1);
                 /*
                 // move into the craft box
                 BackpackManerger._instance.Subtract(m_item);
@@ -30,7 +33,7 @@ namespace Game.SweetsWar
 
         public void SetItem(Item item)
         {
-            m_item = item;
+            m_Item = item;
             btn_Slot.GetComponent<Image>().sprite = item.Icon;
             ItemName.text = item.DisplayName;
             ItemNumber.text = item.Number.ToString();

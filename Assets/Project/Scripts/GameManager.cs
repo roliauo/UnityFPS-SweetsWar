@@ -280,13 +280,15 @@ namespace Game.SweetsWar
 
         }
 
-        [PunRPC] public void RPC_SyncCraftingInventories(int craftID, short itemID, bool add)
+        [PunRPC] public void RPC_SyncCraftingInventories(int craftID, short itemID, int itemViewID, bool add)
         {
             // ERROR: RPC can't recieve object: Item
-            Debug.Log("RPC_SyncCraftingInventories: " + craftID);
-            GameObject targetPrefab = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID);
+            Debug.Log("RPC_SyncCraftingInventories: " + craftID+ " itemID: " + itemID);
+            GameObject targetPrefab = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID || v.GetComponent<WeaponController>().WeaponData.ID == itemID);
             if (targetPrefab == null) return;
             Item item = targetPrefab.GetComponent<ItemBehavior>().item;
+
+            // AllPlayerCraftingInventories
             if (CraftUIManager._instance.AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
             {
                 if (add)
@@ -301,6 +303,24 @@ namespace Game.SweetsWar
             else
             {
                 CraftUIManager._instance.AllPlayerCraftingInventories.Add(craftID, new Inventory(9));
+            }
+
+            // AllStoredItemViewID
+            if (CraftUIManager._instance.AllStoredItemViewID.TryGetValue(craftID, out List<int> list))
+            {
+                if (add)
+                {
+                    list.Add(itemViewID);
+                }
+                else
+                {
+                    list.Remove(itemViewID);
+                }
+                
+            }
+            else
+            {
+                CraftUIManager._instance.AllStoredItemViewID.Add(craftID, new List<int>());
             }
 
             CraftUIManager._instance.UpdateView();

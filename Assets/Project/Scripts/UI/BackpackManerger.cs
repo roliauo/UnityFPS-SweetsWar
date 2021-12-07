@@ -14,6 +14,8 @@ namespace Game.SweetsWar
         public GameObject BackpackUI;
         public GameObject SlotPrefab;
         public Alert alert;
+        //public List<int> BackpackStoredItemViewID;
+        public Dictionary<short, List<int>> BackpackStoredItemViewID; // key: itemID, value: List<int> viewID
 
         private Dictionary<short, GameObject> m_prefabDict;
 
@@ -34,6 +36,8 @@ namespace Game.SweetsWar
             }
             _instance = this;
             m_prefabDict = new Dictionary<short, GameObject>();
+            //BackpackStoredItemViewID = new List<int>();
+            BackpackStoredItemViewID = new Dictionary<short, List<int>>();
 
             _instance.inventory.ItemList.Clear();
             ClearSlots();
@@ -83,14 +87,20 @@ namespace Game.SweetsWar
             return errMsg;
         }
 
-        public bool Collect(Item item, byte num = 1)
+        public bool Collect(Item item, int viewID, byte num = 1)
         {
             
             string msg = _instance.inventory.Add(item, num);
             if (msg == null) // Success
             {
+                //BackpackStoredItemViewID.Add(viewID);
+                if (!BackpackStoredItemViewID.ContainsKey(item.ID))
+                {
+                    BackpackStoredItemViewID.Add(item.ID, new List<int>());
+                }
+                BackpackStoredItemViewID[item.ID].Add(viewID);
+                
                 UpdateView();
-                // show msg
             } 
             else
             {
@@ -101,9 +111,13 @@ namespace Game.SweetsWar
             
         }
 
-        public void Subtract(Item item, byte num = 1)
-        {          
+        public void Subtract(Item item, int viewID, byte num = 1)
+        {
+            //BackpackStoredItemViewID.Remove(viewID);
+            BackpackStoredItemViewID[item.ID].Remove(viewID);
             Item target = _instance.inventory.ItemList.Find(obj => obj.ID == item.ID);
+            Debug.Log("Subtract: " + item.ID);
+            if (!target) return;
             target.Number -= num;
             if (target.Number == 0)
             {
@@ -118,17 +132,19 @@ namespace Game.SweetsWar
             UpdateView();
         }
 
-        public void OnClickSlot(Item m_item) 
+        public void OnClickSlot(Item item) 
         {
+            int itemViewID = BackpackStoredItemViewID[item.ID][BackpackStoredItemViewID[item.ID].Count - 1];
+            Debug.Log("OnClickSlot-item.ID: " + item.ID + " itemViewID: " + itemViewID);
             // move into the craft box
-            if (CraftUIManager._instance.AddToCraftSlots(m_item))
+            if (CraftUIManager._instance.AddToCraftSlots(item, itemViewID))
             {
-                _instance.Subtract(m_item);
+                _instance.Subtract(item, itemViewID);
 
-                if(m_item.Type == GameConstants.ITEM_TYPE_WEAPON)
-                {
-                    Debug.Log("OnClickSlot-weapon: " + m_item.Type);
-                    PlayerController._instance.storeWeaponToFridge();
+                if(item.Type == GameConstants.ITEM_TYPE_WEAPON)
+                {           
+                    //PlayerController._instance.storeWeaponToFridge();
+                    PlayerController._instance.photonView.RPC("StoreWeaponToFridge", RpcTarget.AllBufferedViaServer, CraftUIManager._instance.CraftID);
                 }
             }
             else
@@ -151,6 +167,16 @@ namespace Game.SweetsWar
                 slot.GetComponent<BackpackSlotPrefab>().SetItem(item);
                 m_prefabDict.Add(item.ID, slot);
             }
+            /*for (int i = 0; i < _instance.inventory.ItemList.Count; i++)
+            {
+                Item item = _instance.inventory.ItemList[i];
+                GameObject slot = Instantiate(SlotPrefab);
+                slot.transform.SetParent(BackpackUI.transform);
+                slot.transform.localScale = new Vector3(1, 1, 1);
+                slot.GetComponent<BackpackSlotPrefab>().SetItem(item);
+                //slot.GetComponent<BackpackSlotPrefab>().SetItem(item, BackpackStoredItemViewID[item.ID][i]);
+                m_prefabDict.Add(item.ID, slot);
+            }*/
         }  
         
         private void ClearSlots()

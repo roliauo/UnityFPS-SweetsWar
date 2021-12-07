@@ -7,19 +7,21 @@ namespace Game.SweetsWar
 {
     public class CraftSlotPrefab : MonoBehaviour//, ISelectHandler
     {
-        private Item m_item;
+        private Item m_Item;
+        private int m_ItemViewID;
         void Start()
         {
             this.GetComponent<Button>().onClick.AddListener(() =>
             {
-                Debug.Log("slot click: " + m_item.DisplayName);
-                CraftUIManager._instance.RemoveFromCraftSlots(m_item, this.gameObject);
+                //Debug.Log("slot click: " + m_item.DisplayName);
+                CraftUIManager._instance.RemoveFromCraftSlots(m_Item, gameObject);
             });
         }
 
         public void SetItem(Item item)
         {
-            m_item = item;
+            //m_ItemViewID = viewID;
+            m_Item = item;
             this.GetComponent<Image>().sprite = item.Icon;
 
         }

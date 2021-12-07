@@ -15,6 +15,7 @@ namespace Game.SweetsWar
         public GameObject InfoPanel;
         //public Alert alert;
         public Dictionary<int, Inventory> AllPlayerCraftingInventories;
+        public Dictionary<int, List<int>> AllStoredItemViewID; // key: craftViewID, value: List<int>weaponViewID
 
         [Header("Result")]
         public GameObject ResultPanel;
@@ -42,6 +43,7 @@ namespace Game.SweetsWar
 
             _instance = this;
             AllPlayerCraftingInventories = new Dictionary<int, Inventory>();
+            AllStoredItemViewID = new Dictionary<int, List<int>>();
 
             Button_Close.onClick.AddListener(() =>
             {
@@ -81,7 +83,22 @@ namespace Game.SweetsWar
             {
                 AllPlayerCraftingInventories.Add(id, new Inventory(9));
             }
-            
+
+            /*
+            if (AllStoredItemViewID.TryGetValue(id, out List<int> viewIDList))
+            {
+                AllStoredItemViewID[id] = viewIDList;
+            }
+            else
+            {
+                AllStoredItemViewID.Add(id, new List<int>());
+            }
+            */
+
+            if (!AllStoredItemViewID.ContainsKey(id))
+            {
+                AllStoredItemViewID.Add(id, new List<int>());
+            }
         }
 
         public void Clear()
@@ -99,6 +116,10 @@ namespace Game.SweetsWar
             AllPlayerCraftingInventories.TryGetValue(CraftID, out box);
             box.ItemList.Clear();
 
+            List<int> viewIDList;
+            AllStoredItemViewID.TryGetValue(CraftID, out viewIDList);
+            viewIDList.Clear();
+
             foreach (Transform child in SlotContainer.transform)
             {
                 Destroy(child.gameObject);
@@ -106,7 +127,27 @@ namespace Game.SweetsWar
             ValidMix();
         }
 
-        public bool AddToCraftSlots(Item item)
+        public void UpdateStoredItemViewID(int itemViewID, bool add)
+        {
+            if (AllStoredItemViewID.TryGetValue(CraftID, out List<int> list))
+            {
+                if (add)
+                {
+                    list.Add(itemViewID);
+                }
+                else
+                {
+                    list.Remove(itemViewID);
+                }
+
+            }
+            else
+            {
+                AllStoredItemViewID.Add(CraftID, new List<int>());
+            }
+        }
+
+        public bool AddToCraftSlots(Item item, int itemViewID)
         {
             Inventory box = _instance.inventory;
             if (box.ItemList.Count < box.InventoryCapacity)
@@ -117,32 +158,35 @@ namespace Game.SweetsWar
                 slot.transform.localScale = new Vector3(1, 1, 1);
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
                 ValidMix();
-                //Debug.Log("count: " + box.ItemList.Count + " InventoryCapacity: " + box.InventoryCapacity);
-                //Debug.Log("PhotonNetwork.LocalPlayer.UserId: " + PhotonNetwork.LocalPlayer.UserId);
+
+                UpdateStoredItemViewID(itemViewID, true);
+
                 // use FridgeBehavior._instance.ID to get the data
-                GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, true);
+                GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, itemViewID, true);
                 return true;
             }
             return false;
         }
 
-        public void RemoveFromCraftSlots(Item item, GameObject obj)
+        public void RemoveFromCraftSlots(Item item, GameObject slot) // rpc
         {
+            int itemViewID = AllStoredItemViewID[CraftID][AllStoredItemViewID[CraftID].Count - 1];
             // move into the backpack
-            BackpackManerger._instance.Collect(item);
+            BackpackManerger._instance.Collect(item, itemViewID);
             _instance.inventory.ItemList.Remove(item); // list.remove: only remove the first item.
-            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, false);
-            Destroy(obj);
+            UpdateStoredItemViewID(itemViewID, false);
+            GameManager.Instance.GetComponent<PhotonView>().RPC("RPC_SyncCraftingInventories", RpcTarget.Others, CraftID, item.ID, itemViewID, false);
+            
+            Destroy(slot);
             ValidMix();
 
             //equip
             if (item.Type == GameConstants.ITEM_TYPE_WEAPON)
             {
-                GameObject fridgePrefab = PhotonView.Find(_instance.CraftID).gameObject;
-                GameObject weapon = fridgePrefab.transform.Find("Weapon_"+item.ID+"(Clone)").gameObject;
-                int viewID = weapon.GetComponentInChildren<PhotonView>().ViewID;
-                Debug.Log("RemoveFromCraftSlots: " + viewID);
-                PlayerController._instance.EquipWeapon(viewID);
+                Debug.Log("CraftID: " + CraftID + " item.ID: " + item.ID + " item.photonViewID: "+ itemViewID);
+                //PlayerController._instance.photonView.RPC("GetWeaponFromFridge", RpcTarget.AllViaServer, CraftID, item.ID);
+                PlayerController._instance.EquipWeapon(itemViewID);
+
             }
         }
 
@@ -164,6 +208,14 @@ namespace Game.SweetsWar
                 slot.GetComponent<CraftSlotPrefab>().SetItem(item);
                 //m_prefabDict.Add(slot.gameObject);
             }
+            /*for(int i=0; i < _instance.inventory.ItemList.Count; i++)
+            {
+                Item item = _instance.inventory.ItemList[i];
+                Button slot = Instantiate(Button_SlotPrefab);
+                slot.transform.SetParent(SlotContainer.transform);
+                slot.transform.localScale = new Vector3(1, 1, 1);
+                slot.GetComponent<CraftSlotPrefab>().SetItem(item, AllStoredItemViewID[CraftID][i]);
+            }*/
             ValidMix();
         }    
 

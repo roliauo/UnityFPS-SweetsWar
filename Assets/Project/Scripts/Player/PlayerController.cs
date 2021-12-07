@@ -9,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 namespace Game.SweetsWar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource), typeof(Animator))]
-    public class PlayerController : MonoBehaviourPunCallbacks//, IPunObservable
+    public class PlayerController : MonoBehaviourPunCallbacks  //, IPunObservable
     {
         public static PlayerController _instance;
         public static GameObject localPlayerInstance;
@@ -160,7 +160,7 @@ namespace Game.SweetsWar
             }
         }
 
-        public void storeWeaponToFridge()
+        public void storeWeaponToFridge() //remove
         {
             if (m_heldWeaponViewID == -1 || CraftUIManager._instance.CraftID == -1)
             {
@@ -188,72 +188,6 @@ namespace Game.SweetsWar
             }
         }
 
-        /*
-        // correct version
-        public void EquipWeapon(int viewID) //GameObject weaponPrefab
-        {
-            if (m_heldWeaponPrefabName != null)
-            {
-                // Switch weapon (Drop)
-                // BackpackManerger - remove previous weapon 
-                foreach (GameObject go in weaponPosition)
-                {
-                    if (photonView.IsMine && go.name == m_heldWeaponPrefabName)
-                    {
-                        BackpackManerger._instance.Subtract(go.GetComponent<WeaponController>().WeaponData);
-                        break;
-                    }
-                }
-                // Scene - drop previous weapon
-                //Vector3 position = PlayerController.localPlayerInstance.transform.position;
-                GameObject prevWeaponPrefab = PhotonView.Find(m_heldWeaponViewID).gameObject;
-                prevWeaponPrefab.GetComponent<Rigidbody>().useGravity = true;
-                prevWeaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                prevWeaponPrefab.transform.parent = null;
-                prevWeaponPrefab.GetComponent<WeaponController>().isInUse = false;
-            }
-
-            if (viewID < 0) return;
-
-            // setup
-            GameObject weaponPrefab = PhotonView.Find(viewID).gameObject;
-            weaponPrefab.GetComponent<WeaponController>().isInUse = true;
-            m_weaponPrefab = weaponPrefab;
-            m_heldWeapon = weaponPrefab.GetComponent<WeaponController>().WeaponData;
-            m_heldWeaponPrefabName = weaponPrefab.name.Substring(0, weaponPrefab.name.IndexOf("("));
-            m_heldWeaponViewID = viewID;
-            weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
-            weaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll; //RigidbodyConstraints.FreezePosition;
-
-            // position
-            //Transform weaponTransform;
-            foreach (GameObject go in weaponPosition)
-            {
-                if (go.name == m_heldWeaponPrefabName)
-                {
-                    //weaponTransform = go.transform;
-                    weaponPrefab.transform.position = go.transform.position;
-                    weaponPrefab.transform.rotation = go.transform.rotation;
-                    weaponPrefab.transform.parent = gameObject.transform; // outside
-                    weaponPrefab.transform.parent = weaponSlot; // inside
-
-                    //m_animator.Play(GameConstants.ANIMATION_EQUIP);
-                    m_animator.SetBool(k_ANIMATION_EQUIP, true);
-                    audioSource.PlayOneShot(equipSFX);
-
-                    break;
-                }
-            }
-
-            if (photonView.IsMine)
-            {
-                Hashtable hash = new Hashtable();
-                hash.Add("weaponViewID", viewID);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-        }
-        */
-
         public void EquipWeapon(int viewID) //GameObject weaponPrefab
         {
 
@@ -266,8 +200,7 @@ namespace Game.SweetsWar
 
                 if (photonView.IsMine)
                 {
-                    BackpackManerger._instance.Subtract(prevWeaponPrefab.GetComponent<WeaponController>().WeaponData);
-
+                    BackpackManerger._instance.Subtract(prevWeaponPrefab.GetComponent<WeaponController>().WeaponData, m_heldWeaponViewID);
                 }
 
                 // Scene - drop previous weapon
@@ -285,6 +218,7 @@ namespace Game.SweetsWar
                 m_heldWeapon = null;
                 m_heldWeaponPrefabName = null;
                 m_heldWeaponViewID = -1;
+                if (m_animator) m_animator.SetBool(k_ANIMATION_EQUIP, false);
             }
             else
             {
@@ -330,7 +264,55 @@ namespace Game.SweetsWar
             }
         }
 
+        [PunRPC] public void StoreWeaponToFridge(int craftViewID)
+        {
+            //PlayerController targetPlayer = PhotonView.Find(viewID).gameObject.GetComponent<PlayerController>();
+            /*PlayerController target;
+            if (PhotonNetwork.LocalPlayer.UserId == userID)
+            {
+                target = _instance;
+            }*/
+            if (_instance.m_heldWeaponViewID == -1 || craftViewID == -1)
+            {
+                return;
+            }
+            GameObject weaponPrefab = PhotonView.Find(_instance.m_heldWeaponViewID).gameObject;
+            GameObject fridgePrefab = PhotonView.Find(craftViewID).gameObject;
+            weaponPrefab.SetActive(false);
+            weaponPrefab.transform.parent = fridgePrefab.transform.parent; // outside
+            weaponPrefab.transform.parent = fridgePrefab.transform; // inside
+            weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
+            weaponPrefab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            weaponPrefab.GetComponent<WeaponController>().isInUse = false;
+            EquipWeapon(-1);
+        }
 
+        [PunRPC] public void GetWeaponFromFridge(int craftViewID, short weaponID) //(int weaponViewID) //
+        {
+            //GameObject weaponPrefab = PhotonView.Find(weaponViewID).gameObject;
+            //_instance.EquipWeapon(weaponViewID);
+
+            GameObject fridgePrefab = PhotonView.Find(craftViewID).gameObject;
+            WeaponController[] weaponList = fridgePrefab.GetComponentsInChildren<WeaponController>();
+            Debug.Log("GetWeaponFromFridge: " + craftViewID + " weaponID: " + weaponID + " weaponList: "+ weaponList.Length);
+            foreach (WeaponController w in weaponList)
+            {
+                Debug.Log("weaponList: " + w.WeaponData.ID);
+                if (w.WeaponData.ID == weaponID)
+                {
+                    int id = w.gameObject.GetComponentInChildren<PhotonView>().ViewID;
+                    Debug.Log(" craftViewID: " + craftViewID + " w id: "+id);
+                    _instance.EquipWeapon(w.gameObject.GetComponentInChildren<PhotonView>().ViewID);
+                    break;
+                }
+            }
+            /*
+            GameObject weapon = fridgePrefab.transform.Find("Weapon_" + item.ID + "(Clone)").gameObject;
+            int weaponViewID = weapon.GetComponentInChildren<PhotonView>().ViewID;
+            Debug.Log("RemoveFromCraftSlots: " + weaponViewID);
+            EquipWeapon(weaponViewID);
+            */
+        }
         [PunRPC] public void RPC_TakeDamageInPlayer(int viewID, float damage)
         {
             // ####Important: use _instance to get this local player. (if no _instance, the data are sender's)

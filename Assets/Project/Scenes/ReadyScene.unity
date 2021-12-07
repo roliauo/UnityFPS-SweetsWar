@@ -1655,8 +1655,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PositionRangeX: 1400000032000000
   PositionRangeZ: 1e00000032000000
-  TimeLeft: 5
-  TimeLeftAlert: 5
+  TimeLeft: 3
+  TimeLeftAlert: 3
   CountDownText: {fileID: 2100704302}
   ReadyText: {fileID: 206711432}
   RoomNameText: {fileID: 100094324}

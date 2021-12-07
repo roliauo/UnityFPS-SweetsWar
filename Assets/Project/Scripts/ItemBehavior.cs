@@ -45,31 +45,17 @@ namespace Game.SweetsWar
 
             float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
 
-            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
+            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item, photonView.ViewID))
             {
                 PlayerController._instance.audioSource.PlayOneShot(PlayerController._instance.pickupSFX);
                 // Destroy this item in scene
                 photonView.RPC("RPC_ForceMasterClientDestroy", RpcTarget.MasterClient, photonView.ViewID);
             }
 
-            /*
-            // way2
-            if (BackpackManerger._instance == null)
-            {
-                return;
-            }
-
-            float itemDistance = Vector3.Distance(PlayerController.localPlayerInstance.transform.position, transform.position);
-
-            if (itemDistance < MaxPickUpDistance && BackpackManerger._instance.Collect(item))
-            {
-                // Destroy this item in scene
-                Destroy(this.gameObject);
-            }
-            */
         }
         [PunRPC] void RPC_ForceMasterClientDestroy(int viewID)
         {
+           // item.photonViewID = viewID;
             PhotonNetwork.Destroy(PhotonView.Find(viewID).gameObject);
         }
 
