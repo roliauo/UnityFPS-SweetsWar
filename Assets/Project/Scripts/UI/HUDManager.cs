@@ -51,7 +51,7 @@ namespace Game.SweetsWar
             _instance = this;
 
             PlayerName.text = PhotonNetwork.LocalPlayer.NickName;  //PlayerController._instance.photonView.Owner.NickName;
-            PlayerName.color = GameConstants.GetColor((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_COLOR]);
+            PlayerName.color = GameConstants.GetColor((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM]);
             GameMode.text = (string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE];
             Room.text = PhotonNetwork.CurrentRoom.Name;
             PlayerCount.text = PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;

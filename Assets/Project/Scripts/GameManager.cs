@@ -49,6 +49,7 @@ namespace Game.SweetsWar
 
         private short m_RandomItemNumber;
         private List<GameObject> m_TreasureList;
+        private int m_Team_Winner;
 
         void Start()
         {
@@ -119,7 +120,8 @@ namespace Game.SweetsWar
                 return;
             }
 
-            if (!ScorePanel.activeInHierarchy)// && AllPlayersDataCache != null
+            // TODO: update the score panel even if ScorePanel doesn't display
+            if (!ScorePanel.activeInHierarchy)
             {
                 checkGameOver();
             }
@@ -172,13 +174,48 @@ namespace Game.SweetsWar
         
          public void checkGameOver()
         {
+            if ((string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE] == GameConstants.GAME_MODE_TEAM)
+            {
+                //List<Player> teamAlive = AllPlayersDataCache.Where(p => (bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false).ToList();
+                var teamAlive = AllPlayersDataCache.Where(p => (bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false).GroupBy(g => (int)g.CustomProperties[GameConstants.K_PROP_TEAM]); //.Select(g => new { key = g.Key, count = g.Count() });
+                //Debug.Log("teamAlive: " + teamAlive.Count());
+                //int max = 0;
+                m_Team_Winner = -1;
+                if (teamAlive.Count() == 1)
+                {
+                    m_Team_Winner = teamAlive.First().Key;
+                    GameOver();
+                }
+                /*
+                foreach (var c in teamAlive)
+                {
+                    if (c.Count() > max)
+                    {
+                        max = c.Count();
+                        m_Team_Winner = c.Key;
+                    } 
+                    
+                    if (c.Count() == 0 && (int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM] == c.Key)
+                    {
+                        GameOver();
+                    }
+                }
+                */
+                /*if ((int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM] == m_Team_Winner)
+                {
+                    GameOver();
+                }*/
+            }
+
             // if craft a treasure, rpc to all to end game
             List<Player> playerAlive = AllPlayersDataCache.Where(p => (bool)p.CustomProperties[GameConstants.K_PROP_IS_DEAD] == false).ToList();
             if (playerAlive.Count == 1 || PlayerController._instance.isDead == true)
             {
                 //Debug.Log("playerAlive.Count: "+ playerAlive.Count+ " isDead: "+ PlayerController._instance.isDead);
-                GameOver();                
+                GameOver();
             }
+
+          
 
         }
 
@@ -215,6 +252,7 @@ namespace Game.SweetsWar
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 AllPlayersDataCache.Add(p);
+                Debug.Log("InitPlayerData-teams: " + p.CustomProperties[GameConstants.K_PROP_TEAM]);
                 PlayerMaxHealthSum += (float)p.CustomProperties[GameConstants.K_PROP_MAX_HEALTH];
             }
         }
@@ -227,11 +265,21 @@ namespace Game.SweetsWar
             SetCursorMode(true);
             ScorePanel.SetActive(true);
 
-            if (AllPlayersDataCache.First().UserId == PhotonNetwork.LocalPlayer.UserId) 
-                //(float)AllPlayersDataCache.First().CustomProperties[GameConstants.K_PROP_SCORE] > 0) // Invalid cast exception
+            string gameMode = (string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE];
+            if (gameMode.Equals(GameConstants.GAME_MODE_TEAM) && (int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM] == m_Team_Winner)
             {
                 Win();
+            }else
+            {
+                // solo mode
+                if (AllPlayersDataCache.First().UserId == PhotonNetwork.LocalPlayer.UserId)
+                //(float)AllPlayersDataCache.First().CustomProperties[GameConstants.K_PROP_SCORE] > 0) // Invalid cast exception
+                {
+                    Win();
+                }
             }
+            
+
         }
         [PunRPC] public void AddScore(string userID, string key, float value)
         {
@@ -262,7 +310,7 @@ namespace Game.SweetsWar
         [PunRPC] public void RPC_InitializePlayerPosition()
         {
             //PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[Random.Range(0, PlayerLocations.Count - 1)].position;
-            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[(int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]].position;
+            PlayerController.localPlayerInstance.transform.localPosition = PlayerLocations[(int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM]].position;
         }
 
         [PunRPC] public void RPC_CraftForMasterClient(string prefabName, float x, float y, float z) //string userID //int actorNum
@@ -284,9 +332,18 @@ namespace Game.SweetsWar
         {
             // ERROR: RPC can't recieve object: Item
             Debug.Log("RPC_SyncCraftingInventories: " + craftID+ " itemID: " + itemID);
-            GameObject targetPrefab = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID || v.GetComponent<WeaponController>().WeaponData.ID == itemID);
-            if (targetPrefab == null) return;
-            Item item = targetPrefab.GetComponent<ItemBehavior>().item;
+            //GameObject targetPrefab = ItemPrefabs.Find(v => v.GetComponent<ItemBehavior>().item.ID == itemID || v.GetComponent<WeaponController>().WeaponData.ID == itemID);
+            /*GameObject targetPrefab = ItemPrefabs.Find(v =>
+                (v.TryGetComponent<ItemBehavior>(out ItemBehavior b) && b.item.ID == itemID) ||
+                (v.TryGetComponent<WeaponController>(out WeaponController w) && w.WeaponData.ID == itemID)
+                );*/
+
+            GameObject itemPrefab = ItemPrefabs.Find(v => v.TryGetComponent(out ItemBehavior b) && b.item.ID == itemID);
+            GameObject weaponPrefab = ItemPrefabs.Find(v => v.TryGetComponent(out WeaponController w) && w.WeaponData.ID == itemID);
+
+
+            //if (targetPrefab == null) return;
+            Item item = weaponPrefab ? weaponPrefab.GetComponent<WeaponController>().WeaponData : itemPrefab.GetComponent<ItemBehavior>().item;
 
             // AllPlayerCraftingInventories
             if (CraftUIManager._instance.AllPlayerCraftingInventories.TryGetValue(craftID, out Inventory box))
@@ -333,6 +390,10 @@ namespace Game.SweetsWar
             {
                 box.ItemList.Clear();
                 CraftUIManager._instance.UpdateView();
+            }
+            if (CraftUIManager._instance.AllStoredItemViewID.TryGetValue(craftID, out List<int> list))
+            {
+                list.Clear();
             }
         }
         #endregion
@@ -411,11 +472,12 @@ namespace Game.SweetsWar
             if (!PhotonNetwork.IsMasterClient) return;
 
             // Fridge
-            for (short i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+            int fridgeNum = (string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE] == GameConstants.GAME_MODE_TEAM ? GameConstants.MAX_TEAMS : PhotonNetwork.CurrentRoom.PlayerCount;
+            for (short i = 0; i < fridgeNum; i++)
             {
                 //Debug_ShowAllPlayerCraftingInventories();
-                int colorID = (int)PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_COLOR];
-                PhotonNetwork.InstantiateRoomObject(FridgePrefab.name + colorID, FridgeLocations[i].position, Quaternion.identity, 0);
+                //int colorID = (int)PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_TEAM];
+                PhotonNetwork.InstantiateRoomObject(FridgePrefab.name + i, FridgeLocations[i].position, Quaternion.identity, 0);
             }
 
             //int RandomObjects = Random.Range(0, ItemPrefabList.Length);

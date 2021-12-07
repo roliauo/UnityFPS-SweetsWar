@@ -22,14 +22,20 @@ namespace Game.SweetsWar
         {
             Color color = gameObject.GetComponent<Image>().color;
             //if self #FF5B76 RGB:(255,90,118), if dead
-            if (PhotonNetwork.LocalPlayer.UserId == player.UserId)
+            if ((int) player.CustomProperties[GameConstants.K_PROP_TEAM] > -1)
+            {
+                color = GameConstants.GetColor((int)player.CustomProperties[GameConstants.K_PROP_TEAM]);
+            }
+            else if (PhotonNetwork.LocalPlayer.UserId == player.UserId)
             {
                 color = highlightColor;
             }
+
             if ((bool)player.CustomProperties[GameConstants.K_PROP_IS_DEAD])
             {
                 color.a = 0.6f;
             }
+
             gameObject.GetComponent<Image>().color = color;
             Rank.text = rank.ToString();
             Player.text = player.NickName;

@@ -3,6 +3,7 @@ using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,8 @@ namespace Game.SweetsWar
         public Button Btn_LeaveRoom;
         public Button Btn_Start;
         public GameObject RoomListItemPrefab;
+
+        public List<int> AvailableTeams; // = new List<int>{ 0, 1, 2, 3 };
 
         public bool clickedStart = false;
 
@@ -45,7 +48,7 @@ namespace Game.SweetsWar
             SetCursorMode(false);
             //RoomNameText.text = PhotonNetwork.CurrentRoom.Name;
             RoomListItemPrefab.GetComponent<RoomListItem>().SetInfo(PhotonNetwork.CurrentRoom, false);
-
+            
             Btn_LeaveRoom.onClick.AddListener(LeaveRoom);
             Btn_Start.onClick.AddListener(OnClickStart);
             showHideStartButton();
@@ -81,15 +84,6 @@ namespace Game.SweetsWar
             Btn_Start.gameObject.SetActive(false);
             Btn_LeaveRoom.gameObject.SetActive(false);
             PhotonNetwork.CurrentRoom.IsOpen = false;
-
-            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-            {
-                Hashtable hash = new Hashtable();
-                hash.Add(GameConstants.K_PROP_PLAYER_INDEX, i);
-                PhotonNetwork.PlayerList[i].SetCustomProperties(hash);
-                Debug.Log("player: " + PhotonNetwork.PlayerList[i].NickName + ", index:" + PhotonNetwork.PlayerList[i].CustomProperties[GameConstants.K_PROP_PLAYER_INDEX]);
-            }
-
             photonView.RPC("StartCountDown", RpcTarget.All);
         }
 
@@ -136,15 +130,18 @@ namespace Game.SweetsWar
 
         private void GeneratePlayersInReadyStage() // random range
         {
-            //Debug.Log(PhotonNetwork.LocalPlayer.NickName + " GetPlayerNumber:" + PhotonNetwork.LocalPlayer.GetPlayerNumber());
-            // generate the player : it gets synced by using PhotonNetwork.Instantiate
-            // (PhotonNetwork.LocalPlayer.GetPlayerNumber()+1)
-            int colorID = Random.Range(0, 4); //+ colorID
-            PhotonNetwork.Instantiate("Player" + colorID, new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 5f, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
-            
+            //int colorID = Random.Range(0, 4);
+            //int colorID = (int)PhotonNetwork.LocalPlayer.CustomProperties[GameConstants.K_PROP_TEAM];
+            int colorID = PhotonNetwork.CurrentRoom.PlayerCount - 1;
+            if ((string)PhotonNetwork.CurrentRoom.CustomProperties[GameConstants.GAME_MODE] == GameConstants.GAME_MODE_TEAM){
+                colorID = (PhotonNetwork.CurrentRoom.PlayerCount - 1) / GameConstants.MAX_TEAMS;
+            }
             Hashtable hash = new Hashtable();
-            hash.Add(GameConstants.K_PROP_PLAYER_COLOR, colorID);
+            hash.Add(GameConstants.K_PROP_TEAM, colorID);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+            PhotonNetwork.Instantiate("Player" + colorID, new Vector3(Random.Range(PositionRangeX[0], PositionRangeX[1]), 5f, Random.Range(PositionRangeZ[0], PositionRangeZ[1])), Quaternion.identity, 0);
+
         }
 
         private bool IsPlayerReady()

@@ -8,6 +8,8 @@ namespace Game.SweetsWar
 
         // Game Settings
         public const byte MAX_PLAYERS_PER_ROOM = 4;
+        public const byte MAX_TEAMS = 2;
+        public const byte PLAYERS_PER_TEAM = 2;
         public const string FIXED_REGION_ASIA = "asia";
         public const byte INPUT_TEXT_LIMIT = 20;
 
@@ -51,10 +53,8 @@ namespace Game.SweetsWar
         // Props
         public const string IS_PLAYER_READY = "IS_PLAYER_READY";
         public const string PLAYER_LOADED_LEVEL = "PLAYER_LOADED_LEVEL";
-        public const string K_PROP_PLAYER_INDEX = "K_PROP_PLAYER_INDEX";
-        public const string K_PROP_PLAYER_COLOR = "K_PROP_PLAYER_COLOR";
+        //public const string K_PROP_PLAYER_COLOR = "K_PROP_PLAYER_COLOR";
         public const string K_PROP_WEAPON_VIEW_ID = "weaponViewID";
-
         public const string K_PROP_HEALTH = "health";
         public const string K_PROP_MAX_HEALTH = "maxHealth";
         public const string K_PROP_IS_DEAD = "isDead";
@@ -63,6 +63,7 @@ namespace Game.SweetsWar
         public const string K_PROP_CRAFT_NUMBER = "craftNumber";
         public const string K_PROP_SCORE = "score";
         public const string K_PROP_WINNER = "winner";
+        public const string K_PROP_TEAM = "team";
 
         // UI
         public const string COLOR_YELLOW = "FDBB08";
@@ -102,10 +103,11 @@ namespace Game.SweetsWar
         {
             switch (number)
             {
-                case 0: return Color.red;
-                case 1: return Color.blue;
-                case 2: return Color.yellow;
-                case 3: return Color.green;       
+                case 0: return new Color32(241, 126, 126, 255); //Color.red;
+                case 1: return new Color32(100, 100, 255, 255); //Color.blue;
+                case 2: return new Color32(245, 243, 135, 255); //Color.yellow;
+                case 3: return new Color32(55, 166, 55, 255); //Color.green;    
+                default: return Color.red;
             }
 
             return Color.white;

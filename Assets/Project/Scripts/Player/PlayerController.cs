@@ -111,6 +111,7 @@ namespace Game.SweetsWar
             playerID = photonView.Owner.UserId;
 
             InitializePlayerProps();
+            //GameManager.Instance.InitPlayerData();
 
             /*
             Debug.LogFormat("name: {0}, key: {1}, photonView: {2}",
